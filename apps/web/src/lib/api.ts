@@ -8,6 +8,7 @@ import type {
   Favorite,
   FavoriteCreate,
   Highlight,
+  HighlightCreate,
   PracticeRecord,
 } from "@kaogong/contracts";
 import { getToken } from "./auth";
@@ -44,7 +45,7 @@ export function createApi(base: string, deviceId: () => string) {
       request<Favorite>("/api/favorites", { method: "POST", body: JSON.stringify(body) }),
     removeFavorite: (id: string) => request<null>(`/api/favorites/${id}`, { method: "DELETE" }),
     listHighlights: () => request<Highlight[]>("/api/highlights"),
-    addHighlight: (body: { articleId: string; text: string; note?: string }) =>
+    addHighlight: (body: HighlightCreate) =>
       request<Highlight>("/api/highlights", { method: "POST", body: JSON.stringify(body) }),
     submitPractice: (body: PracticeRecord) =>
       request<PracticeRecord>("/api/practice", { method: "POST", body: JSON.stringify(body) }),

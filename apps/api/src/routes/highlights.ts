@@ -20,6 +20,7 @@ export function highlightsRoutes(db: DB) {
       articleId: row.articleId,
       text: row.text,
       note: row.note,
+      style: row.style as Highlight["style"],
       createdAt: row.createdAt,
     }));
     return c.json({ ok: true, data });
@@ -32,17 +33,25 @@ export function highlightsRoutes(db: DB) {
     try { raw = await c.req.json(); } catch { raw = {}; }
     const parsed = highlightCreateSchema.safeParse(raw);
     if (!parsed.success) return badInput(c, parsed.error.issues[0]?.message ?? "参数非法");
-    const { articleId, text, note } = parsed.data;
+    const { articleId, text, note, style } = parsed.data;
     const row = {
       id: crypto.randomUUID(),
       deviceId: dev,
       articleId,
       text,
       note: note ?? "",
+      style: style ?? "yellow",
       createdAt: Date.now(),
     };
     db.insert(highlights).values(row).run();
-    const data: Highlight = { id: row.id, articleId, text, note: note ?? "", createdAt: row.createdAt };
+    const data: Highlight = {
+      id: row.id,
+      articleId,
+      text,
+      note: note ?? "",
+      style: row.style as Highlight["style"],
+      createdAt: row.createdAt,
+    };
     return c.json({ ok: true, data }, 201);
   });
 

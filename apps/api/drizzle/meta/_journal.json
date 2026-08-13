@@ -15,6 +15,13 @@
       "when": 1786655202144,
       "tag": "0001_flashy_prima",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1786655683296,
+      "tag": "0002_low_giant_girl",
+      "breakpoints": true
     }
   ]
 }

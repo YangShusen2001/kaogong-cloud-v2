@@ -1,0 +1,1 @@
+ALTER TABLE `highlights` ADD `style` text DEFAULT 'yellow' NOT NULL;

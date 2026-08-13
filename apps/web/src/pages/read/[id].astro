@@ -1,0 +1,162 @@
+---
+import Base from "../../layouts/Base.astro";
+import { listArticles } from "../../lib/content";
+
+export function getStaticPaths() {
+  return listArticles().map((a) => ({ params: { id: a.id }, props: { article: a } }));
+}
+
+const { article } = Astro.props;
+---
+<Base title={`${article.title} · 时政小助手`}>
+  <article class="reading" id="article" data-id={article.id}>
+    <p class="item-summary">{article.source} · {article.date}</p>
+    <h1 class="reading-title">{article.title}</h1>
+    {article.keySentences?.length > 0 && <blockquote>{article.keySentences[0]}</blockquote>}
+    {article.paragraphs.map((p) => <p class="reading-para">{p}</p>)}
+  </article>
+
+  <div id="hl-toolbar" class="hl-toolbar" hidden>
+    <button type="button" data-act="yellow" title="黄色高亮">🟡</button>
+    <button type="button" data-act="green" title="荧光笔">🟢</button>
+    <button type="button" data-act="underline" title="下划线">﹏</button>
+    <button type="button" data-act="explain" title="AI 解释">✨</button>
+    <button type="button" data-act="favorite" title="收藏">☆</button>
+    <button type="button" data-act="note" title="加注释">✏️</button>
+  </div>
+
+  <p><a href="/">← 返回首页</a></p>
+</Base>
+
+<script>
+  import { api } from "../../lib/api";
+
+  type Style = "yellow" | "green" | "underline";
+
+  const articleEl = document.getElementById("article") as HTMLElement;
+  const toolbar = document.getElementById("hl-toolbar") as HTMLElement;
+  const articleId = articleEl.dataset.id || "";
+  let currentRange: Range | null = null;
+
+  const hide = () => {
+    toolbar.hidden = true;
+    currentRange = null;
+    window.getSelection()?.removeAllRanges();
+  };
+
+  document.addEventListener("mouseup", () => {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !articleEl.contains(sel.anchorNode)) {
+      hide();
+      return;
+    }
+    const text = sel.toString().trim();
+    if (text.length < 2 || text.length > 300) {
+      hide();
+      return;
+    }
+    currentRange = sel.getRangeAt(0).cloneRange();
+    const rect = currentRange.getBoundingClientRect();
+    toolbar.style.left = `${rect.left + rect.width / 2 - toolbar.offsetWidth / 2}px`;
+    toolbar.style.top = `${rect.top - 44}px`;
+    toolbar.hidden = false;
+  });
+
+  function wrap(style: Style) {
+    try {
+      const mark = document.createElement("mark");
+      mark.className = `hl-${style}`;
+      currentRange!.surroundContents(mark);
+    } catch {
+      // 选区跨节点无法包裹，仅记录不标色
+    }
+  }
+
+  let explainBox: HTMLDivElement | null = null;
+  async function explain(text: string, rect: DOMRect) {
+    if (!explainBox) {
+      explainBox = document.createElement("div");
+      explainBox.className = "explain-pop";
+      document.body.appendChild(explainBox);
+      explainBox.addEventListener("click", () => {
+        explainBox!.hidden = true;
+      });
+    }
+    explainBox.textContent = "解释中…";
+    explainBox.hidden = false;
+    explainBox.style.left = `${rect.left}px`;
+    explainBox.style.top = `${rect.bottom + 8}px`;
+    const env = await api.explain(text);
+    explainBox.textContent = env.ok && env.data ? env.data.explanation : "解释失败";
+  }
+
+  function toast(msg: string) {
+    const t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2000);
+  }
+
+  toolbar.addEventListener("click", async (e) => {
+    const btn = (e.target as HTMLElement).closest("button");
+    if (!btn || !currentRange) return;
+    const act = btn.dataset.act as string;
+    const text = currentRange.toString().trim();
+    const rect = currentRange.getBoundingClientRect();
+    if (!text) {
+      hide();
+      return;
+    }
+    if (act === "yellow" || act === "green" || act === "underline") {
+      wrap(act as Style);
+      await api.addHighlight({ articleId, text, style: act as Style });
+    } else if (act === "explain") {
+      await explain(text, rect);
+    } else if (act === "favorite") {
+      const env = await api.addFavorite({ url: location.href, title: text });
+      toast(env.ok ? "已收藏" : "收藏失败");
+    } else if (act === "note") {
+      const note = prompt("写注释：", "");
+      if (note !== null) {
+        wrap("yellow");
+        await api.addHighlight({ articleId, text, note });
+      }
+    }
+    hide();
+  });
+
+  // 加载已有划线并回填到正文
+  function applyHighlight(text: string, style: Style) {
+    const ps = articleEl.querySelectorAll(".reading-para");
+    for (const p of ps) {
+      const idx = p.textContent?.indexOf(text) ?? -1;
+      if (idx === -1) continue;
+      const range = document.createRange();
+      let start = 0;
+      for (const node of Array.from(p.childNodes)) {
+        if (node.nodeType !== Node.TEXT_NODE) continue;
+        const len = node.textContent?.length ?? 0;
+        const end = start + len;
+        if (start <= idx && idx + text.length <= end) {
+          range.setStart(node, idx - start);
+          range.setEnd(node, idx - start + text.length);
+          const mark = document.createElement("mark");
+          mark.className = `hl-${style}`;
+          range.surroundContents(mark);
+          return;
+        }
+        start = end;
+      }
+    }
+  }
+
+  (async () => {
+    const env = await api.listHighlights();
+    if (env.ok && env.data) {
+      for (const h of env.data) {
+        if (h.articleId === articleId) applyHighlight(h.text, h.style);
+      }
+    }
+  })();
+</script>

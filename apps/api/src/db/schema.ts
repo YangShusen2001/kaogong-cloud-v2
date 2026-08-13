@@ -18,6 +18,7 @@ export const highlights = sqliteTable("highlights", {
   articleId: text("article_id").notNull(),
   text: text("text").notNull(),
   note: text("note").notNull().default(""),
+  style: text("style").notNull().default("yellow"), // yellow | green | underline
   createdAt: integer("created_at").notNull(), // unix 毫秒
 });
 

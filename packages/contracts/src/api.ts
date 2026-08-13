@@ -33,11 +33,15 @@ export const favoriteCreateSchema = z.object({
 export type FavoriteCreate = z.infer<typeof favoriteCreateSchema>;
 
 // —— 划线 ——
+export const highlightStyleSchema = z.enum(["yellow", "green", "underline"]);
+export type HighlightStyle = z.infer<typeof highlightStyleSchema>;
+
 export const highlightSchema = z.object({
   id: z.string(),
   articleId: z.string(),
   text: z.string(),
   note: z.string(),
+  style: highlightStyleSchema,
   createdAt: z.number(), // unix 毫秒
 });
 export type Highlight = z.infer<typeof highlightSchema>;
@@ -46,6 +50,7 @@ export const highlightCreateSchema = z.object({
   articleId: z.string().min(1),
   text: z.string().min(1),
   note: z.string().optional(),
+  style: highlightStyleSchema.optional(),
 });
 export type HighlightCreate = z.infer<typeof highlightCreateSchema>;
 

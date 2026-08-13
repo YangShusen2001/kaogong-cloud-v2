@@ -3,9 +3,10 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { DailyDigest, PracticeSet } from "@kaogong/contracts";
+import type { ClippedArticle, DailyDigest, PracticeSet } from "@kaogong/contracts";
 
 export type {
+  ClippedArticle,
   DailyDigest,
   DigestItem,
   DigestSection,
@@ -51,4 +52,29 @@ export function listPracticeSets(): PracticeSet[] {
 /** 按日期取一份每日一练题集，不存在返回 null。 */
 export function getPracticeSet(date: string): PracticeSet | null {
   return loadJson<PracticeSet>(join(CONTENT_DIR, date, "practice.json"));
+}
+
+/** 按文章 id 取剪藏原文（全文），不存在返回 null。 */
+export function getArticle(id: string): ClippedArticle | null {
+  if (!existsSync(CONTENT_DIR)) return null;
+  for (const d of readdirSync(CONTENT_DIR)) {
+    const p = join(CONTENT_DIR, d, `article-${id}.json`);
+    if (existsSync(p)) return loadJson<ClippedArticle>(p);
+  }
+  return null;
+}
+
+/** 列出所有剪藏原文。 */
+export function listArticles(): ClippedArticle[] {
+  if (!existsSync(CONTENT_DIR)) return [];
+  const out: ClippedArticle[] = [];
+  for (const d of readdirSync(CONTENT_DIR)) {
+    for (const f of readdirSync(join(CONTENT_DIR, d))) {
+      if (f.startsWith("article-") && f.endsWith(".json")) {
+        const a = loadJson<ClippedArticle>(join(CONTENT_DIR, d, f));
+        if (a) out.push(a);
+      }
+    }
+  }
+  return out;
 }
