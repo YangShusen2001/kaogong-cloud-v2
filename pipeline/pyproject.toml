@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "考公日报内容管道：抓取官方来源 → 产出结构化 content/ JSON"
 requires-python = ">=3.12"
 dependencies = [
+  "httpx>=0.27",
   "jsonschema>=4.23",
 ]
 
