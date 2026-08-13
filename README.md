@@ -34,11 +34,11 @@ docs/
 ## 状态
 
 - [x] 0/1 骨架 + 契约（monorepo + contracts）
-- [x] 2 内容管道（HTTP/去重/DeepSeek/源适配/组装，抓取逻辑闭环）
-- [x] 3 Astro 前端（渲染 + 极光/粒子 hero + 收藏）
-- [x] 4 Worker API + D1（收藏/划线/每日一练 + zod 契约闭环）
-- [ ] 5 部署上线（见 `docs/deployment.md`；划线/每日一练 UI 待补）
-- [ ] 6 删债收尾
+- [x] 2 内容管道（HTTP/去重/DeepSeek/源适配/组装/出题）
+- [x] 3 Astro 前端（日报 / 搜索 / 收藏 / 每日一练 / 划线解释 + 极光粒子 hero）
+- [x] 4 Worker API + D1（收藏/划线/每日一练/解释 + zod 契约闭环）
+- [x] 5 前端接 API（匿名设备标识 + 全功能交互）
+- [ ] 6 部署上线（见 `docs/deployment.md`，需 Cloudflare 账号）
 
 ## 本地开发
 
