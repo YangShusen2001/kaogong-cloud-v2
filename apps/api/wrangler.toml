@@ -6,4 +6,5 @@ compatibility_date = "2026-08-13"
 [[d1_databases]]
 binding = "DB"
 database_name = "kaogong-db"
-database_id = "REPLACE_ME"
+database_id = "8bdb197c-cfc8-4f7a-92d7-a35c571e879d"
+migrations_dir = "drizzle"
