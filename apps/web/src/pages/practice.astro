@@ -1,0 +1,75 @@
+---
+import Base from "../layouts/Base.astro";
+import { listPracticeSets } from "../lib/content";
+
+const sets = listPracticeSets();
+const latest = sets[0];
+---
+<Base title="每日一练 · 时政小助手">
+  {latest ? (
+    <section class="card" id="practice" data-date={latest.date}>
+      <h2>每日一练 · {latest.date}</h2>
+      <p id="practice-progress" class="item-summary">共 {latest.total} 题 · 点选作答</p>
+      <div id="questions">
+        {latest.questions.map((q, i) => (
+          <div class="question" data-answer={q.answer}>
+            <p class="q-text">{i + 1}. {q.q}</p>
+            <div class="q-options">
+              {q.options.map((opt, j) => (
+                <button type="button" class="q-opt" data-opt={j}>{opt}</button>
+              ))}
+            </div>
+            <p class="q-analysis" hidden>{q.analysis}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  ) : (
+    <section class="card"><p>还没有题目。</p></section>
+  )}
+</Base>
+
+<script>
+  import { api } from "../lib/api";
+
+  const root = document.getElementById("practice");
+  if (root) {
+    const date = root.dataset.date || "";
+    const questions = Array.from(document.querySelectorAll<HTMLElement>(".question"));
+    let answered = 0;
+    let correct = 0;
+
+    const progress = document.getElementById("practice-progress")!;
+
+    function update() {
+      progress.textContent = `已答 ${answered}/${questions.length} · 答对 ${correct}`;
+    }
+
+    async function submit() {
+      const env = await api.submitPractice({ date, correct, total: questions.length });
+      progress.textContent = env.ok
+        ? `交卷完成 · 答对 ${correct}/${questions.length}`
+        : "交卷失败，记录未保存";
+    }
+
+    questions.forEach((q) => {
+      const answer = Number(q.dataset.answer);
+      q.querySelectorAll<HTMLButtonElement>(".q-opt").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (btn.classList.contains("answered")) return; // 已作答
+          const chosen = Number(btn.dataset.opt);
+          const isCorrect = chosen === answer;
+          btn.classList.add(isCorrect ? "correct" : "wrong");
+          q.querySelector<HTMLButtonElement>(`.q-opt[data-opt="${answer}"]`)?.classList.add("correct");
+          q.querySelectorAll(".q-opt").forEach((b) => b.classList.add("answered"));
+          const analysis = q.querySelector<HTMLElement>(".q-analysis");
+          if (analysis) analysis.hidden = false;
+          answered += 1;
+          if (isCorrect) correct += 1;
+          update();
+          if (answered === questions.length) submit();
+        });
+      });
+    });
+  }
+</script>

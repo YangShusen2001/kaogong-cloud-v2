@@ -14,6 +14,10 @@
   --primary-soft: light-dark(#e7eefc, #17233c);
   --accent: light-dark(#a06d08, #e3b341);
   --accent-soft: light-dark(#faf1dc, #2c2410);
+  --green: light-dark(#1f7a56, #5ecf9d);
+  --green-soft: light-dark(#e6f4ec, #16352a);
+  --red: light-dark(#b3201c, #ff6b66);
+  --red-soft: light-dark(#fbeaea, #3b1b19);
   --shadow: 0 1px 2px rgba(16, 42, 86, 0.05), 0 6px 24px rgba(16, 42, 86, 0.07);
   --shadow-sm: 0 1px 2px rgba(16, 42, 86, 0.05);
 
@@ -204,6 +208,29 @@ p { margin: 0; }
 }
 .fav-btn:hover { border-color: var(--accent); color: var(--accent); }
 .fav-btn[disabled] { opacity: 0.6; cursor: default; }
+
+/* ===== 每日一练 ===== */
+.question { margin-bottom: var(--s-5); padding-bottom: var(--s-4); border-bottom: 1px dashed var(--line); }
+.question:last-child { border-bottom: none; }
+.q-text { font-weight: 500; margin: 0 0 var(--s-3); }
+.q-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-2); }
+.q-opt {
+  text-align: left;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--ink);
+}
+.q-opt:hover:not(.answered) { border-color: var(--primary); }
+.q-opt.answered { cursor: default; }
+.q-opt.correct { border-color: var(--green); background: var(--green-soft); }
+.q-opt.wrong { border-color: var(--red); background: var(--red-soft); }
+.q-analysis { margin-top: var(--s-2); color: var(--sub); font-size: 14px; }
+@media (max-width: 640px) { .q-options { grid-template-columns: 1fr; } }
 blockquote {
   margin: var(--s-2) 0 0;
   padding: var(--s-3) var(--s-4);
