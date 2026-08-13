@@ -65,10 +65,11 @@ p { margin: 0; }
   background: color-mix(in srgb, var(--bg) 82%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
-  padding: 10px 24px;
+  height: 56px;
+  padding: 0 24px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 .top-in {
   display: flex;
@@ -76,6 +77,10 @@ p { margin: 0; }
   gap: var(--s-4);
 }
 .logo {
+  position: absolute;
+  left: 24px;
+  top: 10px;
+  z-index: 60;
   display: flex;
   align-items: center;
   color: var(--ink);
@@ -388,18 +393,23 @@ p { margin: 0; }
 .sub-row input { width: auto; height: auto; margin: 0; }
 
 /* ===== 阅读页 ===== */
+.reading-head {
+  max-width: 80%;
+  margin: var(--s-5) auto 0;
+  padding: var(--s-5) var(--s-6) var(--s-4);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  text-align: center;
+}
 .read-toolbar {
-  position: sticky;
-  top: 58px;
-  z-index: 40;
-  display: flex;
+  display: inline-flex;
   gap: var(--s-2);
   align-items: center;
+  justify-content: center;
   padding: var(--s-2);
-  margin: 0 auto var(--s-3);
-  max-width: 80%;
-  background: color-mix(in srgb, var(--surface) 85%, transparent);
-  backdrop-filter: blur(8px);
+  margin: var(--s-3) auto 0;
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--r-md);
 }
@@ -427,11 +437,10 @@ p { margin: 0; }
 /* 沉浸式阅读：隐藏导航与页脚 */
 body.immersive .top { display: none; }
 body.immersive .foot { display: none; }
-body.immersive .read-toolbar { top: var(--s-3); }
 
 .reading {
   max-width: 80%;
-  margin: var(--s-5) auto;
+  margin: var(--s-4) auto var(--s-5);
   padding: var(--s-6);
   background: var(--surface);
   border: 1px solid var(--line);

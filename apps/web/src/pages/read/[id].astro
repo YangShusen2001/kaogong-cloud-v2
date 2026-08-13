@@ -9,23 +9,25 @@ export function getStaticPaths() {
 const { article } = Astro.props;
 ---
 <Base title={`${article.title} · 时政小助手`}>
-  <div class="read-toolbar">
-    <button type="button" id="font-minus" title="缩小字体">A−</button>
-    <button type="button" id="font-plus" title="放大字体">A＋</button>
-    <select id="font-select" title="字体">
-      <option value="default">默认</option>
-      <option value="serif">宋体</option>
-      <option value="kai">楷体</option>
-      <option value="hei">黑体</option>
-      <option value="shoujin">瘦金简体</option>
-    </select>
-    <button type="button" id="immersive" title="沉浸式阅读">沉浸</button>
-    <button type="button" id="fullscreen" title="全屏">⛶</button>
+  <div class="reading-head">
+    <p class="item-summary">{article.source} · {article.date} · <a href={article.url} target="_blank" rel="noopener">查看原文 ↗</a></p>
+    <h1 class="reading-title">{article.title}</h1>
+    <div class="read-toolbar">
+      <button type="button" id="font-minus" title="缩小字体">A−</button>
+      <button type="button" id="font-plus" title="放大字体">A＋</button>
+      <select id="font-select" title="字体">
+        <option value="default">默认</option>
+        <option value="serif">宋体</option>
+        <option value="kai">楷体</option>
+        <option value="hei">黑体</option>
+        <option value="shoujin">瘦金简体</option>
+      </select>
+      <button type="button" id="immersive" title="沉浸式阅读">沉浸</button>
+      <button type="button" id="fullscreen" title="全屏">⛶</button>
+    </div>
   </div>
 
   <article class="reading" id="article" data-id={article.id}>
-    <p class="item-summary">{article.source} · {article.date} · <a href={article.url} target="_blank" rel="noopener">查看原文 ↗</a></p>
-    <h1 class="reading-title">{article.title}</h1>
     {article.keySentences?.length > 0 && <blockquote>{article.keySentences[0]}</blockquote>}
     {article.paragraphs.map((p) => <p class="reading-para">{p}</p>)}
   </article>
@@ -37,8 +39,6 @@ const { article } = Astro.props;
     <button type="button" data-act="favorite">收藏</button>
     <button type="button" data-act="note">注释</button>
   </div>
-
-  <p><a href="/">← 返回首页</a></p>
 </Base>
 
 <script>
@@ -113,9 +113,18 @@ const { article } = Astro.props;
     }
     currentRange = sel.getRangeAt(0).cloneRange();
     const rect = currentRange.getBoundingClientRect();
-    toolbar.style.left = `${rect.left + rect.width / 2 - toolbar.offsetWidth / 2}px`;
-    toolbar.style.top = `${rect.top - 44}px`;
+    // 工具条定位在选区正下方，靠近鼠标悬停处
+    toolbar.style.left = `${Math.min(Math.max(rect.left + rect.width / 2 - toolbar.offsetWidth / 2, 8), window.innerWidth - toolbar.offsetWidth - 8)}px`;
+    toolbar.style.top = `${rect.bottom + 8}px`;
     toolbar.hidden = false;
+  });
+
+  // 点空白处（非工具条、非已有高亮）→ 收起工具条 + 清除选区
+  document.addEventListener("mousedown", (e) => {
+    const t = e.target as HTMLElement;
+    if (!toolbar.hidden && !toolbar.contains(t) && !t.closest("mark")) {
+      hide();
+    }
   });
 
   function wrap(style: Style): HTMLElement | null {
