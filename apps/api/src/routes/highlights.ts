@@ -1,19 +1,10 @@
 import { and, desc, eq } from "drizzle-orm";
 import { Hono } from "hono";
+import { highlightCreateSchema, type Highlight } from "@kaogong/contracts";
 import type { DB } from "../app";
 import { highlights } from "../db/schema";
 import { getDeviceId } from "../lib/device";
 import { badInput, fail } from "../lib/http";
-
-function toHighlight(row: typeof highlights.$inferSelect) {
-  return {
-    id: row.id,
-    articleId: row.articleId,
-    text: row.text,
-    note: row.note,
-    createdAt: row.createdAt,
-  };
-}
 
 export function highlightsRoutes(db: DB) {
   const r = new Hono();
@@ -24,27 +15,35 @@ export function highlightsRoutes(db: DB) {
     const rows = db.select().from(highlights)
       .where(eq(highlights.deviceId, dev))
       .orderBy(desc(highlights.createdAt)).all();
-    return c.json({ ok: true, data: rows.map(toHighlight) });
+    const data: Highlight[] = rows.map((row) => ({
+      id: row.id,
+      articleId: row.articleId,
+      text: row.text,
+      note: row.note,
+      createdAt: row.createdAt,
+    }));
+    return c.json({ ok: true, data });
   });
 
   r.post("/", async (c) => {
     const dev = getDeviceId(c);
     if (!dev) return fail(c, 400, "DEVICE_REQUIRED", "缺少设备标识");
-    let body: Record<string, unknown> = {};
-    try { body = await c.req.json(); } catch { body = {}; }
-    const articleId = typeof body.articleId === "string" ? body.articleId.trim() : "";
-    const text = typeof body.text === "string" ? body.text.trim() : "";
-    if (!articleId || !text) return badInput(c, "articleId 和 text 必填");
+    let raw: unknown = {};
+    try { raw = await c.req.json(); } catch { raw = {}; }
+    const parsed = highlightCreateSchema.safeParse(raw);
+    if (!parsed.success) return badInput(c, parsed.error.issues[0]?.message ?? "参数非法");
+    const { articleId, text, note } = parsed.data;
     const row = {
       id: crypto.randomUUID(),
       deviceId: dev,
       articleId,
       text,
-      note: typeof body.note === "string" ? body.note : "",
+      note: note ?? "",
       createdAt: Date.now(),
     };
     db.insert(highlights).values(row).run();
-    return c.json({ ok: true, data: toHighlight(row) }, 201);
+    const data: Highlight = { id: row.id, articleId, text, note: note ?? "", createdAt: row.createdAt };
+    return c.json({ ok: true, data }, 201);
   });
 
   r.delete("/:id", (c) => {

@@ -1,20 +1,10 @@
 import { and, desc, eq } from "drizzle-orm";
 import { Hono } from "hono";
+import { favoriteCreateSchema, type Favorite } from "@kaogong/contracts";
 import type { DB } from "../app";
 import { favorites } from "../db/schema";
 import { getDeviceId } from "../lib/device";
 import { badInput, fail } from "../lib/http";
-
-function toFavorite(row: typeof favorites.$inferSelect) {
-  return {
-    id: row.id,
-    url: row.url,
-    title: row.title,
-    source: row.source,
-    note: row.note,
-    createdAt: row.createdAt,
-  };
-}
 
 export function favoritesRoutes(db: DB) {
   const r = new Hono();
@@ -25,28 +15,37 @@ export function favoritesRoutes(db: DB) {
     const rows = db.select().from(favorites)
       .where(eq(favorites.deviceId, dev))
       .orderBy(desc(favorites.createdAt)).all();
-    return c.json({ ok: true, data: rows.map(toFavorite) });
+    const data: Favorite[] = rows.map((row) => ({
+      id: row.id,
+      url: row.url,
+      title: row.title,
+      source: row.source,
+      note: row.note,
+      createdAt: row.createdAt,
+    }));
+    return c.json({ ok: true, data });
   });
 
   r.post("/", async (c) => {
     const dev = getDeviceId(c);
     if (!dev) return fail(c, 400, "DEVICE_REQUIRED", "缺少设备标识");
-    let body: Record<string, unknown> = {};
-    try { body = await c.req.json(); } catch { body = {}; }
-    const url = typeof body.url === "string" ? body.url.trim() : "";
-    const title = typeof body.title === "string" ? body.title.trim() : "";
-    if (!url || !title) return badInput(c, "url 和 title 必填");
+    let raw: unknown = {};
+    try { raw = await c.req.json(); } catch { raw = {}; }
+    const parsed = favoriteCreateSchema.safeParse(raw);
+    if (!parsed.success) return badInput(c, parsed.error.issues[0]?.message ?? "参数非法");
+    const { url, title, source, note } = parsed.data;
     const row = {
       id: crypto.randomUUID(),
       deviceId: dev,
       url,
       title,
-      source: typeof body.source === "string" ? body.source : "",
-      note: typeof body.note === "string" ? body.note : "",
+      source: source ?? "",
+      note: note ?? "",
       createdAt: Date.now(),
     };
     db.insert(favorites).values(row).run();
-    return c.json({ ok: true, data: toFavorite(row) }, 201);
+    const data: Favorite = { id: row.id, url, title, source: source ?? "", note: note ?? "", createdAt: row.createdAt };
+    return c.json({ ok: true, data }, 201);
   });
 
   r.delete("/:id", (c) => {

@@ -1,26 +1,6 @@
+import type { Favorite, Highlight, PracticeRecord } from "@kaogong/contracts";
 import { describe, expect, it } from "vitest";
 import { headers, json, makeApp, readJson } from "./helpers";
-
-interface Favorite {
-  id: string;
-  url: string;
-  title: string;
-  source: string;
-  note: string;
-  createdAt: number;
-}
-interface Highlight {
-  id: string;
-  articleId: string;
-  text: string;
-  note: string;
-  createdAt: number;
-}
-interface Practice {
-  date: string;
-  correct: number;
-  total: number;
-}
 
 describe("favorites", () => {
   it("创建后能按设备列出", async () => {
@@ -77,7 +57,7 @@ describe("practice", () => {
     await app.request("/api/practice", json("POST", { date: "2026-08-12", correct: 3, total: 5 }));
     await app.request("/api/practice", json("POST", { date: "2026-08-12", correct: 5, total: 5 }));
     const list = await app.request("/api/practice", { headers: headers() });
-    const data = (await readJson<Practice[]>(list)).data;
+    const data = (await readJson<PracticeRecord[]>(list)).data;
     expect(data).toHaveLength(1);
     expect(data[0]?.correct).toBe(5);
   });
