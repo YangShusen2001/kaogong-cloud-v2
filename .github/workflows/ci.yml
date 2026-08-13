@@ -1,0 +1,43 @@
+# CI 门禁：每次 push / PR 自动跑 typecheck + test + build
+# 不部署（部署需要 Cloudflare 密钥，见 docs/deployment.md，后续单独加 deploy 工作流）
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+      - name: 类型检查（contracts + api）
+        run: pnpm -r typecheck
+      - name: 前端类型检查（astro check）
+        run: pnpm --filter @kaogong/web check
+      - name: 测试（api + web vitest）
+        run: pnpm -r test
+      - name: 构建（web astro build）
+        run: pnpm -r build
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装管道依赖
+        run: pip install -e "./pipeline[dev]"
+      - name: 单元测试
+        run: pytest pipeline/tests -q
