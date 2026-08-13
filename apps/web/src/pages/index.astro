@@ -18,6 +18,19 @@ const carouselItems = latest
       };
     })
   : [];
+
+// 今日时政：扁平化 + 序号，样式与历史材料统一
+const todayItems = latest
+  ? latest.sections.flatMap((s) =>
+      s.items.map((it) => ({
+        title: it.title,
+        date: it.date,
+        section: s.title,
+        href: clipMap.has(it.sourceUrl) ? `/read/${clipMap.get(it.sourceUrl)}/` : it.sourceUrl,
+        external: !clipMap.has(it.sourceUrl),
+      })),
+    )
+  : [];
 ---
 <Base title="每日时政">
   {latest && (
@@ -42,23 +55,17 @@ const carouselItems = latest
   {latest && (
     <section class="card">
       <h2>今日时政 · {latest.date}</h2>
-      {latest.sections.map((s) => (
-        <div class="section">
-          <h3>{s.title}</h3>
-          {s.items.map((it) => (
-            <div class="item">
-              {clipMap.has(it.sourceUrl) ? (
-                <a href={`/read/${clipMap.get(it.sourceUrl)}/`}>{it.title}</a>
-              ) : (
-                <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
-              )}
-              <span class="item-date">{it.date}</span>
-              {it.summary && <p class="item-summary">{it.summary}</p>}
-              {it.quotes?.map((q) => <blockquote>{q}</blockquote>)}
-            </div>
-          ))}
-        </div>
-      ))}
+      <div class="day-list">
+        {todayItems.map((it, i) => (
+          <a class="day-row" href={it.href} {...(it.external ? { target: "_blank", rel: "noopener" } : {})}>
+            <span class="day-num">{String(i + 1).padStart(2, "0")}</span>
+            <span class="day-date">{it.date}</span>
+            <span class="day-title">{it.title}</span>
+            <span class="item-sec">{it.section}</span>
+            <span class="day-arrow">›</span>
+          </a>
+        ))}
+      </div>
     </section>
   )}
 
