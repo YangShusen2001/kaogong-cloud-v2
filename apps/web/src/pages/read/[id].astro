@@ -12,18 +12,21 @@ const { article } = Astro.props;
   <div class="reading-head">
     <p class="item-summary">{article.source} · {article.date} · <a href={article.url} target="_blank" rel="noopener">查看原文 ↗</a></p>
     <h1 class="reading-title">{article.title}</h1>
-    <div class="read-toolbar">
-      <button type="button" id="font-minus" title="缩小字体">A−</button>
-      <button type="button" id="font-plus" title="放大字体">A＋</button>
-      <select id="font-select" title="字体">
-        <option value="default">默认</option>
-        <option value="serif">宋体</option>
-        <option value="kai">楷体</option>
-        <option value="hei">黑体</option>
-        <option value="shoujin">瘦金简体</option>
-      </select>
-      <button type="button" id="immersive" title="沉浸式阅读">沉浸</button>
-      <button type="button" id="fullscreen" title="全屏">⛶</button>
+    <div class="read-actions">
+      <button type="button" class="read-fav" id="read-fav" data-title={article.title} data-url={article.url}>☆ 收藏本文</button>
+      <div class="read-toolbar">
+        <button type="button" id="font-minus" title="缩小字体">A−</button>
+        <button type="button" id="font-plus" title="放大字体">A＋</button>
+        <select id="font-select" title="字体">
+          <option value="default">默认</option>
+          <option value="serif">宋体</option>
+          <option value="kai">楷体</option>
+          <option value="hei">黑体</option>
+          <option value="shoujin">瘦金简体</option>
+        </select>
+        <button type="button" id="immersive" title="沉浸式阅读">沉浸</button>
+        <button type="button" id="fullscreen" title="全屏">⛶</button>
+      </div>
     </div>
   </div>
 
@@ -90,6 +93,15 @@ const { article } = Astro.props;
   document.getElementById("fullscreen")!.addEventListener("click", () => {
     if (document.fullscreenElement) document.exitFullscreen();
     else document.documentElement.requestFullscreen();
+  });
+
+  const favBtn = document.getElementById("read-fav") as HTMLButtonElement;
+  favBtn.addEventListener("click", async () => {
+    const url = favBtn.dataset.url || "";
+    const title = favBtn.dataset.title || "";
+    const env = await api.addFavorite({ url, title });
+    favBtn.textContent = env.ok ? "★ 已收藏" : "☆ 收藏失败";
+    favBtn.disabled = env.ok;
   });
 
   // ===== 划词高亮 =====

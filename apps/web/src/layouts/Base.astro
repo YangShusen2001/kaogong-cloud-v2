@@ -19,12 +19,13 @@ const {
     <title>{title}</title>
   </head>
   <body>
-    <header class="top">
+    <header class="top" id="top">
       <a class="logo" href="/">
         <img class="logo-img" src="/logo.png" alt="每日时政" />
       </a>
       <div class="top-in">
-        <nav class="nav">
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-label="菜单">☰</button>
+        <nav class="nav" id="nav">
           <a href="/">首页</a>
           <a href="/search/">搜索</a>
           <a href="/favorites/">收藏</a>
@@ -56,6 +57,14 @@ const {
           });
           box.append(link, btn);
         }
+      }
+
+      // 下滑收起导航，悬停展开
+      const topEl = document.getElementById("top");
+      if (topEl) {
+        const onScroll = () => topEl.classList.toggle("collapsed", window.scrollY > 140);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
       }
     </script>
   </body>
