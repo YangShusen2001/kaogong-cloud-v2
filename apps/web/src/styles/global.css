@@ -88,6 +88,7 @@ p { margin: 0; }
   font-weight: 700;
   letter-spacing: 0.04em;
 }
+.logo-img { height: 34px; width: auto; display: block; }
 .logo-mark {
   width: 30px;
   height: 30px;
@@ -361,6 +362,32 @@ p { margin: 0; }
   border-radius: var(--r-sm);
   font-size: 14px;
 }
+
+/* ===== 个人中心 ===== */
+.profile-head { display: flex; align-items: center; gap: var(--s-3); margin-bottom: var(--s-4); }
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+.avatar-picker { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+.avatar-opt {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 22px;
+}
+.avatar-opt.on { border-color: var(--primary); background: var(--primary-soft); }
+.sub-row { display: flex; align-items: center; gap: var(--s-2); font-size: 14px; color: var(--sub); }
+.sub-row input { width: auto; height: auto; margin: 0; }
 
 /* ===== 阅读页 ===== */
 .read-toolbar {

@@ -10,6 +10,8 @@ import type {
   Highlight,
   HighlightCreate,
   PracticeRecord,
+  Profile,
+  ProfileUpdate,
 } from "@kaogong/contracts";
 import { getToken } from "./auth";
 import { getDeviceId } from "./device";
@@ -56,6 +58,9 @@ export function createApi(base: string, deviceId: () => string) {
     login: (body: Credentials) =>
       request<AuthResponse>("/api/auth/login", { method: "POST", body: JSON.stringify(body) }),
     me: () => request<AuthUser>("/api/auth/me"),
+    getProfile: () => request<Profile>("/api/profile"),
+    updateProfile: (body: ProfileUpdate) =>
+      request<Profile>("/api/profile", { method: "POST", body: JSON.stringify(body) }),
   };
 }
 

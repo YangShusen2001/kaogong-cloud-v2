@@ -36,11 +36,15 @@ export const practice = sqliteTable(
   }),
 );
 
-// 用户：用户名 + PBKDF2 哈希密码（永不存明文）
+// 用户：用户名 + PBKDF2 哈希密码（永不存明文）+ 个人资料
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
   username: text("username").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   salt: text("salt").notNull(),
+  email: text("email").notNull().default(""),
+  name: text("name").notNull().default(""),
+  avatar: text("avatar").notNull().default(""),
+  subscribed: integer("subscribed").notNull().default(0), // 0/1 订阅 QQ 邮箱通知
   createdAt: integer("created_at").notNull(), // unix 毫秒
 });

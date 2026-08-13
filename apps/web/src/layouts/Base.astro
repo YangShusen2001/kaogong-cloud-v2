@@ -22,7 +22,7 @@ const {
     <header class="top">
       <div class="top-in">
         <a class="logo" href="/">
-          <span class="logo-text">每日时政</span>
+          <img class="logo-img" src="/logo.png" alt="每日时政" />
         </a>
         <nav class="nav">
           <a href="/">首页</a>
@@ -43,8 +43,9 @@ const {
         const name = tokenUsername();
         if (name) {
           box.textContent = "";
-          const span = document.createElement("span");
-          span.textContent = name;
+          const link = document.createElement("a");
+          link.href = "/profile/";
+          link.textContent = name;
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "nav-logout";
@@ -53,7 +54,7 @@ const {
             clearToken();
             location.reload();
           });
-          box.append(span, btn);
+          box.append(link, btn);
         }
       }
     </script>

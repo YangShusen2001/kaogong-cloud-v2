@@ -81,6 +81,8 @@ export type ExplainResponse = z.infer<typeof explainResponseSchema>;
 export const credentialsSchema = z.object({
   username: z.string().min(2).max(32).regex(/^[a-zA-Z0-9_-]+$/, "用户名只能含字母数字下划线"),
   password: z.string().min(8).max(64),
+  email: z.string().max(64).optional(), // QQ 邮箱，用于订阅通知
+  name: z.string().max(32).optional(),  // 姓名
 });
 export type Credentials = z.infer<typeof credentialsSchema>;
 
@@ -95,3 +97,21 @@ export const authResponseSchema = z.object({
   user: authUserSchema,
 });
 export type AuthResponse = z.infer<typeof authResponseSchema>;
+
+// —— 个人资料 ——
+export const profileSchema = z.object({
+  username: z.string(),
+  name: z.string(),
+  email: z.string(),
+  avatar: z.string(),
+  subscribed: z.boolean(),
+});
+export type Profile = z.infer<typeof profileSchema>;
+
+export const profileUpdateSchema = z.object({
+  name: z.string().max(32).optional(),
+  email: z.string().max(64).optional(),
+  avatar: z.string().max(8).optional(),
+  subscribed: z.boolean().optional(),
+});
+export type ProfileUpdate = z.infer<typeof profileUpdateSchema>;

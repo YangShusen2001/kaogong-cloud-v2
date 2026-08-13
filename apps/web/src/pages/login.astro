@@ -13,6 +13,14 @@ import Base from "../layouts/Base.astro";
         密码
         <input id="password" type="password" autocomplete="current-password" required minlength="8" />
       </label>
+      <label class="reg-only" hidden>
+        QQ 邮箱（用于订阅通知，可选）
+        <input id="email" type="email" placeholder="123456@qq.com" />
+      </label>
+      <label class="reg-only" hidden>
+        姓名（可选）
+        <input id="name" type="text" maxlength="32" />
+      </label>
       <p id="auth-error" class="auth-error" hidden></p>
       <div class="auth-actions">
         <button type="submit" class="btn btn--solid" id="auth-submit">登录</button>
@@ -24,6 +32,7 @@ import Base from "../layouts/Base.astro";
 </Base>
 
 <script>
+  import type { Credentials } from "@kaogong/contracts";
   import { api } from "../lib/api";
   import { setToken } from "../lib/auth";
 
@@ -35,6 +44,8 @@ import Base from "../layouts/Base.astro";
   const err = document.getElementById("auth-error")!;
   const username = document.getElementById("username") as HTMLInputElement;
   const password = document.getElementById("password") as HTMLInputElement;
+  const email = document.getElementById("email") as HTMLInputElement;
+  const name = document.getElementById("name") as HTMLInputElement;
 
   function setMode(m: "login" | "register") {
     mode = m;
@@ -42,13 +53,20 @@ import Base from "../layouts/Base.astro";
     submit.textContent = m === "login" ? "登录" : "注册";
     toggle.textContent = m === "login" ? "去注册" : "去登录";
     err.hidden = true;
+    document.querySelectorAll(".reg-only").forEach((el) => {
+      (el as HTMLElement).hidden = m !== "register";
+    });
   }
 
   toggle.addEventListener("click", () => setMode(mode === "login" ? "register" : "login"));
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const body = { username: username.value.trim(), password: password.value };
+    const body: Credentials = { username: username.value.trim(), password: password.value };
+    if (mode === "register") {
+      if (email.value.trim()) body.email = email.value.trim();
+      if (name.value.trim()) body.name = name.value.trim();
+    }
     const env = mode === "login" ? await api.login(body) : await api.register(body);
     if (env.ok && env.data) {
       setToken(env.data.token);

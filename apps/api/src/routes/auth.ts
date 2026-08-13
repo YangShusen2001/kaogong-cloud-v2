@@ -23,12 +23,21 @@ export function authRoutes(db: DB, config: AppConfig) {
     try { body = await c.req.json(); } catch { body = {}; }
     const parsed = credentialsSchema.safeParse(body);
     if (!parsed.success) return badInput(c, parsed.error.issues[0]?.message ?? "参数非法");
-    const { username, password } = parsed.data;
+    const { username, password, email, name } = parsed.data;
     const existing = db.select().from(users).where(eq(users.username, username)).get();
     if (existing) return fail(c, 409, "USERNAME_TAKEN", "用户名已存在");
     const { hash, salt } = await hashPassword(password);
     const id = crypto.randomUUID();
-    db.insert(users).values({ id, username, passwordHash: hash, salt, createdAt: Date.now() }).run();
+    db.insert(users).values({
+      id,
+      username,
+      passwordHash: hash,
+      salt,
+      email: email ?? "",
+      name: name ?? "",
+      avatar: "😀",
+      createdAt: Date.now(),
+    }).run();
     const token = await signToken(id, username, secret);
     return c.json({ ok: true, data: { token, user: { id, username } } }, 201);
   });

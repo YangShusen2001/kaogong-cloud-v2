@@ -1,0 +1,55 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="个人中心 · 每日时政">
+  <section class="card auth-card">
+    <h2>个人中心</h2>
+    <div id="profile-box"><p class="item-summary">加载中…</p></div>
+  </section>
+</Base>
+
+<script>
+  import { api } from "../lib/api";
+
+  const esc = (s: string): string =>
+    String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] ?? c));
+  const AVATARS = ["😀", "😎", "🤓", "🐱", "🐼", "🦊", "🦁", "🐯"];
+  const box = document.getElementById("profile-box")!;
+
+  const env = await api.getProfile();
+  if (!env.ok || !env.data) {
+    box.innerHTML = '<p>未登录，请先 <a href="/login/">登录</a>。</p>';
+  } else {
+    const p = env.data;
+    box.innerHTML = `
+      <div class="profile-head">
+        <span class="profile-avatar">${p.avatar || "😀"}</span>
+        <div><b>${esc(p.username)}</b><p class="item-summary">${esc(p.email) || "未绑定邮箱"}</p></div>
+      </div>
+      <div class="auth-form">
+        <label>姓名<input id="p-name" value="${esc(p.name)}" maxlength="32" /></label>
+        <label>QQ 邮箱<input id="p-email" type="email" value="${esc(p.email)}" placeholder="用于订阅通知" /></label>
+        <label>头像
+          <div class="avatar-picker">${AVATARS.map((a) => `<button type="button" class="avatar-opt ${a === p.avatar ? "on" : ""}" data-a="${a}">${a}</button>`).join("")}</div>
+        </label>
+        <label class="sub-row"><input type="checkbox" id="p-sub" ${p.subscribed ? "checked" : ""} /> 订阅 QQ 邮箱通知（每日时政摘要）</label>
+        <div class="auth-actions"><button type="button" class="btn btn--solid" id="p-save">保存</button></div>
+        <p id="p-msg" class="item-summary"></p>
+      </div>
+    `;
+    box.querySelectorAll(".avatar-opt").forEach((b) => {
+      b.addEventListener("click", () => {
+        box.querySelectorAll(".avatar-opt").forEach((x) => x.classList.remove("on"));
+        b.classList.add("on");
+      });
+    });
+    document.getElementById("p-save")!.addEventListener("click", async () => {
+      const name = (document.getElementById("p-name") as HTMLInputElement).value.trim();
+      const email = (document.getElementById("p-email") as HTMLInputElement).value.trim();
+      const sub = (document.getElementById("p-sub") as HTMLInputElement).checked;
+      const avatar = box.querySelector(".avatar-opt.on")?.getAttribute("data-a") || "😀";
+      const res = await api.updateProfile({ name, email, avatar, subscribed: sub });
+      document.getElementById("p-msg")!.textContent = res.ok ? "已保存" : (res.error?.message ?? "保存失败");
+    });
+  }
+</script>
