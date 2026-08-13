@@ -1,0 +1,9 @@
+name = "kaogong-api"
+main = "src/index.ts"
+compatibility_date = "2026-08-13"
+
+# D1 数据库绑定（部署时把 database_id 换成 Cloudflare 控制台里的真实 id）
+[[d1_databases]]
+binding = "DB"
+database_name = "kaogong-db"
+database_id = "REPLACE_ME"

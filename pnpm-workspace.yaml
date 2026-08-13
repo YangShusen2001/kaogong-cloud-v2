@@ -4,6 +4,10 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+# pnpm 11 默认不跑依赖的 postinstall 脚本（供应链安全），这里显式批准需要构建/下载二进制的依赖
 allowBuilds:
-  esbuild: set this to true or false
-  sharp: set this to true or false
+  better-sqlite3: true
+  esbuild: true
+  sharp: true
+  workerd: true
