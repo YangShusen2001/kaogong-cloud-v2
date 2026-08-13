@@ -3,14 +3,14 @@ import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { fileURLToPath } from "node:url";
-import { createApp } from "../src/app";
+import { createApp, type AppConfig } from "../src/app";
 import * as schema from "../src/db/schema";
 
-export function makeApp() {
+export function makeApp(config: AppConfig = {}) {
   const sqlite = new Database(":memory:");
   const db = drizzle(sqlite, { schema });
   migrate(db, { migrationsFolder: fileURLToPath(new URL("../drizzle", import.meta.url)) });
-  return createApp(db);
+  return createApp(db, config);
 }
 
 export const DEVICE = "test-device-1234";

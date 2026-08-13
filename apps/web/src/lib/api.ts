@@ -1,5 +1,5 @@
 // 类型化 API 客户端：自动带 X-Device-Id 头，响应类型来自 @kaogong/contracts。
-import type { ApiError, Favorite, FavoriteCreate, Highlight, PracticeRecord } from "@kaogong/contracts";
+import type { ApiError, ExplainResponse, Favorite, FavoriteCreate, Highlight, PracticeRecord } from "@kaogong/contracts";
 import { getDeviceId } from "./device";
 
 export interface Envelope<T> {
@@ -35,6 +35,8 @@ export function createApi(base: string, deviceId: () => string) {
       request<Highlight>("/api/highlights", { method: "POST", body: JSON.stringify(body) }),
     submitPractice: (body: PracticeRecord) =>
       request<PracticeRecord>("/api/practice", { method: "POST", body: JSON.stringify(body) }),
+    explain: (text: string) =>
+      request<ExplainResponse>("/api/explain", { method: "POST", body: JSON.stringify({ text }) }),
   };
 }
 

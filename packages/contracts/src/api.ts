@@ -60,3 +60,14 @@ export type PracticeRecord = z.infer<typeof practiceRecordSchema>;
 /** 每日一练提交体与记录同构。 */
 export const practiceSubmitSchema = practiceRecordSchema;
 export type PracticeSubmit = z.infer<typeof practiceSubmitSchema>;
+
+// —— 划线 AI 解释 ——
+export const explainRequestSchema = z.object({
+  text: z.string().min(1).max(500),
+});
+export type ExplainRequest = z.infer<typeof explainRequestSchema>;
+
+export const explainResponseSchema = z.object({
+  explanation: z.string(),
+});
+export type ExplainResponse = z.infer<typeof explainResponseSchema>;

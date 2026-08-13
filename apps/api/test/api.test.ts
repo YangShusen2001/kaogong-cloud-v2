@@ -1,6 +1,8 @@
 import type { Favorite, Highlight, PracticeRecord } from "@kaogong/contracts";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { headers, json, makeApp, readJson } from "./helpers";
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe("favorites", () => {
   it("创建后能按设备列出", async () => {
@@ -74,5 +76,29 @@ describe("ping", () => {
     const app = makeApp();
     const res = await app.request("/api/ping");
     expect((await readJson<string>(res)).data).toBe("pong");
+  });
+});
+
+describe("explain", () => {
+  it("调用 DeepSeek 返回解释", async () => {
+    const app = makeApp({ deepseekKey: "k" });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        new Response(
+          JSON.stringify({ choices: [{ message: { content: "这句指高质量发展是首要任务。" } }] }),
+          { headers: { "content-type": "application/json" } },
+        ),
+      ),
+    );
+    const res = await app.request("/api/explain", json("POST", { text: "高质量发展" }));
+    expect(res.status).toBe(200);
+    expect((await readJson<{ explanation: string }>(res)).data.explanation).toContain("高质量发展");
+  });
+
+  it("未配置 key 返回 503", async () => {
+    const app = makeApp();
+    const res = await app.request("/api/explain", json("POST", { text: "高质量发展" }));
+    expect(res.status).toBe(503);
   });
 });

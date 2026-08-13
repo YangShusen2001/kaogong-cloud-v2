@@ -232,6 +232,16 @@ p { margin: 0; }
 .q-analysis { margin-top: var(--s-2); color: var(--sub); font-size: 14px; }
 @media (max-width: 640px) { .q-options { grid-template-columns: 1fr; } }
 
+.quote-item { margin-bottom: var(--s-3); }
+.explain-result {
+  margin-top: var(--s-2);
+  padding: var(--s-2) var(--s-3);
+  background: var(--primary-soft);
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  font-size: 14px;
+}
+
 /* ===== 搜索 ===== */
 .search-input {
   width: 100%;

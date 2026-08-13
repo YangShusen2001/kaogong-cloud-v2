@@ -24,7 +24,13 @@ const { digest } = Astro.props;
             <span class="item-date">{it.date}</span>
             <button type="button" class="fav-btn" data-url={it.sourceUrl} data-title={it.title}>收藏</button>
             {it.summary && <p class="item-summary">{it.summary}</p>}
-            {it.quotes?.map((q) => <blockquote>{q}</blockquote>)}
+            {it.quotes?.map((q) => (
+              <div class="quote-item">
+                <blockquote>{q}</blockquote>
+                <button type="button" class="fav-btn explain-btn" data-text={q}>解释</button>
+                <p class="explain-result" hidden></p>
+              </div>
+            ))}
           </div>
         ))}
       </section>
@@ -36,13 +42,29 @@ const { digest } = Astro.props;
 <script>
   import { api } from "../../lib/api";
 
-  document.querySelectorAll<HTMLButtonElement>(".fav-btn").forEach((btn) => {
+  document.querySelectorAll<HTMLButtonElement>(".fav-btn[data-url]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const url = btn.dataset.url || "";
       const title = btn.dataset.title || "";
       const env = await api.addFavorite({ url, title });
       btn.textContent = env.ok ? "已收藏 ✓" : "收藏失败";
       btn.disabled = env.ok;
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>(".explain-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const text = btn.dataset.text || "";
+      const result = btn.nextElementSibling as HTMLElement | null;
+      btn.textContent = "解释中…";
+      btn.disabled = true;
+      const env = await api.explain(text);
+      btn.textContent = "解释";
+      btn.disabled = false;
+      if (result) {
+        result.hidden = false;
+        result.textContent = env.ok && env.data ? env.data.explanation : "解释失败";
+      }
     });
   });
 </script>
