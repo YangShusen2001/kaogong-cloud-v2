@@ -19,9 +19,9 @@ export function createApp(db: DB, config: AppConfig = {}) {
   const app = new Hono();
   app.get("/api/ping", (c) => c.json({ ok: true, data: "pong" }));
   app.route("/api/auth", authRoutes(db, config));
-  app.route("/api/favorites", favoritesRoutes(db));
-  app.route("/api/highlights", highlightsRoutes(db));
-  app.route("/api/practice", practiceRoutes(db));
+  app.route("/api/favorites", favoritesRoutes(db, config));
+  app.route("/api/highlights", highlightsRoutes(db, config));
+  app.route("/api/practice", practiceRoutes(db, config));
   app.route("/api/explain", explainRoutes(config));
   return app;
 }

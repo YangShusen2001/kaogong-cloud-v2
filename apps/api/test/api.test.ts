@@ -145,3 +145,33 @@ describe("auth", () => {
     expect(res.status).toBe(401);
   });
 });
+
+describe("账号同步", () => {
+  it("登录后收藏随账号走（跨设备同步，匿名隔离）", async () => {
+    const app = makeApp({ authSecret: "test-secret" });
+    const reg = await app.request("/api/auth/register", json("POST", { username: "bob", password: "password123" }));
+    const token = (await readJson<AuthData>(reg)).data.token;
+
+    const authHeaders = {
+      "x-device-id": "device-A",
+      authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    };
+    const add = await app.request("/api/favorites", {
+      method: "POST",
+      headers: authHeaders,
+      body: JSON.stringify({ url: "u1", title: "t1" }),
+    });
+    expect(add.status).toBe(201);
+
+    // 换个设备（device-B），仍带同一 token → 能看到（跨设备同步）
+    const list = await app.request("/api/favorites", {
+      headers: { "x-device-id": "device-B", authorization: `Bearer ${token}` },
+    });
+    expect((await readJson<Favorite[]>(list)).data).toHaveLength(1);
+
+    // 匿名（无 token）看不到账号数据
+    const anon = await app.request("/api/favorites", { headers: { "x-device-id": "device-B" } });
+    expect((await readJson<Favorite[]>(anon)).data).toHaveLength(0);
+  });
+});

@@ -1,19 +1,19 @@
 import { and, desc, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { favoriteCreateSchema, type Favorite } from "@kaogong/contracts";
-import type { DB } from "../app";
+import type { AppConfig, DB } from "../app";
 import { favorites } from "../db/schema";
-import { getDeviceId } from "../lib/device";
+import { resolveOwnerId } from "../lib/identity";
 import { badInput, fail } from "../lib/http";
 
-export function favoritesRoutes(db: DB) {
+export function favoritesRoutes(db: DB, config: AppConfig) {
   const r = new Hono();
 
-  r.get("/", (c) => {
-    const dev = getDeviceId(c);
-    if (!dev) return fail(c, 400, "DEVICE_REQUIRED", "缺少设备标识");
+  r.get("/", async (c) => {
+    const owner = await resolveOwnerId(c, config.authSecret ?? "");
+    if (!owner) return fail(c, 400, "IDENTITY_REQUIRED", "缺少身份标识");
     const rows = db.select().from(favorites)
-      .where(eq(favorites.deviceId, dev))
+      .where(eq(favorites.ownerId, owner))
       .orderBy(desc(favorites.createdAt)).all();
     const data: Favorite[] = rows.map((row) => ({
       id: row.id,
@@ -27,8 +27,8 @@ export function favoritesRoutes(db: DB) {
   });
 
   r.post("/", async (c) => {
-    const dev = getDeviceId(c);
-    if (!dev) return fail(c, 400, "DEVICE_REQUIRED", "缺少设备标识");
+    const owner = await resolveOwnerId(c, config.authSecret ?? "");
+    if (!owner) return fail(c, 400, "IDENTITY_REQUIRED", "缺少身份标识");
     let raw: unknown = {};
     try { raw = await c.req.json(); } catch { raw = {}; }
     const parsed = favoriteCreateSchema.safeParse(raw);
@@ -36,7 +36,7 @@ export function favoritesRoutes(db: DB) {
     const { url, title, source, note } = parsed.data;
     const row = {
       id: crypto.randomUUID(),
-      deviceId: dev,
+      ownerId: owner,
       url,
       title,
       source: source ?? "",
@@ -48,11 +48,11 @@ export function favoritesRoutes(db: DB) {
     return c.json({ ok: true, data }, 201);
   });
 
-  r.delete("/:id", (c) => {
-    const dev = getDeviceId(c);
-    if (!dev) return fail(c, 400, "DEVICE_REQUIRED", "缺少设备标识");
+  r.delete("/:id", async (c) => {
+    const owner = await resolveOwnerId(c, config.authSecret ?? "");
+    if (!owner) return fail(c, 400, "IDENTITY_REQUIRED", "缺少身份标识");
     const id = c.req.param("id");
-    db.delete(favorites).where(and(eq(favorites.id, id), eq(favorites.deviceId, dev))).run();
+    db.delete(favorites).where(and(eq(favorites.id, id), eq(favorites.ownerId, owner))).run();
     return c.json({ ok: true, data: null });
   });
 

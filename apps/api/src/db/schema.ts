@@ -4,7 +4,7 @@ import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 export const favorites = sqliteTable("favorites", {
   id: text("id").primaryKey(),
-  deviceId: text("device_id").notNull(),
+  ownerId: text("owner_id").notNull(), // 登录=userId，匿名=设备id
   url: text("url").notNull(),
   title: text("title").notNull(),
   source: text("source").notNull().default(""),
@@ -14,7 +14,7 @@ export const favorites = sqliteTable("favorites", {
 
 export const highlights = sqliteTable("highlights", {
   id: text("id").primaryKey(),
-  deviceId: text("device_id").notNull(),
+  ownerId: text("owner_id").notNull(), // 登录=userId，匿名=设备id
   articleId: text("article_id").notNull(),
   text: text("text").notNull(),
   note: text("note").notNull().default(""),
@@ -22,17 +22,17 @@ export const highlights = sqliteTable("highlights", {
   createdAt: integer("created_at").notNull(), // unix 毫秒
 });
 
-// 每日一练：每个设备每天一条（复合主键），重复提交即覆盖
+// 每日一练：每个归属每天一条（复合主键），重复提交即覆盖
 export const practice = sqliteTable(
   "practice",
   {
-    deviceId: text("device_id").notNull(),
+    ownerId: text("owner_id").notNull(),
     date: text("date").notNull(), // "YYYY-MM-DD"
     correct: integer("correct").notNull(),
     total: integer("total").notNull(),
   },
   (t) => ({
-    pk: primaryKey({ columns: [t.deviceId, t.date] }),
+    pk: primaryKey({ columns: [t.ownerId, t.date] }),
   }),
 );
 
