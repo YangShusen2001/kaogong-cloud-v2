@@ -231,6 +231,21 @@ p { margin: 0; }
 .q-opt.wrong { border-color: var(--red); background: var(--red-soft); }
 .q-analysis { margin-top: var(--s-2); color: var(--sub); font-size: 14px; }
 @media (max-width: 640px) { .q-options { grid-template-columns: 1fr; } }
+
+/* ===== 搜索 ===== */
+.search-input {
+  width: 100%;
+  max-width: 560px;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+  margin-bottom: var(--s-3);
+}
+.search-input:focus { outline: 2px solid var(--primary); border-color: transparent; }
 blockquote {
   margin: var(--s-2) 0 0;
   padding: var(--s-3) var(--s-4);
