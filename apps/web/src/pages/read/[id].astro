@@ -9,6 +9,20 @@ export function getStaticPaths() {
 const { article } = Astro.props;
 ---
 <Base title={`${article.title} · 时政小助手`}>
+  <div class="read-toolbar">
+    <button type="button" id="font-minus" title="缩小字体">A−</button>
+    <button type="button" id="font-plus" title="放大字体">A＋</button>
+    <select id="font-select" title="字体">
+      <option value="default">默认</option>
+      <option value="serif">宋体</option>
+      <option value="kai">楷体</option>
+      <option value="hei">黑体</option>
+      <option value="shoujin">瘦金简体</option>
+    </select>
+    <button type="button" id="immersive" title="沉浸式阅读">沉浸</button>
+    <button type="button" id="fullscreen" title="全屏">⛶</button>
+  </div>
+
   <article class="reading" id="article" data-id={article.id}>
     <p class="item-summary">{article.source} · {article.date}</p>
     <h1 class="reading-title">{article.title}</h1>
@@ -38,6 +52,48 @@ const { article } = Astro.props;
   const articleId = articleEl.dataset.id || "";
   let currentRange: Range | null = null;
 
+  // ===== 字体 / 沉浸 / 全屏 =====
+  const FONT_SIZE_KEY = "kaogong.read.fontsize";
+  const FONT_NAME_KEY = "kaogong.read.font";
+  const FONTS: Record<string, string> = {
+    default: "var(--font)",
+    serif: "var(--font-serif)",
+    kai: '"KaiTi", "楷体", "STKaiti", serif',
+    hei: '"SimHei", "黑体", "Microsoft YaHei", sans-serif',
+    shoujin: '"瘦金简体", "汉仪瘦金书简", "ShouJinTi", "STKaiti", serif',
+  };
+
+  let fontSize = Number(localStorage.getItem(FONT_SIZE_KEY)) || 17;
+  function setFontSize(n: number) {
+    fontSize = Math.min(26, Math.max(13, n));
+    articleEl.style.fontSize = `${fontSize}px`;
+    localStorage.setItem(FONT_SIZE_KEY, String(fontSize));
+  }
+  setFontSize(fontSize);
+
+  function setFont(name: string) {
+    articleEl.style.fontFamily = FONTS[name] || FONTS.default!;
+    localStorage.setItem(FONT_NAME_KEY, name);
+  }
+  const savedFont = localStorage.getItem(FONT_NAME_KEY);
+  if (savedFont) {
+    (document.getElementById("font-select") as HTMLSelectElement).value = savedFont;
+    setFont(savedFont);
+  }
+
+  document.getElementById("font-minus")!.addEventListener("click", () => setFontSize(fontSize - 1));
+  document.getElementById("font-plus")!.addEventListener("click", () => setFontSize(fontSize + 1));
+  document.getElementById("font-select")!.addEventListener("change", (e) => setFont((e.target as HTMLSelectElement).value));
+  document.getElementById("immersive")!.addEventListener("click", (e) => {
+    document.body.classList.toggle("immersive");
+    (e.target as HTMLButtonElement).textContent = document.body.classList.contains("immersive") ? "退出" : "沉浸";
+  });
+  document.getElementById("fullscreen")!.addEventListener("click", () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  });
+
+  // ===== 划词高亮 =====
   const hide = () => {
     toolbar.hidden = true;
     currentRange = null;
@@ -126,19 +182,20 @@ const { article } = Astro.props;
     hide();
   });
 
-  // 加载已有划线并回填到正文
+  // 回填已有划线：用 TreeWalker 遍历所有文本节点（含 mark 内），偏移才正确
   function applyHighlight(text: string, style: Style) {
     const ps = articleEl.querySelectorAll(".reading-para");
     for (const p of ps) {
       const idx = p.textContent?.indexOf(text) ?? -1;
       if (idx === -1) continue;
-      const range = document.createRange();
+      const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT);
       let start = 0;
-      for (const node of Array.from(p.childNodes)) {
-        if (node.nodeType !== Node.TEXT_NODE) continue;
+      let node: Node | null;
+      while ((node = walker.nextNode())) {
         const len = node.textContent?.length ?? 0;
         const end = start + len;
         if (start <= idx && idx + text.length <= end) {
+          const range = document.createRange();
           range.setStart(node, idx - start);
           range.setEnd(node, idx - start + text.length);
           const mark = document.createElement("mark");

@@ -22,12 +22,12 @@ const clipMap = new Map(listArticles().map((a) => [a.url, a.id]));
         <h2>{s.title}</h2>
         {s.items.map((it) => (
           <div class="item">
-            <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
-            <span class="item-date">{it.date}</span>
-            <button type="button" class="fav-btn" data-url={it.sourceUrl} data-title={it.title}>收藏</button>
-            {clipMap.has(it.sourceUrl) && (
-              <a class="read-link" href={`/read/${clipMap.get(it.sourceUrl)}/`}>阅读全文 →</a>
+            {clipMap.has(it.sourceUrl) ? (
+              <a href={`/read/${clipMap.get(it.sourceUrl)}/`}>{it.title}</a>
+            ) : (
+              <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
             )}
+            <span class="item-date">{it.date}</span>
             {it.summary && <p class="item-summary">{it.summary}</p>}
             {it.quotes?.map((q) => (
               <div class="quote-item">
@@ -46,16 +46,6 @@ const clipMap = new Map(listArticles().map((a) => [a.url, a.id]));
 
 <script>
   import { api } from "../../lib/api";
-
-  document.querySelectorAll<HTMLButtonElement>(".fav-btn[data-url]").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const url = btn.dataset.url || "";
-      const title = btn.dataset.title || "";
-      const env = await api.addFavorite({ url, title });
-      btn.textContent = env.ok ? "已收藏 ✓" : "收藏失败";
-      btn.disabled = env.ok;
-    });
-  });
 
   document.querySelectorAll<HTMLButtonElement>(".explain-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {

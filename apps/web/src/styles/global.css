@@ -67,7 +67,7 @@ p { margin: 0; }
   border-bottom: 1px solid var(--line);
 }
 .top-in {
-  max-width: 960px;
+  max-width: 80%;
   margin: 0 auto;
   padding: 0 var(--s-4);
   height: 58px;
@@ -102,9 +102,9 @@ p { margin: 0; }
 }
 .nav a:hover { background: var(--surface-2); color: var(--ink); }
 
-.wrap { max-width: 960px; margin: 0 auto; padding: var(--s-5) var(--s-4) var(--s-6); }
+.wrap { max-width: 80%; margin: 0 auto; padding: var(--s-5) var(--s-4) var(--s-6); }
 .foot {
-  max-width: 960px;
+  max-width: 80%;
   margin: 0 auto;
   padding: var(--s-5) var(--s-4);
   color: var(--mut);
@@ -305,6 +305,47 @@ p { margin: 0; }
 }
 
 /* ===== 阅读页 ===== */
+.read-toolbar {
+  position: sticky;
+  top: 58px;
+  z-index: 40;
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  padding: var(--s-2);
+  margin: 0 auto var(--s-3);
+  max-width: 760px;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+.read-toolbar button {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--sub);
+  border-radius: var(--r-sm);
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.read-toolbar button:hover { border-color: var(--primary); color: var(--primary); }
+.read-toolbar select {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--ink);
+  border-radius: var(--r-sm);
+  padding: 4px 6px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+/* 沉浸式阅读：隐藏导航与页脚 */
+body.immersive .top { display: none; }
+body.immersive .foot { display: none; }
+body.immersive .read-toolbar { top: var(--s-3); }
+
 .reading {
   max-width: 760px;
   margin: var(--s-5) auto;
