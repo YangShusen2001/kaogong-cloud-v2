@@ -53,3 +53,27 @@ def build_content(target: dt.date, content_dir: Path, *, client: httpx.Client | 
         json.dumps(digest.to_json(), ensure_ascii=False, indent=2), encoding="utf-8"
     )
     return path
+
+
+def clip_content(target: dt.date, content_dir: Path, *, client: httpx.Client | None = None) -> int:
+    """为某天日报的条目剪藏原文，写 content/{date}/article-{id}.json。返回剪藏成功数。"""
+    from .clip import clip_article
+
+    digest_path = content_dir / target.isoformat() / "digest.json"
+    if not digest_path.exists():
+        return 0
+    digest = json.loads(digest_path.read_text(encoding="utf-8"))
+    n = 0
+    for sec in digest.get("sections", []):
+        for it in sec.get("items", []):
+            url = it.get("sourceUrl", "")
+            title = it.get("title", "")
+            if not url:
+                continue
+            clip = clip_article(url, title, target.isoformat(), client=client)
+            if clip.get("status") == "ok":
+                out = content_dir / target.isoformat() / f"article-{clip['id']}.json"
+                out.parent.mkdir(parents=True, exist_ok=True)
+                out.write_text(json.dumps(clip, ensure_ascii=False, indent=2), encoding="utf-8")
+                n += 1
+    return n

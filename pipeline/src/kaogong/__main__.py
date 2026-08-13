@@ -7,7 +7,7 @@ import datetime as dt
 import sys
 from pathlib import Path
 
-from .pipeline import build_content
+from .pipeline import build_content, clip_content
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -22,7 +22,8 @@ def main(argv: list[str] | None = None) -> int:
         else Path(__file__).resolve().parents[3] / "content"
     )
     path = build_content(target, content_dir)
-    print(f"已生成：{path}")
+    n_clips = clip_content(target, content_dir)
+    print(f"已生成：{path}；剪藏 {n_clips} 篇原文")
     return 0
 
 
