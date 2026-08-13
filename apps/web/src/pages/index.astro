@@ -4,41 +4,54 @@ import { listArticles, listDigests } from "../lib/content";
 
 const digests = listDigests();
 const latest = digests[0];
-const articles = listArticles();
+const clipMap = new Map(listArticles().map((a) => [a.url, a.id]));
+
+// 轮播：取最新一期前面的条目（全国时政优先），有剪藏的跳阅读页
+const carouselItems = latest
+  ? latest.sections.flatMap((s) => s.items).slice(0, 6).map((it) => {
+      const id = clipMap.get(it.sourceUrl);
+      return {
+        title: it.title,
+        summary: it.summary ?? "",
+        href: id ? `/read/${id}/` : it.sourceUrl,
+        external: !id,
+      };
+    })
+  : [];
 ---
-<Base title="时政小助手 · 每日日报">
-  <section class="hero">
-    <div class="hero__aurora" aria-hidden="true">
-      <span class="a1"></span><span class="a2"></span><span class="a3"></span>
-    </div>
-    <canvas id="hero-particles" class="hero__particles" aria-hidden="true"></canvas>
-    <div class="hero__content">
-      <h1>时政小助手 · 每日日报</h1>
-      <p>每天整理全国时政、申论精读与政策解读，来源均为官方原文。</p>
-      <div class="hero__stats">
-        <span><b>{digests.length}</b> 期材料</span>
-        <span>每日自动更新 · 官方来源</span>
+<Base title="每日时政">
+  {latest && (
+    <section class="carousel" id="carousel">
+      <div class="hero__aurora" aria-hidden="true">
+        <span class="a1"></span><span class="a2"></span><span class="a3"></span>
       </div>
-      <div class="hero__actions">
-        {latest ? (
-          <a class="btn btn--primary" href={`/daily/${latest.date}/`}>打开最新一期 · {latest.date}</a>
-        ) : (
-          <span class="btn btn--primary">暂无材料</span>
-        )}
-        <a class="btn btn--ghost" href="#history">历史材料</a>
+      <canvas id="hero-particles" class="hero__particles" aria-hidden="true"></canvas>
+      <div class="carousel-track" id="carousel-track">
+        {carouselItems.map((it) => (
+          <a class="carousel-slide" href={it.href} {...(it.external ? { target: "_blank", rel: "noopener" } : {})}>
+            <span class="carousel-tag">今日要闻</span>
+            <h2>{it.title}</h2>
+            {it.summary && <p>{it.summary}</p>}
+          </a>
+        ))}
       </div>
-    </div>
-  </section>
+      <div class="carousel-dots" id="carousel-dots"></div>
+    </section>
+  )}
 
   {latest && (
     <section class="card">
-      <h2>今日导读 · {latest.date}</h2>
+      <h2>今日时政 · {latest.date}</h2>
       {latest.sections.map((s) => (
         <div class="section">
           <h3>{s.title}</h3>
           {s.items.map((it) => (
             <div class="item">
-              <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
+              {clipMap.has(it.sourceUrl) ? (
+                <a href={`/read/${clipMap.get(it.sourceUrl)}/`}>{it.title}</a>
+              ) : (
+                <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
+              )}
               <span class="item-date">{it.date}</span>
               {it.summary && <p class="item-summary">{it.summary}</p>}
               {it.quotes?.map((q) => <blockquote>{q}</blockquote>)}
@@ -46,20 +59,6 @@ const articles = listArticles();
           ))}
         </div>
       ))}
-    </section>
-  )}
-
-  {articles.length > 0 && (
-    <section class="card" id="reading">
-      <h2>原文阅读</h2>
-      <div class="day-list">
-        {articles.map((a) => (
-          <a class="day-row" href={`/read/${a.id}/`}>
-            <span class="day-date">{a.date.slice(5)}</span>
-            <span class="day-title">{a.title}</span>
-          </a>
-        ))}
-      </div>
     </section>
   )}
 
@@ -81,74 +80,74 @@ const articles = listArticles();
 </Base>
 
 <script>
-  // 粒子网络：点 + 近距离连线。尊重系统「减少动效」偏好，页面隐藏时暂停。
+  // 轮播：自动滚动 + 圆点导航
+  const track = document.getElementById("carousel-track") as HTMLElement | null;
+  const slides = track ? Array.from(track.querySelectorAll(".carousel-slide")) : [];
+  const dots = document.getElementById("carousel-dots");
+  if (track && dots && slides.length > 1) {
+    let idx = 0;
+    slides.forEach((_, i) => {
+      const d = document.createElement("button");
+      d.type = "button";
+      d.addEventListener("click", () => { idx = i; update(); });
+      dots.appendChild(d);
+    });
+    function update() {
+      track!.style.transform = `translateX(-${idx * 100}%)`;
+      Array.from(dots!.children).forEach((d, i) => d.classList.toggle("on", i === idx));
+    }
+    update();
+    setInterval(() => { idx = (idx + 1) % slides.length; update(); }, 4500);
+  }
+
+  // 粒子网络（背景）
   const canvas = document.getElementById("hero-particles") as HTMLCanvasElement | null;
   if (canvas && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      const hero = canvas.parentElement!;
-      let dots: { x: number; y: number; vx: number; vy: number; r: number }[] = [];
-      let w = 0;
-      let h = 0;
-      let raf = 0;
-
+      const parent = canvas.parentElement!;
+      let dotsArr: { x: number; y: number; vx: number; vy: number; r: number }[] = [];
+      let w = 0, h = 0, raf = 0;
       const resize = () => {
-        const rect = hero.getBoundingClientRect();
+        const rect = parent.getBoundingClientRect();
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        w = rect.width;
-        h = rect.height;
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
-        canvas.style.width = `${w}px`;
-        canvas.style.height = `${h}px`;
+        w = rect.width; h = rect.height;
+        canvas.width = w * dpr; canvas.height = h * dpr;
+        canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         const count = Math.min(60, Math.max(24, Math.floor((w * h) / 26000)));
-        dots = Array.from({ length: count }, () => ({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.35,
-          vy: (Math.random() - 0.5) * 0.35,
+        dotsArr = Array.from({ length: count }, () => ({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
           r: Math.random() * 1.6 + 0.6,
         }));
       };
-
       const step = () => {
         ctx.clearRect(0, 0, w, h);
-        for (const d of dots) {
-          d.x += d.vx;
-          d.y += d.vy;
+        for (const d of dotsArr) {
+          d.x += d.vx; d.y += d.vy;
           if (d.x < 0 || d.x > w) d.vx *= -1;
           if (d.y < 0 || d.y > h) d.vy *= -1;
         }
         ctx.fillStyle = "rgba(255,255,255,.5)";
-        for (const d of dots) {
-          ctx.beginPath();
-          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
+        for (const d of dotsArr) { ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill(); }
         ctx.lineWidth = 1;
-        for (let i = 0; i < dots.length; i++) {
-          for (let j = i + 1; j < dots.length; j++) {
-            const dx = dots[i].x - dots[j].x;
-            const dy = dots[i].y - dots[j].y;
+        for (let i = 0; i < dotsArr.length; i++) {
+          for (let j = i + 1; j < dotsArr.length; j++) {
+            const dx = dotsArr[i].x - dotsArr[j].x, dy = dotsArr[i].y - dotsArr[j].y;
             const dist = Math.hypot(dx, dy);
             if (dist < 110) {
               ctx.strokeStyle = `rgba(255,255,255,${((1 - dist / 110) * 0.18).toFixed(3)})`;
-              ctx.beginPath();
-              ctx.moveTo(dots[i].x, dots[i].y);
-              ctx.lineTo(dots[j].x, dots[j].y);
-              ctx.stroke();
+              ctx.beginPath(); ctx.moveTo(dotsArr[i].x, dotsArr[i].y); ctx.lineTo(dotsArr[j].x, dotsArr[j].y); ctx.stroke();
             }
           }
         }
         raf = requestAnimationFrame(step);
       };
-
       resize();
       window.addEventListener("resize", resize);
       document.addEventListener("visibilitychange", () => {
-        if (document.hidden) cancelAnimationFrame(raf);
-        else raf = requestAnimationFrame(step);
+        if (document.hidden) cancelAnimationFrame(raf); else raf = requestAnimationFrame(step);
       });
       raf = requestAnimationFrame(step);
     }

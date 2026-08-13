@@ -24,19 +24,18 @@ const { article } = Astro.props;
   </div>
 
   <article class="reading" id="article" data-id={article.id}>
-    <p class="item-summary">{article.source} · {article.date}</p>
+    <p class="item-summary">{article.source} · {article.date} · <a href={article.url} target="_blank" rel="noopener">查看原文 ↗</a></p>
     <h1 class="reading-title">{article.title}</h1>
     {article.keySentences?.length > 0 && <blockquote>{article.keySentences[0]}</blockquote>}
     {article.paragraphs.map((p) => <p class="reading-para">{p}</p>)}
   </article>
 
   <div id="hl-toolbar" class="hl-toolbar" hidden>
-    <button type="button" data-act="yellow" title="黄色高亮">🟡</button>
-    <button type="button" data-act="green" title="荧光笔">🟢</button>
-    <button type="button" data-act="underline" title="下划线">﹏</button>
-    <button type="button" data-act="explain" title="AI 解释">✨</button>
-    <button type="button" data-act="favorite" title="收藏">☆</button>
-    <button type="button" data-act="note" title="加注释">✏️</button>
+    <button type="button" data-act="green">荧光笔</button>
+    <button type="button" data-act="explain">AI 解释</button>
+    <button type="button" data-act="underline">下划线</button>
+    <button type="button" data-act="favorite">收藏</button>
+    <button type="button" data-act="note">注释</button>
   </div>
 
   <p><a href="/">← 返回首页</a></p>
@@ -100,7 +99,8 @@ const { article } = Astro.props;
     window.getSelection()?.removeAllRanges();
   };
 
-  document.addEventListener("mouseup", () => {
+  document.addEventListener("mouseup", (e) => {
+    if (toolbar.contains(e.target as Node)) return; // 点工具条不清选区
     const sel = window.getSelection();
     if (!sel || sel.isCollapsed || !articleEl.contains(sel.anchorNode)) {
       hide();
@@ -154,6 +154,9 @@ const { article } = Astro.props;
     setTimeout(() => t.remove(), 2000);
   }
 
+  // 关键：mousedown 阻止按钮夺焦点（否则选区被清空，高亮失效）
+  toolbar.addEventListener("mousedown", (e) => e.preventDefault());
+
   toolbar.addEventListener("click", async (e) => {
     const btn = (e.target as HTMLElement).closest("button");
     if (!btn || !currentRange) return;
@@ -164,10 +167,12 @@ const { article } = Astro.props;
       hide();
       return;
     }
-    if (act === "yellow" || act === "green" || act === "underline") {
+    if (act === "green" || act === "underline") {
       wrap(act as Style);
       await api.addHighlight({ articleId, text, style: act as Style });
     } else if (act === "explain") {
+      wrap("yellow"); // AI 解释 = 黄色高亮 + 弹解释
+      await api.addHighlight({ articleId, text, style: "yellow" });
       await explain(text, rect);
     } else if (act === "favorite") {
       const env = await api.addFavorite({ url: location.href, title: text });
@@ -176,7 +181,7 @@ const { article } = Astro.props;
       const note = prompt("写注释：", "");
       if (note !== null) {
         wrap("yellow");
-        await api.addHighlight({ articleId, text, note });
+        await api.addHighlight({ articleId, text, note, style: "yellow" });
       }
     }
     hide();
