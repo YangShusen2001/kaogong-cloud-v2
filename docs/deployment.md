@@ -40,14 +40,17 @@ npx wrangler deploy
 
 ## 3. 部署前端到 Pages
 
-```sh
+> 环境变量用 PowerShell 语法（`$env:`）；bash 用户改用 `PUBLIC_API_BASE=... npx astro build` 前缀写法。
+
+```powershell
 cd apps/web
 # 构建时注入后端地址（Astro 的 PUBLIC_ 环境变量会打进前端 bundle）
-PUBLIC_API_BASE=https://kaogong-api.<你的子域>.workers.dev npx astro build
+$env:PUBLIC_API_BASE = "https://kaogong-api.<你的子域>.workers.dev"
+npx astro build
 npx wrangler pages deploy dist --project-name kaogong-web
 ```
 
-之后每次改前端，重跑这两行即可（`PUBLIC_API_BASE` 记得带上）。
+之后每次改前端，重跑这几行即可（`PUBLIC_API_BASE` 记得带上）。
 
 > 也可以在建 Pages 项目后，去 Cloudflare Dashboard → Pages → kaogong-web → 设置 → 环境变量，把 `PUBLIC_API_BASE` 设为 Worker 地址，以后 `astro build` 就不用每次手写。
 
@@ -60,12 +63,15 @@ npx wrangler pages deploy dist --project-name kaogong-web
 
 不部署、本地跑：
 
-```sh
+```powershell
 # 终端 1：本地 Worker（默认 8787，带本地 D1）
-cd apps/api && npx wrangler dev
+cd apps/api
+npx wrangler dev
 
 # 终端 2：本地前端（默认 4321，PUBLIC_API_BASE 指向 8787）
-cd apps/web && PUBLIC_API_BASE=http://127.0.0.1:8787 npx astro dev
+cd apps/web
+$env:PUBLIC_API_BASE = "http://127.0.0.1:8787"
+npx astro dev
 ```
 
 打开 `http://localhost:4321`。
