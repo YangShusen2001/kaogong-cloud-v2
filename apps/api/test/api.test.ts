@@ -102,3 +102,46 @@ describe("explain", () => {
     expect(res.status).toBe(503);
   });
 });
+
+interface AuthData {
+  token: string;
+  user: { id: string; username: string };
+}
+
+describe("auth", () => {
+  const creds = { username: "alice", password: "password123" };
+
+  it("注册后能登录并读 me", async () => {
+    const app = makeApp({ authSecret: "test-secret" });
+    const reg = await app.request("/api/auth/register", json("POST", creds));
+    expect(reg.status).toBe(201);
+    const regData = await readJson<AuthData>(reg);
+    expect(regData.data.user.username).toBe("alice");
+
+    const me = await app.request("/api/auth/me", {
+      headers: { authorization: `Bearer ${regData.data.token}` },
+    });
+    expect(me.status).toBe(200);
+    expect((await readJson<{ username: string }>(me)).data.username).toBe("alice");
+  });
+
+  it("重复注册返回 409", async () => {
+    const app = makeApp({ authSecret: "test-secret" });
+    await app.request("/api/auth/register", json("POST", creds));
+    const dup = await app.request("/api/auth/register", json("POST", creds));
+    expect(dup.status).toBe(409);
+  });
+
+  it("密码错误返回 401", async () => {
+    const app = makeApp({ authSecret: "test-secret" });
+    await app.request("/api/auth/register", json("POST", creds));
+    const bad = await app.request("/api/auth/login", json("POST", { ...creds, password: "wrongpass99" }));
+    expect(bad.status).toBe(401);
+  });
+
+  it("未登录读 me 返回 401", async () => {
+    const app = makeApp({ authSecret: "test-secret" });
+    const res = await app.request("/api/auth/me");
+    expect(res.status).toBe(401);
+  });
+});

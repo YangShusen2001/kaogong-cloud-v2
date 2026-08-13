@@ -34,3 +34,12 @@ export const practice = sqliteTable(
     pk: primaryKey({ columns: [t.deviceId, t.date] }),
   }),
 );
+
+// 用户：用户名 + PBKDF2 哈希密码（永不存明文）
+export const users = sqliteTable("users", {
+  id: text("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  salt: text("salt").notNull(),
+  createdAt: integer("created_at").notNull(), // unix 毫秒
+});

@@ -71,3 +71,22 @@ export const explainResponseSchema = z.object({
   explanation: z.string(),
 });
 export type ExplainResponse = z.infer<typeof explainResponseSchema>;
+
+// —— 账号鉴权 ——
+export const credentialsSchema = z.object({
+  username: z.string().min(2).max(32).regex(/^[a-zA-Z0-9_-]+$/, "用户名只能含字母数字下划线"),
+  password: z.string().min(8).max(64),
+});
+export type Credentials = z.infer<typeof credentialsSchema>;
+
+export const authUserSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+});
+export type AuthUser = z.infer<typeof authUserSchema>;
+
+export const authResponseSchema = z.object({
+  token: z.string(),
+  user: authUserSchema,
+});
+export type AuthResponse = z.infer<typeof authResponseSchema>;

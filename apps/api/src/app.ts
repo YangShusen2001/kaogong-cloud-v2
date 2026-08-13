@@ -6,16 +6,19 @@ import { favoritesRoutes } from "./routes/favorites";
 import { highlightsRoutes } from "./routes/highlights";
 import { practiceRoutes } from "./routes/practice";
 import { explainRoutes } from "./routes/explain";
+import { authRoutes } from "./routes/auth";
 
 export type DB = BetterSQLite3Database<typeof schema>;
 
 export interface AppConfig {
   deepseekKey?: string;
+  authSecret?: string;
 }
 
 export function createApp(db: DB, config: AppConfig = {}) {
   const app = new Hono();
   app.get("/api/ping", (c) => c.json({ ok: true, data: "pong" }));
+  app.route("/api/auth", authRoutes(db, config));
   app.route("/api/favorites", favoritesRoutes(db));
   app.route("/api/highlights", highlightsRoutes(db));
   app.route("/api/practice", practiceRoutes(db));

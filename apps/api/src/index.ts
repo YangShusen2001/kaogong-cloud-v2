@@ -7,12 +7,13 @@ import { createDb } from "./db";
 interface Env {
   DB: D1Database;
   DEEPSEEK_API_KEY?: string;
+  AUTH_SECRET?: string;
 }
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     // D1 与 better-sqlite3 的 Drizzle 类型不同（运行时接口一致），这里做类型收窄
     const db = createDb(env) as unknown as DB;
-    return createApp(db, { deepseekKey: env.DEEPSEEK_API_KEY }).fetch(request, env, ctx);
+    return createApp(db, { deepseekKey: env.DEEPSEEK_API_KEY, authSecret: env.AUTH_SECRET }).fetch(request, env, ctx);
   },
 };
