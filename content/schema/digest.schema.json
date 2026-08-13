@@ -33,6 +33,7 @@
         "title": { "type": "string" },
         "date": { "type": "string", "description": "短写 MM-DD" },
         "sourceUrl": { "type": "string", "description": "原文链接" },
+        "summary": { "type": "string", "description": "摘要（政策解读/地区/南方时评等栏目有）" },
         "quotes": {
           "type": "array",
           "items": { "type": "string" },

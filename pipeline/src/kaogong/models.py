@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import datetime as dt
 from dataclasses import dataclass, field
 
 
@@ -14,6 +15,7 @@ class DigestItem:
     title: str
     date: str          # 短写 "08-12"
     source_url: str    # 原文链接
+    summary: str = ""  # 摘要（政策解读/地区/南方时评等栏目有）
     quotes: list[str] = field(default_factory=list)  # 金句摘录
 
     def to_json(self) -> dict:
@@ -22,6 +24,8 @@ class DigestItem:
             "date": self.date,
             "sourceUrl": self.source_url,
         }
+        if self.summary:
+            out["summary"] = self.summary
         if self.quotes:
             out["quotes"] = self.quotes
         return out
@@ -55,3 +59,17 @@ class DailyDigest:
             "title": self.title,
             "sections": [s.to_json() for s in self.sections],
         }
+
+
+@dataclass
+class Candidate:
+    """抓取阶段的候选条目（管道内部类型，不进 content 契约）。
+
+    由各新闻源适配器产出，经去重后由 build_digest 组装成 DailyDigest。
+    """
+    title: str
+    url: str
+    date: dt.date
+    slot: str          # 栏目槽位：pol/gov/shi/qst/xh/rm/byt/gd/sc/js/gdp/nf
+    summary: str = ""
+    key: bool = False

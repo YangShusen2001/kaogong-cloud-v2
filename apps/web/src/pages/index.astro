@@ -39,6 +39,7 @@ const latest = digests[0];
             <div class="item">
               <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
               <span class="item-date">{it.date}</span>
+              {it.summary && <p class="item-summary">{it.summary}</p>}
               {it.quotes?.map((q) => <blockquote>{q}</blockquote>)}
             </div>
           ))}

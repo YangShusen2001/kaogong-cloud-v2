@@ -37,6 +37,8 @@ export interface DigestItem {
   date: string;
   /** 原文链接。 */
   sourceUrl: string;
+  /** 摘要（可选，政策解读/地区/南方时评等栏目有）。 */
+  summary?: string;
   /** 金句摘录（可选）。 */
   quotes?: string[];
 }

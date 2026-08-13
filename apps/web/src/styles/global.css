@@ -190,6 +190,7 @@ p { margin: 0; }
 .item a { color: var(--ink); font-weight: 500; }
 .item a:hover { color: var(--primary); }
 .item-date { margin-left: var(--s-2); font-size: 13px; color: var(--mut); }
+.item-summary { margin: var(--s-1) 0 0; color: var(--sub); font-size: 14px; }
 blockquote {
   margin: var(--s-2) 0 0;
   padding: var(--s-3) var(--s-4);
