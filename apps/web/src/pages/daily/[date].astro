@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { listDigests } from "../../lib/content";
+import { listArticles, listDigests } from "../../lib/content";
 
 // 构建时扫 content/ 目录，为每个日期生成一个静态页
 export function getStaticPaths() {
@@ -11,6 +11,8 @@ export function getStaticPaths() {
 }
 
 const { digest } = Astro.props;
+// url → 文章 id 映射：有剪藏原文的条目才能跳阅读页
+const clipMap = new Map(listArticles().map((a) => [a.url, a.id]));
 ---
 <Base title={`${digest.title} · 时政小助手`}>
   <article class="card">
@@ -23,6 +25,9 @@ const { digest } = Astro.props;
             <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
             <span class="item-date">{it.date}</span>
             <button type="button" class="fav-btn" data-url={it.sourceUrl} data-title={it.title}>收藏</button>
+            {clipMap.has(it.sourceUrl) && (
+              <a class="read-link" href={`/read/${clipMap.get(it.sourceUrl)}/`}>阅读全文 →</a>
+            )}
             {it.summary && <p class="item-summary">{it.summary}</p>}
             {it.quotes?.map((q) => (
               <div class="quote-item">

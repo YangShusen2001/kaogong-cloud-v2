@@ -217,6 +217,8 @@ p { margin: 0; }
 }
 .fav-btn:hover { border-color: var(--accent); color: var(--accent); }
 .fav-btn[disabled] { opacity: 0.6; cursor: default; }
+.read-link { margin-left: var(--s-1); font-size: 13px; color: var(--primary); }
+.read-link:hover { text-decoration: underline; }
 
 /* ===== 每日一练 ===== */
 .question { margin-bottom: var(--s-5); padding-bottom: var(--s-4); border-bottom: 1px dashed var(--line); }

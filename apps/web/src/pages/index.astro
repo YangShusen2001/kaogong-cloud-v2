@@ -1,9 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
-import { listDigests } from "../lib/content";
+import { listArticles, listDigests } from "../lib/content";
 
 const digests = listDigests();
 const latest = digests[0];
+const articles = listArticles();
 ---
 <Base title="时政小助手 · 每日日报">
   <section class="hero">
@@ -45,6 +46,20 @@ const latest = digests[0];
           ))}
         </div>
       ))}
+    </section>
+  )}
+
+  {articles.length > 0 && (
+    <section class="card" id="reading">
+      <h2>原文阅读</h2>
+      <div class="day-list">
+        {articles.map((a) => (
+          <a class="day-row" href={`/read/${a.id}/`}>
+            <span class="day-date">{a.date.slice(5)}</span>
+            <span class="day-title">{a.title}</span>
+          </a>
+        ))}
+      </div>
     </section>
   )}
 
