@@ -1,0 +1,23 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+.wrangler/
+.astro/
+
+# 环境变量（含密钥，永不入库）
+.env
+.env.*
+!.env.example
+
+# 日志 / 系统文件
+*.log
+.DS_Store
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/

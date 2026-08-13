@@ -1,0 +1,32 @@
+---
+import Base from "../../layouts/Base.astro";
+import { listDigests, getDigest } from "../../lib/content";
+
+// 构建时扫 content/ 目录，为每个日期生成一个静态页
+export function getStaticPaths() {
+  return listDigests().map((d) => ({
+    params: { date: d.date },
+    props: { digest: d },
+  }));
+}
+
+const { digest } = Astro.props;
+---
+<Base title={`${digest.title} · 时政小助手`}>
+  <article class="card">
+    <h1>{digest.title}</h1>
+    {digest.sections.map((s) => (
+      <section class="section">
+        <h2>{s.title}</h2>
+        {s.items.map((it) => (
+          <div class="item">
+            <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
+            <span class="item-date">{it.date}</span>
+            {it.quotes?.map((q) => <blockquote>{q}</blockquote>)}
+          </div>
+        ))}
+      </section>
+    ))}
+  </article>
+  <p><a href="/">← 返回首页</a></p>
+</Base>

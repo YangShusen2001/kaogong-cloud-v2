@@ -1,0 +1,31 @@
+{
+  "date": "2026-08-12",
+  "title": "每日日报 · 2026-08-12（周三）",
+  "sections": [
+    {
+      "id": "national",
+      "title": "全国时政要闻",
+      "items": [
+        {
+          "title": "习近平就哥伦比亚发生强烈地震向哥伦比亚总统德拉埃斯普列亚致慰问电",
+          "date": "08-12",
+          "sourceUrl": "https://politics.people.com.cn/n1/2026/0812/c1024-40777729.html"
+        }
+      ]
+    },
+    {
+      "id": "essay",
+      "title": "申论精读",
+      "items": [
+        {
+          "title": "壹时评：一碗拉面的“正名”之路",
+          "date": "08-12",
+          "sourceUrl": "http://opinion.people.com.cn/n1/2026/0812/c223228-40778377.html",
+          "quotes": [
+            "近日，“兰州拉面”在天津、江苏等多地改名“青海拉面”，引发舆论热议。"
+          ]
+        }
+      ]
+    }
+  ]
+}

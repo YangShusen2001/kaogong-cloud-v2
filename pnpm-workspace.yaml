@@ -1,0 +1,9 @@
+# pnpm 工作区：告诉 pnpm 哪些目录是“包”
+# - apps/*     部署单元（前端 Astro / 后端 Worker）
+# - packages/* 共享库（契约等，不单独部署）
+packages:
+  - "apps/*"
+  - "packages/*"
+allowBuilds:
+  esbuild: set this to true or false
+  sharp: set this to true or false

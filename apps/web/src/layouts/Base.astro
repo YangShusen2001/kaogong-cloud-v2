@@ -1,0 +1,36 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const {
+  title,
+  description = "每天整理全国时政、申论精读与政策解读，来源均为官方原文。",
+} = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="top">
+      <div class="top-in">
+        <a class="logo" href="/">
+          <span class="logo-mark">森</span><span>时政小助手</span>
+        </a>
+        <nav class="nav">
+          <a href="/">首页</a>
+          <a href="/#history">历史材料</a>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap"><slot /></main>
+    <footer class="foot">时政小助手 · 内容来自官方原文，请以原文为准</footer>
+  </body>
+</html>
