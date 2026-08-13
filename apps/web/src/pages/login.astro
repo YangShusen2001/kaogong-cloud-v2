@@ -1,0 +1,61 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="登录 · 时政小助手">
+  <section class="card auth-card">
+    <h2 id="auth-title">登录</h2>
+    <form id="auth-form" class="auth-form">
+      <label>
+        用户名
+        <input id="username" type="text" autocomplete="username" required minlength="2" />
+      </label>
+      <label>
+        密码
+        <input id="password" type="password" autocomplete="current-password" required minlength="8" />
+      </label>
+      <p id="auth-error" class="auth-error" hidden></p>
+      <div class="auth-actions">
+        <button type="submit" class="btn btn--solid" id="auth-submit">登录</button>
+        <button type="button" class="btn btn--line" id="auth-toggle">去注册</button>
+      </div>
+      <p class="item-summary">注册即创建个人账号，之后你的收藏/划线/练习会随账号同步（下一步实现）。</p>
+    </form>
+  </section>
+</Base>
+
+<script>
+  import { api } from "../lib/api";
+  import { setToken } from "../lib/auth";
+
+  let mode: "login" | "register" = "login";
+  const form = document.getElementById("auth-form") as HTMLFormElement;
+  const title = document.getElementById("auth-title")!;
+  const submit = document.getElementById("auth-submit")!;
+  const toggle = document.getElementById("auth-toggle")!;
+  const err = document.getElementById("auth-error")!;
+  const username = document.getElementById("username") as HTMLInputElement;
+  const password = document.getElementById("password") as HTMLInputElement;
+
+  function setMode(m: "login" | "register") {
+    mode = m;
+    title.textContent = m === "login" ? "登录" : "注册";
+    submit.textContent = m === "login" ? "登录" : "注册";
+    toggle.textContent = m === "login" ? "去注册" : "去登录";
+    err.hidden = true;
+  }
+
+  toggle.addEventListener("click", () => setMode(mode === "login" ? "register" : "login"));
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const body = { username: username.value.trim(), password: password.value };
+    const env = mode === "login" ? await api.login(body) : await api.register(body);
+    if (env.ok && env.data) {
+      setToken(env.data.token);
+      location.href = "/";
+    } else {
+      err.hidden = false;
+      err.textContent = env.error?.message ?? "操作失败";
+    }
+  });
+</script>

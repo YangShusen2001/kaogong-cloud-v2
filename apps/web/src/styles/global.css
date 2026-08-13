@@ -165,11 +165,19 @@ p { margin: 0; }
   border-radius: var(--r-full);
   font-size: 16px;
   font-weight: 500;
-  transition: transform 0.15s, box-shadow 0.15s;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s, border-color 0.15s;
 }
 .btn:hover { transform: translateY(-1px); }
 .btn--primary { background: #fff; color: var(--primary-deep); box-shadow: var(--shadow); }
 .btn--ghost { border: 1px solid rgba(255, 255, 255, 0.4); color: #fff; }
+.btn--solid { background: var(--primary); color: #fff; }
+.btn--solid:hover { background: var(--primary-deep); }
+.btn--line { border-color: var(--line); color: var(--sub); }
+.btn--line:hover { border-color: var(--primary); color: var(--primary); }
 
 /* ===== 卡片 / 栏目 / 列表 ===== */
 .card {
@@ -256,6 +264,42 @@ p { margin: 0; }
   margin-bottom: var(--s-3);
 }
 .search-input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+
+/* ===== 登录 / 顶栏账号 ===== */
+.nav-auth { display: inline-flex; align-items: center; gap: var(--s-1); color: var(--sub); }
+.nav-logout {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--sub);
+  border-radius: var(--r-sm);
+  padding: 2px 8px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.nav-logout:hover { border-color: var(--red); color: var(--red); }
+.auth-card { max-width: 420px; margin: var(--s-6) auto 0; }
+.auth-form { display: flex; flex-direction: column; gap: var(--s-3); }
+.auth-form label { display: flex; flex-direction: column; gap: var(--s-1); font-size: 14px; color: var(--sub); }
+.auth-form input {
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 16px;
+}
+.auth-form input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+.auth-actions { display: flex; gap: var(--s-2); margin-top: var(--s-2); }
+.auth-error {
+  margin: 0;
+  padding: var(--s-2) var(--s-3);
+  background: var(--red-soft);
+  color: var(--red);
+  border-radius: var(--r-sm);
+  font-size: 14px;
+}
 blockquote {
   margin: var(--s-2) 0 0;
   padding: var(--s-3) var(--s-4);

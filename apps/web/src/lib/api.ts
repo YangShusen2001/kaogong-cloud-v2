@@ -1,5 +1,16 @@
 // 类型化 API 客户端：自动带 X-Device-Id 头，响应类型来自 @kaogong/contracts。
-import type { ApiError, ExplainResponse, Favorite, FavoriteCreate, Highlight, PracticeRecord } from "@kaogong/contracts";
+import type {
+  ApiError,
+  AuthResponse,
+  AuthUser,
+  Credentials,
+  ExplainResponse,
+  Favorite,
+  FavoriteCreate,
+  Highlight,
+  PracticeRecord,
+} from "@kaogong/contracts";
+import { getToken } from "./auth";
 import { getDeviceId } from "./device";
 
 export interface Envelope<T> {
@@ -16,6 +27,8 @@ export function createApi(base: string, deviceId: () => string) {
   async function request<T>(path: string, init?: RequestInit): Promise<Envelope<T>> {
     const headers = new Headers(init?.headers);
     headers.set("x-device-id", deviceId());
+    const token = getToken();
+    if (token) headers.set("authorization", `Bearer ${token}`);
     if (init?.body) headers.set("content-type", "application/json");
     try {
       const res = await fetch(base + path, { ...init, headers });
@@ -37,6 +50,11 @@ export function createApi(base: string, deviceId: () => string) {
       request<PracticeRecord>("/api/practice", { method: "POST", body: JSON.stringify(body) }),
     explain: (text: string) =>
       request<ExplainResponse>("/api/explain", { method: "POST", body: JSON.stringify({ text }) }),
+    register: (body: Credentials) =>
+      request<AuthResponse>("/api/auth/register", { method: "POST", body: JSON.stringify(body) }),
+    login: (body: Credentials) =>
+      request<AuthResponse>("/api/auth/login", { method: "POST", body: JSON.stringify(body) }),
+    me: () => request<AuthUser>("/api/auth/me"),
   };
 }
 

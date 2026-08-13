@@ -29,10 +29,33 @@ const {
           <a href="/search/">搜索</a>
           <a href="/favorites/">收藏</a>
           <a href="/practice/">每日一练</a>
+          <span class="nav-auth" id="kg-auth"><a href="/login/">登录</a></span>
         </nav>
       </div>
     </header>
     <main class="wrap"><slot /></main>
     <footer class="foot">时政小助手 · 内容来自官方原文，请以原文为准</footer>
+    <script>
+      import { clearToken, tokenUsername } from "../lib/auth";
+
+      const box = document.getElementById("kg-auth");
+      if (box) {
+        const name = tokenUsername();
+        if (name) {
+          box.textContent = "";
+          const span = document.createElement("span");
+          span.textContent = name;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "nav-logout";
+          btn.textContent = "退出";
+          btn.addEventListener("click", () => {
+            clearToken();
+            location.reload();
+          });
+          box.append(span, btn);
+        }
+      }
+    </script>
   </body>
 </html>
