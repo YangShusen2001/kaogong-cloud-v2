@@ -60,3 +60,25 @@ export interface DailyDigest {
   title: string;
   sections: DigestSection[];
 }
+
+/** 每日一练里的一道 4 选 1 客观题（管道产出 → 前端消费）。 */
+export interface Question {
+  id: string;
+  /** 题干。 */
+  q: string;
+  /** 恰好 4 个选项。 */
+  options: string[];
+  /** 正确选项下标 0-3。 */
+  answer: number;
+  /** 解析（说明材料依据）。 */
+  analysis: string;
+  /** 主题词，如 "健康中国" / "科技" / "民生"。 */
+  topic: string;
+}
+
+/** 一天的每日一练题集。 */
+export interface PracticeSet {
+  date: string;
+  total: number;
+  questions: Question[];
+}

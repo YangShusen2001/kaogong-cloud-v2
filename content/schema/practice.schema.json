@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kaogong.local/schema/practice.schema.json",
+  "title": "PracticeSet",
+  "description": "一天的每日一练题集（管道产出 → apps/web 消费）。",
+  "type": "object",
+  "required": ["date", "total", "questions"],
+  "properties": {
+    "date": { "type": "string", "description": "YYYY-MM-DD" },
+    "total": { "type": "integer" },
+    "source": { "type": "string" },
+    "questions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/question" }
+    }
+  },
+  "$defs": {
+    "question": {
+      "type": "object",
+      "required": ["id", "q", "options", "answer", "analysis", "topic"],
+      "properties": {
+        "id": { "type": "string" },
+        "q": { "type": "string" },
+        "options": { "type": "array", "items": { "type": "string" }, "minItems": 4, "maxItems": 4 },
+        "answer": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "analysis": { "type": "string" },
+        "topic": { "type": "string" }
+      }
+    }
+  }
+}

@@ -19,10 +19,16 @@ def _load(path: Path) -> dict:
 def test_sample_content_matches_schema():
     digest_schema = _load(SCHEMAS / "digest.schema.json")
     article_schema = _load(SCHEMAS / "article.schema.json")
+    practice_schema = _load(SCHEMAS / "practice.schema.json")
     samples = list((CONTENT / "2026-08-12").glob("*.json"))
     assert samples, "content/2026-08-12/ 下应至少有一个样例文件"
     for f in samples:
         data = _load(f)
-        # 有 sections 的判定为日报，否则判定为剪藏原文
-        schema = digest_schema if "sections" in data else article_schema
+        # 按内容形态分发到对应 schema：日报（sections）/ 每日一练（questions）/ 剪藏原文
+        if "sections" in data:
+            schema = digest_schema
+        elif "questions" in data:
+            schema = practice_schema
+        else:
+            schema = article_schema
         jsonschema.validate(data, schema)
