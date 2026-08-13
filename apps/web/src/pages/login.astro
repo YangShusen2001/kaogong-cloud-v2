@@ -14,6 +14,10 @@ import Base from "../layouts/Base.astro";
         <input id="password" type="password" autocomplete="current-password" required minlength="8" />
       </label>
       <label class="reg-only" hidden>
+        确认密码
+        <input id="password2" type="password" required minlength="8" />
+      </label>
+      <label class="reg-only" hidden>
         QQ 邮箱（用于订阅通知，可选）
         <input id="email" type="email" placeholder="123456@qq.com" />
       </label>
@@ -44,6 +48,7 @@ import Base from "../layouts/Base.astro";
   const err = document.getElementById("auth-error")!;
   const username = document.getElementById("username") as HTMLInputElement;
   const password = document.getElementById("password") as HTMLInputElement;
+  const password2 = document.getElementById("password2") as HTMLInputElement;
   const email = document.getElementById("email") as HTMLInputElement;
   const name = document.getElementById("name") as HTMLInputElement;
 
@@ -62,6 +67,11 @@ import Base from "../layouts/Base.astro";
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (mode === "register" && password.value !== password2.value) {
+      err.hidden = false;
+      err.textContent = "两次输入的密码不一致";
+      return;
+    }
     const body: Credentials = { username: username.value.trim(), password: password.value };
     if (mode === "register") {
       if (email.value.trim()) body.email = email.value.trim();

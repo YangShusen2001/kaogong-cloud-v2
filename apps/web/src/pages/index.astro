@@ -66,10 +66,12 @@ const carouselItems = latest
     <h2>历史材料</h2>
     {digests.length ? (
       <div class="day-list">
-        {digests.map((d) => (
+        {digests.map((d, i) => (
           <a class="day-row" href={`/daily/${d.date}/`}>
+            <span class="day-num">{String(i + 1).padStart(2, "0")}</span>
             <span class="day-date">{d.date.slice(5)}</span>
             <span class="day-title">{d.title}</span>
+            <span class="day-arrow">›</span>
           </a>
         ))}
       </div>

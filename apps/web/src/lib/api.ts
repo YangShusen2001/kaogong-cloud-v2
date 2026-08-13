@@ -49,6 +49,7 @@ export function createApi(base: string, deviceId: () => string) {
     listHighlights: () => request<Highlight[]>("/api/highlights"),
     addHighlight: (body: HighlightCreate) =>
       request<Highlight>("/api/highlights", { method: "POST", body: JSON.stringify(body) }),
+    removeHighlight: (id: string) => request<null>(`/api/highlights/${id}`, { method: "DELETE" }),
     submitPractice: (body: PracticeRecord) =>
       request<PracticeRecord>("/api/practice", { method: "POST", body: JSON.stringify(body) }),
     explain: (text: string) =>

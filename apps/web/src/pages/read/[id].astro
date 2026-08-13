@@ -118,13 +118,14 @@ const { article } = Astro.props;
     toolbar.hidden = false;
   });
 
-  function wrap(style: Style) {
+  function wrap(style: Style): HTMLElement | null {
     try {
       const mark = document.createElement("mark");
       mark.className = `hl-${style}`;
       currentRange!.surroundContents(mark);
+      return mark;
     } catch {
-      // 选区跨节点无法包裹，仅记录不标色
+      return null; // 选区跨节点无法包裹，仅记录不标色
     }
   }
 
@@ -168,11 +169,13 @@ const { article } = Astro.props;
       return;
     }
     if (act === "green" || act === "underline") {
-      wrap(act as Style);
-      await api.addHighlight({ articleId, text, style: act as Style });
+      const mark = wrap(act as Style);
+      const res = await api.addHighlight({ articleId, text, style: act as Style });
+      if (mark && res.ok && res.data) mark.dataset.id = res.data.id;
     } else if (act === "explain") {
-      wrap("yellow"); // AI 解释 = 黄色高亮 + 弹解释
-      await api.addHighlight({ articleId, text, style: "yellow" });
+      const mark = wrap("yellow"); // AI 解释 = 黄色高亮 + 弹解释
+      const res = await api.addHighlight({ articleId, text, style: "yellow" });
+      if (mark && res.ok && res.data) mark.dataset.id = res.data.id;
       await explain(text, rect);
     } else if (act === "favorite") {
       const env = await api.addFavorite({ url: location.href, title: text });
@@ -180,15 +183,44 @@ const { article } = Astro.props;
     } else if (act === "note") {
       const note = prompt("写注释：", "");
       if (note !== null) {
-        wrap("yellow");
-        await api.addHighlight({ articleId, text, note, style: "yellow" });
+        const mark = wrap("yellow");
+        const res = await api.addHighlight({ articleId, text, note, style: "yellow" });
+        if (mark && res.ok && res.data) mark.dataset.id = res.data.id;
       }
     }
     hide();
   });
 
+  // 点击已有高亮 → 取消高亮
+  const delBox = document.createElement("div");
+  delBox.className = "hl-del";
+  delBox.hidden = true;
+  document.body.appendChild(delBox);
+  document.addEventListener("click", (e) => {
+    const mark = (e.target as HTMLElement).closest("mark[data-id]") as HTMLElement | null;
+    if (mark) {
+      const rect = mark.getBoundingClientRect();
+      delBox.innerHTML = `<button type="button" data-id="${mark.dataset.id}">取消高亮</button>`;
+      delBox.style.left = `${rect.left + rect.width / 2 - 40}px`;
+      delBox.style.top = `${rect.top - 38}px`;
+      delBox.hidden = false;
+    } else if (!(e.target as HTMLElement).closest(".hl-del")) {
+      delBox.hidden = true;
+    }
+  });
+  delBox.addEventListener("click", async (e) => {
+    const btn = (e.target as HTMLElement).closest("button");
+    if (!btn) return;
+    const id = btn.dataset.id!;
+    await api.removeHighlight(id);
+    document.querySelectorAll(`mark[data-id="${id}"]`).forEach((m) => {
+      m.replaceWith(document.createTextNode(m.textContent || ""));
+    });
+    delBox.hidden = true;
+  });
+
   // 回填已有划线：用 TreeWalker 遍历所有文本节点（含 mark 内），偏移才正确
-  function applyHighlight(text: string, style: Style) {
+  function applyHighlight(text: string, style: Style, id: string) {
     const ps = articleEl.querySelectorAll(".reading-para");
     for (const p of ps) {
       const idx = p.textContent?.indexOf(text) ?? -1;
@@ -205,6 +237,7 @@ const { article } = Astro.props;
           range.setEnd(node, idx - start + text.length);
           const mark = document.createElement("mark");
           mark.className = `hl-${style}`;
+          mark.dataset.id = id;
           range.surroundContents(mark);
           return;
         }
@@ -217,7 +250,7 @@ const { article } = Astro.props;
     const env = await api.listHighlights();
     if (env.ok && env.data) {
       for (const h of env.data) {
-        if (h.articleId === articleId) applyHighlight(h.text, h.style);
+        if (h.articleId === articleId) applyHighlight(h.text, h.style, h.id);
       }
     }
   })();
