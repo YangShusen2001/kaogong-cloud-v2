@@ -1,0 +1,133 @@
+{
+  "date": "2026-08-13",
+  "title": "每日日报 · 2026-08-13（周四）",
+  "sections": [
+    {
+      "id": "national",
+      "title": "全国时政要闻",
+      "items": [
+        {
+          "title": "国务院关于修改和废止部分行政法规的决定",
+          "date": "08-13",
+          "sourceUrl": "https://www.gov.cn/zhengce/content/202608/content_7077980.htm"
+        }
+      ]
+    },
+    {
+      "id": "essay",
+      "title": "申论精读",
+      "items": [
+        {
+          "title": "匠心赓续文脉 非遗惠及民生",
+          "date": "08-13",
+          "sourceUrl": "https://www.news.cn/politics/20260813/173078b8314248c0835ad3137597f022/c.html"
+        }
+      ]
+    },
+    {
+      "id": "guangdong",
+      "title": "广东要闻动态",
+      "items": [
+        {
+          "title": "首艘国产大型邮轮开启中国海岸巡游大湾区新篇章",
+          "date": "08-13",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/13/139996_54990610.htm"
+        },
+        {
+          "title": "省政府与阿里巴巴集团签署战略合作框架协议 黄坤明孟凡利会见吴泳铭并共同见证签约",
+          "date": "08-13",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/13/139996_54990576.htm"
+        },
+        {
+          "title": "广东9月1日起提高最低工资标准，广州每月2680元",
+          "date": "08-13",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/13/139996_54990587.htm"
+        },
+        {
+          "title": "35公里外拍到广州塔，广东空气优良天数比率持续提升",
+          "date": "08-13",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/13/139996_54990586.htm"
+        },
+        {
+          "title": "省运会皮划艇静水项目将举办至14日 本次赛事全程对外免费开放 目前已决出8枚金牌",
+          "date": "08-13",
+          "sourceUrl": "https://www.gd.gov.cn/gdywdt/xwdt/content/post_4941934.html"
+        }
+      ]
+    },
+    {
+      "id": "sichuan",
+      "title": "四川要闻动态",
+      "items": [
+        {
+          "title": "4只“鸟中大熊猫”在老君山练什么？记者探访四川山鹧鸪野化训练基地",
+          "date": "08-13",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83305039.html"
+        },
+        {
+          "title": "改签费用高、特价票“不可退”，机票退改费究竟是如何收的？",
+          "date": "08-13",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83305038.html"
+        },
+        {
+          "title": "于敏院士诞辰100周年主题活动在绵阳梓潼举行",
+          "date": "08-13",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83305033.html"
+        },
+        {
+          "title": "500万播放量背后，一个成都眼镜店老板的“彩蛋”时刻",
+          "date": "08-13",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83305032.html"
+        },
+        {
+          "title": "游唐代石窟 观田园风光丨枕边书语",
+          "date": "08-13",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83305024.html"
+        },
+        {
+          "title": "今年前7月，川渝共建重点项目投资完成率66.5%，超时序进度8.2个百分点",
+          "date": "08-13",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83305021.html"
+        }
+      ]
+    },
+    {
+      "id": "jiangsu",
+      "title": "江苏要闻动态",
+      "items": [
+        {
+          "title": "700多个“第二现场”、250多亿元“苏品”成交——一颗球“踢”出一条消费链",
+          "date": "08-13",
+          "sourceUrl": "http://www.jiangsu.gov.cn/art/2026/8/13/art_84322_11815645.html"
+        }
+      ]
+    },
+    {
+      "id": "today-talk",
+      "title": "今日谈（半月谈·申论素材）",
+      "items": [
+        {
+          "title": "“手洗一辆车”也能让情绪压力清零？",
+          "date": "08-13",
+          "sourceUrl": "http://www.banyuetan.org/jrt/detail/20260813/1000200033134991786585066538220531_1.html"
+        }
+      ]
+    },
+    {
+      "id": "south-review",
+      "title": "南方时评（南方网·广东申论素材）",
+      "items": [
+        {
+          "title": "头条",
+          "date": "08-13",
+          "sourceUrl": "https://opinion.southcn.com/node_87fa4020d8"
+        },
+        {
+          "title": "南方快评",
+          "date": "08-13",
+          "sourceUrl": "https://opinion.southcn.com/node_e4f9db6b4d"
+        }
+      ]
+    }
+  ]
+}
