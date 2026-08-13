@@ -1,0 +1,45 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="我的收藏 · 时政小助手">
+  <section class="card">
+    <h2>我的收藏</h2>
+    <div id="fav-list"><p class="item-summary">加载中…</p></div>
+  </section>
+</Base>
+
+<script>
+  import { api } from "../lib/api";
+
+  const esc = (s: unknown): string =>
+    String(s ?? "").replace(/[&<>"']/g, (c) => {
+      const map: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+      return map[c] ?? c;
+    });
+  const list = document.getElementById("fav-list")!;
+
+  async function render() {
+    const env = await api.listFavorites();
+    if (!env.ok || !env.data?.length) {
+      list.innerHTML = '<p class="item-summary">还没有收藏，去日报页点「收藏」添加。</p>';
+      return;
+    }
+    list.innerHTML = env.data
+      .map(
+        (f) => `
+      <div class="day-row">
+        <a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.title)}</a>
+        <button type="button" class="btn btn--ghost" data-id="${esc(f.id)}" style="margin-left:auto">删除</button>
+      </div>`,
+      )
+      .join("");
+    list.querySelectorAll("button[data-id]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        await api.removeFavorite(btn.getAttribute("data-id") || "");
+        render();
+      });
+    });
+  }
+
+  render();
+</script>

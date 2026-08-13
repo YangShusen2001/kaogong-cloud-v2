@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { listDigests, getDigest } from "../../lib/content";
+import { listDigests } from "../../lib/content";
 
 // 构建时扫 content/ 目录，为每个日期生成一个静态页
 export function getStaticPaths() {
@@ -22,6 +22,7 @@ const { digest } = Astro.props;
           <div class="item">
             <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
             <span class="item-date">{it.date}</span>
+            <button type="button" class="fav-btn" data-url={it.sourceUrl} data-title={it.title}>收藏</button>
             {it.summary && <p class="item-summary">{it.summary}</p>}
             {it.quotes?.map((q) => <blockquote>{q}</blockquote>)}
           </div>
@@ -31,3 +32,17 @@ const { digest } = Astro.props;
   </article>
   <p><a href="/">← 返回首页</a></p>
 </Base>
+
+<script>
+  import { api } from "../../lib/api";
+
+  document.querySelectorAll<HTMLButtonElement>(".fav-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const url = btn.dataset.url || "";
+      const title = btn.dataset.title || "";
+      const env = await api.addFavorite({ url, title });
+      btn.textContent = env.ok ? "已收藏 ✓" : "收藏失败";
+      btn.disabled = env.ok;
+    });
+  });
+</script>

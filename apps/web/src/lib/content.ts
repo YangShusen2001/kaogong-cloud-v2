@@ -1,29 +1,14 @@
 // 内容加载器：构建时用 Node 直接读仓库根 content/ 目录。
-// 这是「管道 → 前端」契约边界的消费端：只认 content/ 里的 JSON，不认识 Python 实现。
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+// 类型来自 @kaogong/contracts（单一事实源），不在此重复定义——否则会漂移。
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import type { DailyDigest } from "@kaogong/contracts";
+
+export type { DailyDigest, DigestItem, DigestSection } from "@kaogong/contracts";
 
 // 从 apps/web/src/lib/content.ts 上溯 4 层到仓库根，再进 content/
 const CONTENT_DIR = fileURLToPath(new URL("../../../../content/", import.meta.url));
-
-/** 与 content/schema/digest.schema.json 对齐的日报类型（消费端视图）。 */
-export interface DigestItem {
-  title: string;
-  date: string;
-  sourceUrl: string;
-  quotes?: string[];
-}
-export interface DigestSection {
-  id: string;
-  title: string;
-  items: DigestItem[];
-}
-export interface DailyDigest {
-  date: string;
-  title: string;
-  sections: DigestSection[];
-}
 
 /** 列出所有已生成的日报，按日期倒序。 */
 export function listDigests(): DailyDigest[] {
