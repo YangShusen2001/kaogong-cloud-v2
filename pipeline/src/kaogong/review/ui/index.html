@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日时政 · 本地审核</title>
+<style>
+  :root {
+    --bg: #f5f7fa; --surface: #fff; --surface2: #eef1f6;
+    --ink: #1b2432; --sub: #5b6472; --mut: #8a93a4; --line: #e4e8ef;
+    --primary: #1d4ed8; --primary-deep: #122a5c; --accent: #a06d08;
+    --red: #b3201c;
+    --r: 12px; --r-sm: 8px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "PingFang SC","Microsoft YaHei",system-ui,sans-serif; font-size: 15px; }
+  header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 24px; background: var(--surface); border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .logo { height: 40px; }
+  .title { font-size: 18px; font-weight: 700; }
+  header .spacer { flex: 1; }
+  .btn {
+    border: 1px solid transparent; border-radius: 999px; padding: 8px 18px;
+    font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary-deep); }
+  .btn-gold { background: var(--accent); color: #fff; }
+  .btn-line { border-color: var(--line); background: transparent; color: var(--sub); }
+  input[type="date"] { border: 1px solid var(--line); border-radius: var(--r-sm); padding: 7px 10px; font-family: inherit; font-size: 14px; background: var(--surface); color: var(--ink); }
+
+  main { display: flex; gap: 16px; padding: 16px 24px; max-width: 1400px; margin: 0 auto; align-items: flex-start; }
+  aside { flex: 0 0 340px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; position: sticky; top: 82px; max-height: calc(100vh - 100px); overflow: auto; }
+  .sec-title { font-weight: 700; margin: 14px 0 6px; font-size: 14px; color: var(--primary); }
+  .sec-title:first-child { margin-top: 0; }
+  .art {
+    display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: var(--r-sm);
+    cursor: pointer; color: var(--ink);
+  }
+  .art:hover { background: var(--surface2); }
+  .art.on { background: var(--primary); color: #fff; }
+  .art .num { flex: none; font-size: 12px; color: var(--mut); width: 22px; }
+  .art.on .num { color: rgba(255,255,255,.7); }
+  .art .t { flex: 1; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .art .del { color: var(--red); font-size: 12px; }
+  .art.del .t { text-decoration: line-through; opacity: .5; }
+
+  section.editor { flex: 1; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
+  .empty { color: var(--mut); text-align: center; padding: 60px 0; }
+  .editor label { display: block; font-size: 13px; color: var(--sub); margin-bottom: 12px; }
+  .editor input, .editor textarea {
+    display: block; width: 100%; margin-top: 4px; border: 1px solid var(--line); border-radius: var(--r-sm);
+    padding: 9px 12px; font-family: inherit; font-size: 14px; background: var(--surface2); color: var(--ink);
+  }
+  .editor textarea { min-height: 90px; resize: vertical; }
+  .editor .row { display: flex; gap: 10px; align-items: center; margin: 14px 0; }
+  .check { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--red); cursor: pointer; }
+  .preview { margin-top: 16px; border-top: 1px dashed var(--line); padding-top: 14px; }
+  .preview h3 { font-size: 14px; color: var(--sub); margin: 0 0 8px; }
+  .preview .body { max-height: 360px; overflow: auto; line-height: 1.9; font-size: 14px; color: var(--ink); }
+  .preview .body p { text-indent: 2em; margin: 0 0 10px; }
+  #log { margin-top: 16px; padding: 12px; background: #0d1117; color: #e6edf3; border-radius: var(--r-sm); font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 200px; overflow: auto; display: none; }
+</style>
+</head>
+<body>
+<header>
+  <img class="logo" src="/logo.png" alt="每日时政">
+  <span class="title">本地审核</span>
+  <span class="spacer"></span>
+  <input type="date" id="date">
+  <button class="btn btn-line" id="fetch">🔄 抓取</button>
+  <button class="btn btn-gold" id="publish">🚀 发布到 CF</button>
+</header>
+
+<main>
+  <aside id="aside"></aside>
+  <section class="editor" id="editor">
+    <div class="empty">选择左侧文章进行编辑</div>
+    <div id="edit-form" style="display:none">
+      <label>标题<input id="f-title"></label>
+      <label>摘要<textarea id="f-summary"></textarea></label>
+      <div class="row">
+        <button class="btn btn-primary" id="save">保存</button>
+        <label class="check"><input type="checkbox" id="f-del"> 本期不发布（删除）</label>
+      </div>
+      <div class="preview">
+        <h3>原文预览</h3>
+        <div class="body" id="preview-body">暂无原文</div>
+      </div>
+    </div>
+    <div id="log"></div>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let digest = null;            // 当前日报 JSON
+let selected = null;          // {si, ii} 选中的文章
+const clipMap = {};           // url -> article id
+
+async function j(url, opts) {
+  const r = await fetch(url, opts);
+  return r.json();
+}
+
+function log(msg) {
+  const el = $("log");
+  el.style.display = "block";
+  el.textContent = msg;
+}
+
+// —— 加载日期 ——
+async function loadDates() {
+  const { dates } = await j("/api/dates");
+  const dp = $("date");
+  if (dates.length) dp.value = dates[0];
+}
+
+// —— 加载日报 ——
+async function loadDigest(date) {
+  if (!date) return;
+  digest = await j(`/api/digest/${date}`);
+  buildClipMap();
+  renderAside();
+  selected = null;
+  $("edit-form").style.display = "none";
+  document.querySelector(".empty").style.display = "block";
+}
+
+function buildClipMap() {
+  for (const s of digest.sections) for (const it of s.items) {
+    if (it.sourceUrl && !(it.sourceUrl in clipMap)) clipMap[it.sourceUrl] = null;
+  }
+}
+
+function renderAside() {
+  const aside = $("aside");
+  aside.innerHTML = "";
+  let n = 0;
+  digest.sections.forEach((s, si) => {
+    const h = document.createElement("div");
+    h.className = "sec-title";
+    h.textContent = s.title;
+    aside.appendChild(h);
+    s.items.forEach((it, ii) => {
+      n++;
+      const row = document.createElement("div");
+      row.className = "art" + (selected && selected.si === si && selected.ii === ii ? " on" : "");
+      row.innerHTML = `<span class="num">${String(n).padStart(2,"0")}</span><span class="t"></span>`;
+      row.querySelector(".t").textContent = it.title;
+      row.onclick = () => select(si, ii, row);
+      aside.appendChild(row);
+    });
+  });
+}
+
+function select(si, ii, row) {
+  selected = { si, ii };
+  document.querySelectorAll(".art").forEach((a) => a.classList.remove("on"));
+  row.classList.add("on");
+  const it = digest.sections[si].items[ii];
+  document.querySelector(".empty").style.display = "none";
+  $("edit-form").style.display = "block";
+  $("f-title").value = it.title;
+  $("f-summary").value = it.summary || "";
+  $("f-del").checked = false;
+  loadPreview(it.sourceUrl);
+}
+
+async function loadPreview(url) {
+  const body = $("preview-body");
+  const id = clipMap[url];
+  if (!id) {
+    // 尝试找该 url 对应的原文
+    const { dates } = await j("/api/dates");
+    for (const d of dates) {
+      const dg = await j(`/api/digest/${d}`);
+      for (const s of dg.sections) for (const it of s.items) {
+        if (it.sourceUrl === url && it._articleId) clipMap[url] = it._articleId;
+      }
+    }
+  }
+  if (!clipMap[url]) { body.textContent = "该篇暂无剪藏原文"; return; }
+  const art = await j(`/api/article/${clipMap[url]}`);
+  if (art.paragraphs) body.innerHTML = art.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("");
+  else body.textContent = "无正文";
+}
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+$("save").onclick = async () => {
+  if (!selected) return;
+  const it = digest.sections[selected.si].items[selected.ii];
+  it.title = $("f-title").value.trim();
+  it.summary = $("f-summary").value.trim();
+  if ($("f-del").checked) {
+    digest.sections[selected.si].items.splice(selected.ii, 1);
+  }
+  await j("/api/digest", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ date: $("date").value, digest }),
+  });
+  renderAside();
+  $("edit-form").style.display = "none";
+  document.querySelector(".empty").style.display = "block";
+  selected = null;
+  log("已保存");
+};
+
+$("fetch").onclick = async () => {
+  $("fetch").disabled = true;
+  log("抓取中…");
+  const r = await j("/api/fetch", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ date: $("date").value }),
+  });
+  $("fetch").disabled = false;
+  if (r.ok) { log(`抓取完成：${r.date}，剪藏 ${r.clips} 篇`); await loadDates(); await loadDigest(r.date); }
+  else log("抓取失败：" + JSON.stringify(r));
+};
+
+$("publish").onclick = async () => {
+  $("publish").disabled = true;
+  log("发布中（构建 + 部署）…");
+  const r = await j("/api/publish", { method: "POST" });
+  $("publish").disabled = false;
+  log(r.ok ? "✅ 发布成功\n\n" + r.log : "❌ " + (r.step || "发布失败") + "\n\n" + r.log);
+};
+
+$("date").onchange = () => loadDigest($("date").value);
+
+(async () => {
+  await loadDates();
+  await loadDigest($("date").value);
+})();
+</script>
+</body>
+</html>
