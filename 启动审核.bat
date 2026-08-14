@@ -1,11 +1,11 @@
 @echo off
-chcp 65001 >nul
+chcp 936 >nul
 cd /d "D:\kaogong-cloud-v2\pipeline"
 if not exist ".venv\Scripts\python.exe" (
-  echo é¦–æ¬¡è¿è¡Œï¼šåˆ›å»ºè™šæ‹Ÿç¯å¢ƒå¹¶å®‰è£…ä¾èµ–...
+  echo Ê×´ÎÔËĞĞ£ºÕıÔÚ´´½¨ĞéÄâ»·¾³²¢°²×°ÒÀÀµ...
   python -m venv .venv
   .venv\Scripts\python.exe -m pip install -e ".[review]"
 )
-echo æ­£åœ¨å¯åŠ¨æœ¬åœ°å®¡æ ¸æœåŠ¡ï¼ˆæµè§ˆå™¨ä¼šè‡ªåŠ¨æ‰“å¼€ï¼‰...
+echo ÕıÔÚÆô¶¯±¾µØÉóºË·şÎñ£¨ä¯ÀÀÆ÷»á×Ô¶¯´ò¿ª£©...
 .venv\Scripts\python.exe -m kaogong.review
 pause

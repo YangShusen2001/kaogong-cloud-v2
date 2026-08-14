@@ -1,2 +1,4 @@
 # 统一文本换行符为 LF，避免 Windows 上 CRLF 噪音
 * text=auto eol=lf
+# .bat 必须 CRLF：LF 会让 cmd 解析多行 if 块出错
+*.bat text eol=crlf
