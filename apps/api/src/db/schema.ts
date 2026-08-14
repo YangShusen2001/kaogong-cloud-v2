@@ -18,7 +18,12 @@ export const highlights = sqliteTable("highlights", {
   articleId: text("article_id").notNull(),
   text: text("text").notNull(),
   note: text("note").notNull().default(""),
-  style: text("style").notNull().default("yellow"), // yellow | green | underline
+  // 旧字段：单值样式，已被 styles 取代；仅保留用于既有数据兼容，不再读写。
+  style: text("style").notNull().default("yellow"),
+  styles: text("styles").notNull().default("[]"), // JSON 数组，如 '["green","underline"]'
+  paragraphIndex: integer("paragraph_index").notNull().default(0), // 段落序号
+  startOffset: integer("start_offset").notNull().default(0), // 段落内起始偏移（含）
+  endOffset: integer("end_offset").notNull().default(0), // 段落内结束偏移（不含）
   createdAt: integer("created_at").notNull(), // unix 毫秒
 });
 

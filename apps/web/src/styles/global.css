@@ -492,16 +492,16 @@ body.immersive .wrap { max-width: 100%; padding-left: var(--s-3); padding-right:
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
+  font-size: 17px; /* 默认字号；JS 通过内联样式覆盖 */
 }
 .reading-title { font-size: 30px; margin: var(--s-3) 0 var(--s-4); line-height: 1.35; text-align: center; }
-.reading-para { margin: 0 0 var(--s-4); font-size: 17px; line-height: 1.9; text-indent: 2em; }
+.reading-para { margin: 0 0 var(--s-4); line-height: 1.9; text-indent: 2em; }
 .reading blockquote {
   margin: var(--s-3) 0;
   padding: var(--s-3) var(--s-4);
   background: var(--accent-soft);
   border-left: 3px solid var(--accent);
   border-radius: 0 var(--r-sm) var(--r-sm) 0;
-  font-family: var(--font-serif);
   color: var(--sub);
 }
 

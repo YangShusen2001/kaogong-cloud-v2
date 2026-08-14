@@ -43,13 +43,57 @@ describe("favorites", () => {
 });
 
 describe("highlights", () => {
-  it("创建并列出划线", async () => {
+  it("创建并列出划线（含叠加样式与偏移）", async () => {
     const app = makeApp();
-    await app.request("/api/highlights", json("POST", { articleId: "a1", text: "划线文本" }));
+    const post = await app.request("/api/highlights", json("POST", {
+      articleId: "a1",
+      text: "划线文本",
+      styles: ["green", "underline"],
+      paragraphIndex: 0,
+      start: 0,
+      end: 4,
+    }));
+    expect(post.status).toBe(201);
+    const created = await readJson<Highlight>(post);
+    expect(created.data.styles).toEqual(["green", "underline"]);
+    expect(created.data.paragraphIndex).toBe(0);
+    expect(created.data.start).toBe(0);
+    expect(created.data.end).toBe(4);
+
     const list = await app.request("/api/highlights", { headers: headers() });
     const data = (await readJson<Highlight[]>(list)).data;
     expect(data).toHaveLength(1);
     expect(data[0]?.articleId).toBe("a1");
+    expect(data[0]?.styles).toEqual(["green", "underline"]);
+  });
+
+  it("缺少 styles 或偏移返回 400", async () => {
+    const app = makeApp();
+    const noStyles = await app.request("/api/highlights", json("POST", {
+      articleId: "a1", text: "x", paragraphIndex: 0, start: 0, end: 1,
+    }));
+    expect(noStyles.status).toBe(400);
+  });
+
+  it("区间非法（start >= end）返回 400", async () => {
+    const app = makeApp();
+    const bad = await app.request("/api/highlights", json("POST", {
+      articleId: "a1", text: "x", styles: ["green"], paragraphIndex: 0, start: 3, end: 1,
+    }));
+    expect(bad.status).toBe(400);
+  });
+
+  it("删除只影响自己设备的数据", async () => {
+    const app = makeApp();
+    const post = await app.request("/api/highlights", json("POST", {
+      articleId: "a1", text: "x", styles: ["green"], paragraphIndex: 0, start: 0, end: 1,
+    }));
+    const created = await readJson<Highlight>(post);
+    const del = await app.request(`/api/highlights/${created.data.id}`, { method: "DELETE", headers: headers() });
+    expect(del.status).toBe(200);
+
+    const other = await app.request("/api/highlights", { headers: headers("other-device") });
+    expect((await readJson<Highlight[]>(other)).data).toHaveLength(0);
   });
 });
 

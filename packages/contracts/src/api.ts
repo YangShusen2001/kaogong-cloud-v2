@@ -41,17 +41,29 @@ export const highlightSchema = z.object({
   articleId: z.string(),
   text: z.string(),
   note: z.string(),
-  style: highlightStyleSchema,
+  /** 叠加样式（可同时是荧光笔 + 下划线）。 */
+  styles: z.array(highlightStyleSchema).min(1),
+  /** 所属段落序号（对应文章的 paragraphs 下标）。 */
+  paragraphIndex: z.number().int().min(0),
+  /** 段落内起始字符偏移（含）。 */
+  start: z.number().int().min(0),
+  /** 段落内结束字符偏移（不含），必须大于 start。 */
+  end: z.number().int().min(1),
   createdAt: z.number(), // unix 毫秒
 });
 export type Highlight = z.infer<typeof highlightSchema>;
 
-export const highlightCreateSchema = z.object({
-  articleId: z.string().min(1),
-  text: z.string().min(1),
-  note: z.string().optional(),
-  style: highlightStyleSchema.optional(),
-});
+export const highlightCreateSchema = z
+  .object({
+    articleId: z.string().min(1),
+    text: z.string().min(1),
+    note: z.string().optional(),
+    styles: z.array(highlightStyleSchema).min(1),
+    paragraphIndex: z.number().int().min(0),
+    start: z.number().int().min(0),
+    end: z.number().int().min(1),
+  })
+  .refine((v) => v.start < v.end, { message: "划线区间无效（start 必须小于 end）" });
 export type HighlightCreate = z.infer<typeof highlightCreateSchema>;
 
 // —— 每日一练 ——

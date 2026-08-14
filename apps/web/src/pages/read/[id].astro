@@ -46,13 +46,16 @@ const { article } = Astro.props;
 
 <script>
   import { api } from "../../lib/api";
-
-  type Style = "yellow" | "green" | "underline";
+  import { applyStyle, buildSegments, removeRange, segmentsToHtml, type Span } from "../../lib/highlights";
+  import type { Highlight, HighlightStyle } from "@kaogong/contracts";
 
   const articleEl = document.getElementById("article") as HTMLElement;
   const toolbar = document.getElementById("hl-toolbar") as HTMLElement;
   const articleId = articleEl.dataset.id || "";
-  let currentRange: Range | null = null;
+  const paraEls = Array.from(articleEl.querySelectorAll<HTMLElement>(".reading-para"));
+
+  // 文章各段落原文（从初始 DOM 读取，重渲染前捕获一次），是偏移计算与重渲染的唯一事实源。
+  const paraText: string[] = paraEls.map((el) => el.textContent ?? "");
 
   // ===== 字体 / 沉浸 / 全屏 =====
   const FONT_SIZE_KEY = "kaogong.read.fontsize";
@@ -104,51 +107,122 @@ const { article } = Astro.props;
     favBtn.disabled = env.ok;
   });
 
-  // ===== 划词高亮 =====
+  // ===== 划线：以段落内偏移为源，数据驱动重渲染 =====
+  let records: Highlight[] = [];
+
+  function spansFor(index: number): Span[] {
+    return records
+      .filter((r) => r.paragraphIndex === index)
+      .map((r) => ({ start: r.start, end: r.end, styles: [...r.styles].sort() }))
+      .sort((a, b) => a.start - b.start || a.end - b.end);
+  }
+
+  function renderParagraph(index: number) {
+    const para = paraEls[index];
+    if (!para) return;
+    const text = paraText[index] ?? para.textContent ?? "";
+    para.innerHTML = segmentsToHtml(buildSegments(text, spansFor(index)));
+  }
+
+  function renderAll() {
+    paraEls.forEach((_, i) => renderParagraph(i));
+  }
+
+  async function reconcileParagraph(index: number, spans: Span[], noteOverrides: Record<string, string> = {}) {
+    const old = records.filter((r) => r.paragraphIndex === index);
+    const notes = new Map<string, string>();
+    for (const r of old) notes.set(`${r.start}:${r.end}`, r.note);
+    for (const [k, v] of Object.entries(noteOverrides)) notes.set(k, v);
+
+    // 先删后插，保证 DB 与本地方案一致（个人工具，记录量小，整段重写可接受）。
+    await Promise.all(old.map((r) => api.removeHighlight(r.id)));
+    records = records.filter((r) => r.paragraphIndex !== index);
+
+    for (const span of spans) {
+      const res = await api.addHighlight({
+        articleId,
+        text: (paraText[index] ?? "").slice(span.start, span.end),
+        note: notes.get(`${span.start}:${span.end}`) ?? "",
+        styles: span.styles,
+        paragraphIndex: index,
+        start: span.start,
+        end: span.end,
+      });
+      if (res.ok && res.data) records.push(res.data);
+    }
+    renderParagraph(index);
+  }
+
+  // 选区 → 段落内字符偏移
+  function pointOffset(para: HTMLElement, node: Node, offset: number): number | null {
+    const walker = document.createTreeWalker(para, NodeFilter.SHOW_TEXT);
+    let total = 0;
+    let cur: Node | null;
+    while ((cur = walker.nextNode())) {
+      if (cur === node) return total + offset;
+      total += cur.textContent?.length ?? 0;
+    }
+    return null;
+  }
+
+  interface SelectionOffsets {
+    paragraphIndex: number;
+    start: number;
+    end: number;
+    text: string;
+    rect: DOMRect;
+  }
+
+  let current: SelectionOffsets | null = null;
+
+  function selectionToOffsets(): SelectionOffsets | null {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return null;
+    const range = sel.getRangeAt(0);
+    const startEl = range.startContainer.nodeType === Node.TEXT_NODE
+      ? (range.startContainer as Text).parentElement
+      : (range.startContainer as Element);
+    const para = startEl?.closest(".reading-para") as HTMLElement | null;
+    if (!para || !para.contains(range.endContainer)) return null;
+    const index = paraEls.indexOf(para);
+    if (index < 0) return null;
+    const start = pointOffset(para, range.startContainer, range.startOffset);
+    const end = pointOffset(para, range.endContainer, range.endOffset);
+    if (start === null || end === null || start >= end) return null;
+    return {
+      paragraphIndex: index,
+      start,
+      end,
+      text: (paraText[index] ?? "").slice(start, end),
+      rect: range.getBoundingClientRect(),
+    };
+  }
+
   const hide = () => {
     toolbar.hidden = true;
-    currentRange = null;
+    current = null;
     window.getSelection()?.removeAllRanges();
   };
 
   document.addEventListener("mouseup", (e) => {
-    if (toolbar.contains(e.target as Node)) return; // 点工具条不清选区
-    const sel = window.getSelection();
-    if (!sel || sel.isCollapsed || !articleEl.contains(sel.anchorNode)) {
+    if (toolbar.contains(e.target as Node)) return;
+    const off = selectionToOffsets();
+    if (!off || off.text.trim().length < 2 || off.text.trim().length > 300) {
       hide();
       return;
     }
-    const text = sel.toString().trim();
-    if (text.length < 2 || text.length > 300) {
-      hide();
-      return;
-    }
-    currentRange = sel.getRangeAt(0).cloneRange();
-    const rect = currentRange.getBoundingClientRect();
-    // 工具条定位在选区正下方，靠近鼠标悬停处
-    toolbar.style.left = `${Math.min(Math.max(rect.left + rect.width / 2 - toolbar.offsetWidth / 2, 8), window.innerWidth - toolbar.offsetWidth - 8)}px`;
-    toolbar.style.top = `${rect.bottom + 8}px`;
+    current = off;
     toolbar.hidden = false;
+    toolbar.style.left = `${Math.min(Math.max(off.rect.left + off.rect.width / 2 - toolbar.offsetWidth / 2, 8), window.innerWidth - toolbar.offsetWidth - 8)}px`;
+    toolbar.style.top = `${off.rect.bottom + 8}px`;
   });
 
-  // 点空白处（非工具条、非已有高亮）→ 收起工具条 + 清除选区
   document.addEventListener("mousedown", (e) => {
     const t = e.target as HTMLElement;
     if (!toolbar.hidden && !toolbar.contains(t) && !t.closest("mark")) {
       hide();
     }
   });
-
-  function wrap(style: Style): HTMLElement | null {
-    try {
-      const mark = document.createElement("mark");
-      mark.className = `hl-${style}`;
-      currentRange!.surroundContents(mark);
-      return mark;
-    } catch {
-      return null; // 选区跨节点无法包裹，仅记录不标色
-    }
-  }
 
   let explainBox: HTMLDivElement | null = null;
   async function explain(text: string, rect: DOMRect) {
@@ -176,27 +250,18 @@ const { article } = Astro.props;
     setTimeout(() => t.remove(), 2000);
   }
 
-  // 关键：mousedown 阻止按钮夺焦点（否则选区被清空，高亮失效）
+  // 关键：mousedown 阻止按钮夺焦点（否则选区被清空）
   toolbar.addEventListener("mousedown", (e) => e.preventDefault());
 
   toolbar.addEventListener("click", async (e) => {
     const btn = (e.target as HTMLElement).closest("button");
-    if (!btn || !currentRange) return;
+    if (!btn || !current) return;
     const act = btn.dataset.act as string;
-    const text = currentRange.toString().trim();
-    const rect = currentRange.getBoundingClientRect();
-    if (!text) {
-      hide();
-      return;
-    }
+    const { paragraphIndex, start, end, text, rect } = current;
     if (act === "green" || act === "underline") {
-      const mark = wrap(act as Style);
-      const res = await api.addHighlight({ articleId, text, style: act as Style });
-      if (mark && res.ok && res.data) mark.dataset.id = res.data.id;
+      await reconcileParagraph(paragraphIndex, applyStyle(spansFor(paragraphIndex), { start, end }, act as HighlightStyle));
     } else if (act === "explain") {
-      const mark = wrap("yellow"); // AI 解释 = 黄色高亮 + 弹解释
-      const res = await api.addHighlight({ articleId, text, style: "yellow" });
-      if (mark && res.ok && res.data) mark.dataset.id = res.data.id;
+      await reconcileParagraph(paragraphIndex, applyStyle(spansFor(paragraphIndex), { start, end }, "yellow"));
       await explain(text, rect);
     } else if (act === "favorite") {
       const env = await api.addFavorite({ url: location.href, title: text });
@@ -204,24 +269,46 @@ const { article } = Astro.props;
     } else if (act === "note") {
       const note = prompt("写注释：", "");
       if (note !== null) {
-        const mark = wrap("yellow");
-        const res = await api.addHighlight({ articleId, text, note, style: "yellow" });
-        if (mark && res.ok && res.data) mark.dataset.id = res.data.id;
+        await reconcileParagraph(
+          paragraphIndex,
+          applyStyle(spansFor(paragraphIndex), { start, end }, "yellow"),
+          { [`${start}:${end}`]: note },
+        );
       }
     }
     hide();
   });
 
-  // 点击已有高亮 → 取消高亮
+  // 点击已有高亮 → 取消该区间全部样式
   const delBox = document.createElement("div");
   delBox.className = "hl-del";
   delBox.hidden = true;
   document.body.appendChild(delBox);
+  let delTarget: { paragraphIndex: number; start: number; end: number } | null = null;
+
+  function markOffsets(para: HTMLElement, mark: HTMLElement): { start: number; end: number } | null {
+    const walker = document.createTreeWalker(para, NodeFilter.SHOW_TEXT);
+    let total = 0;
+    let cur: Node | null;
+    while ((cur = walker.nextNode())) {
+      const len = cur.textContent?.length ?? 0;
+      if (cur.parentElement === mark) return { start: total, end: total + len };
+      total += len;
+    }
+    return null;
+  }
+
   document.addEventListener("click", (e) => {
-    const mark = (e.target as HTMLElement).closest("mark[data-id]") as HTMLElement | null;
+    const mark = (e.target as HTMLElement).closest("mark.hl-yellow, mark.hl-green, mark.hl-underline") as HTMLElement | null;
     if (mark) {
+      const para = mark.closest(".reading-para") as HTMLElement | null;
+      if (!para) return;
+      const index = paraEls.indexOf(para);
+      const off = markOffsets(para, mark);
+      if (index < 0 || !off) return;
+      delTarget = { paragraphIndex: index, start: off.start, end: off.end };
       const rect = mark.getBoundingClientRect();
-      delBox.innerHTML = `<button type="button" data-id="${mark.dataset.id}">取消高亮</button>`;
+      delBox.innerHTML = `<button type="button">取消高亮</button>`;
       delBox.style.left = `${rect.left + rect.width / 2 - 40}px`;
       delBox.style.top = `${rect.top - 38}px`;
       delBox.hidden = false;
@@ -229,50 +316,22 @@ const { article } = Astro.props;
       delBox.hidden = true;
     }
   });
+
   delBox.addEventListener("click", async (e) => {
     const btn = (e.target as HTMLElement).closest("button");
-    if (!btn) return;
-    const id = btn.dataset.id!;
-    await api.removeHighlight(id);
-    document.querySelectorAll(`mark[data-id="${id}"]`).forEach((m) => {
-      m.replaceWith(document.createTextNode(m.textContent || ""));
-    });
+    if (!btn || !delTarget) return;
+    const { paragraphIndex, start, end } = delTarget;
+    await reconcileParagraph(paragraphIndex, removeRange(spansFor(paragraphIndex), { start, end }));
+    delTarget = null;
     delBox.hidden = true;
   });
 
-  // 回填已有划线：用 TreeWalker 遍历所有文本节点（含 mark 内），偏移才正确
-  function applyHighlight(text: string, style: Style, id: string) {
-    const ps = articleEl.querySelectorAll(".reading-para");
-    for (const p of ps) {
-      const idx = p.textContent?.indexOf(text) ?? -1;
-      if (idx === -1) continue;
-      const walker = document.createTreeWalker(p, NodeFilter.SHOW_TEXT);
-      let start = 0;
-      let node: Node | null;
-      while ((node = walker.nextNode())) {
-        const len = node.textContent?.length ?? 0;
-        const end = start + len;
-        if (start <= idx && idx + text.length <= end) {
-          const range = document.createRange();
-          range.setStart(node, idx - start);
-          range.setEnd(node, idx - start + text.length);
-          const mark = document.createElement("mark");
-          mark.className = `hl-${style}`;
-          mark.dataset.id = id;
-          range.surroundContents(mark);
-          return;
-        }
-        start = end;
-      }
-    }
-  }
-
+  // 回填：拉取已有划线并重渲染（与新建走同一条渲染路径）
   (async () => {
     const env = await api.listHighlights();
     if (env.ok && env.data) {
-      for (const h of env.data) {
-        if (h.articleId === articleId) applyHighlight(h.text, h.style, h.id);
-      }
+      records = env.data.filter((h) => h.articleId === articleId);
+      renderAll();
     }
   })();
 </script>
