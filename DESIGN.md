@@ -45,7 +45,7 @@ Rules:
 
 - UI and body use `--font`: PingFang SC, Microsoft YaHei, Segoe UI, then system sans.
 - Reading titles and editorial headings use `--font-serif`: Songti SC, Noto Serif CJK SC, SimSun, then serif.
-- The existing logo asset owns brand lettering; account pages do not imitate it in text.
+- Brand wordmark uses `--font-logo`: subsetted PingFangFangMaoTiCaoShu at 24px, text only, no image. Account pages do not imitate it.
 
 ## 4. Spacing & Layout
 

@@ -10,7 +10,7 @@ import subprocess
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 from ..pipeline import build_content, clip_content, practice_content
@@ -19,7 +19,6 @@ ROOT = Path(__file__).resolve().parents[4]  # 仓库根（pipeline/src/kaogong/r
 CONTENT = ROOT / "content"
 WEB = ROOT / "apps" / "web"
 UI = Path(__file__).resolve().parent / "ui" / "index.html"
-LOGO = WEB / "public" / "logo.png"
 
 # Worker 地址：默认写死，可用环境变量覆盖
 PUBLIC_API_BASE = os.environ.get("PUBLIC_API_BASE", "https://kaogong-api.2667199938.workers.dev")
@@ -30,11 +29,6 @@ app = FastAPI(title="每日时政 · 本地审核")
 @app.get("/", response_class=HTMLResponse)
 def index() -> HTMLResponse:
     return HTMLResponse(UI.read_text(encoding="utf-8"))
-
-
-@app.get("/logo.png")
-def logo() -> FileResponse:
-    return FileResponse(LOGO)
 
 
 class FetchBody(BaseModel):

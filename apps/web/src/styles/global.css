@@ -36,6 +36,14 @@
 
   --font: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
   --font-serif: "Songti SC", "Noto Serif CJK SC", "SimSun", serif;
+  --font-logo: "PingFangFangMaoTiCaoShu", "STXingkai", "华文行楷", "KaiTi", cursive;
+}
+
+@font-face {
+  font-family: "PingFangFangMaoTiCaoShu";
+  src: url("/fonts/PingFangFangMaoTiCaoShu-logo.woff2") format("woff2");
+  font-display: swap;
+  unicode-range: U+6BCF, U+65E5, U+65F6, U+653F;
 }
 
 /* ===== 基础 ===== */
@@ -86,12 +94,12 @@ p { margin: 0; }
   color: var(--ink);
 }
 .logo-text {
-  font-family: "毛泽东体", "毛体", "STXingkai", "华文行楷", "KaiTi", cursive;
+  font-family: var(--font-logo);
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: 0.04em;
+  line-height: 1;
 }
-.logo-img { height: 96px; width: auto; display: block; }
 .logo-mark {
   width: 30px;
   height: 30px;
@@ -731,7 +739,7 @@ blockquote {
     background: var(--bg);
   }
   .logo { left: var(--s-4); top: 4px; }
-  .logo-img { height: 64px; }
+  .logo-text { font-size: 24px; }
   .nav-toggle { display: inline-flex; }
   .nav {
     position: absolute;
