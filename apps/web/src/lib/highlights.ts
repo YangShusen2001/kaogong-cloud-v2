@@ -76,6 +76,35 @@ export function removeRange(spans: Span[], range: { start: number; end: number }
   return mergeAdjacent(result);
 }
 
+/** 仅移除区间内的一种样式，保留同区间的其他样式。 */
+export function removeStyle(
+  spans: Span[],
+  range: { start: number; end: number },
+  style: HighlightStyle,
+): Span[] {
+  if (range.start >= range.end) return spans;
+  const boundaries = new Set<number>([range.start, range.end]);
+  for (const span of spans) {
+    boundaries.add(span.start);
+    boundaries.add(span.end);
+  }
+  const sorted = [...boundaries].sort((a, b) => a - b);
+  const result: Span[] = [];
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const start = sorted[i]!;
+    const end = sorted[i + 1]!;
+    const styles = new Set<HighlightStyle>();
+    for (const span of spans) {
+      if (span.start <= start && end <= span.end) {
+        for (const current of span.styles) styles.add(current);
+      }
+    }
+    if (range.start <= start && end <= range.end) styles.delete(style);
+    if (styles.size) result.push({ start, end, styles: normalizeStyles(styles) });
+  }
+  return mergeAdjacent(result);
+}
+
 /** 渲染片段：一段文本及其样式集合（无样式时 styles 为空）。 */
 export interface Segment {
   text: string;
