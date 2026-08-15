@@ -11,7 +11,9 @@
 - 单个收件人失败不影响其他投递。
 - 临时失败可重试，永久退信暂停或抑制投递。
 - 邮件包含明确退订链接。
-- 供应商通过 `MailProvider` 抽象接入。
+- 验证码供应商通过 `MailProvider` 接入；日报必须通过独立 `NewsletterMailProvider` 接入。
+- 日报 provider 必须使用投递 ID 作为幂等键、持久化 provider message ID、支持 GET 对账和签名 webhook。
+- 永久退信、投诉和供应商抑制必须永久停止投递；不得提供自动解除抑制接口。
 
 ## Forbidden Areas
 

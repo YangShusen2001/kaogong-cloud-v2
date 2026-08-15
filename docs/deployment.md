@@ -46,8 +46,11 @@ npx wrangler deploy
 - `JOB_SECRET`：日报发行与投递内部任务密钥。**必填**，不得暴露给浏览器。
 - `MAIL_FROM`：已在 Cloudflare Email Sending 启用域名下的验证码发件地址。
 - `PUBLIC_API_URL`：Worker 对外 API 的同站点 HTTPS 地址，用于 newsletter 退订链接；没有 newsletter provider 时调度仍会安全跳过。
+- `RESEND_API_KEY`：Resend API key，仅从 Worker secret 注入；不得写入仓库。
+- `RESEND_NEWSLETTER_FROM`：已验证 Resend 域名下的日报发件人。与 API key 任一缺失时日报保持禁用。
+- `RESEND_WEBHOOK_SECRET`：Resend/Svix `whsec_` signing secret；缺失时 webhook 返回 503。
 
-验证码使用 Cloudflare Email Sending Worker binding `EMAIL`。每日摘要属于订阅/批量邮件，不使用事务邮件 binding；生产环境必须为 `newsletterMailProvider` 接入支持订阅、退信和批量投递的供应商。
+验证码使用 Cloudflare Email Sending Worker binding `EMAIL`。每日摘要使用独立 Resend Email API，不使用该 binding，也不使用 Resend batch endpoint。
 
 Session Cookie 使用 `HttpOnly + Secure + SameSite=Lax`。Pages 和 Worker 生产域名必须部署在同一站点下的自定义子域，例如 `www.example.com` 与 `api.example.com`；直接组合 `pages.dev` 和 `workers.dev` 时，浏览器不会在跨站 fetch 中发送 Lax Cookie。
 
@@ -70,7 +73,7 @@ npx wrangler pages deploy dist --project-name kaogong-web
 
 当前有两个独立的 high/open blocker：
 
-- `REL-NEWSLETTER-PROVIDER`：缺少 newsletter provider、provider 幂等或结果对账、退信、批量投递和真实投递证据。
+- `REL-NEWSLETTER-PROVIDER`：Resend 本地集成已完成，但缺少生产发件域/secrets/webhook、批量运行、退信/投诉演练和真实投递证据。
 - `REL-PRODUCTION-DEPLOYMENT`：缺少生产配置、全部 D1 迁移、Worker 和 Pages 部署、同站点自定义域、部署后 GET smoke 和一次安全验证码邮件验证。
 
 两个 blocker 必须分别满足关闭条件，任何一个都足以阻止发布。验证码仍使用 Cloudflare Email Sending `EMAIL` binding，不能把该事务邮件链路当作 newsletter provider，也不能用本地测试证明生产部署成功。
@@ -117,7 +120,7 @@ pnpm test:smoke
 
 ### 5.4 Newsletter 投递不可用
 
-订阅 API、发行幂等、退订、lease fencing 和重试的本地测试不等于 provider exactly-once，也不等于生产 newsletter 可投递。网络超时后供应商结果可能未知，本地状态会进入 `outcome_unknown`，接入方必须通过 provider idempotency key 或对账确认结果，不能盲目重发。当前没有 newsletter provider，禁止发送或声称发送了每日摘要；保持 `REL-NEWSLETTER-PROVIDER` open，直到供应商能力、独立集成、退信、批量投递、结果对账和真实投递验证均有证据。
+订阅 API、发行幂等、退订、lease fencing 和重试的本地测试不等于 provider exactly-once，也不等于生产 newsletter 可投递。网络超时后供应商结果可能未知，本地状态会进入 `outcome_unknown`，接入方必须通过 provider idempotency key 或对账确认结果，不能盲目重发。本地 Resend 集成不等于生产可投递，禁止发送或声称发送了每日摘要；保持 `REL-NEWSLETTER-PROVIDER` open，直到发件域、secrets、webhook、批量运行、退信/投诉演练、结果对账和真实投递验证均有证据。
 
 ## 6. （可选）本地联调
 

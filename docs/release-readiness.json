@@ -3,15 +3,15 @@
   "blockers": [
     {
       "id": "REL-NEWSLETTER-PROVIDER",
-      "title": "Production newsletter delivery provider is not selected or integrated",
+      "title": "Production Resend newsletter delivery evidence is incomplete",
       "severity": "high",
       "status": "open",
       "owner": "release-owner",
       "scope": "newsletter-delivery",
       "openedAt": "2026-08-15T00:00:00Z",
       "closeCriteria": [
-        "Select a provider that supports subscription, unsubscribe, bounce handling, and bulk delivery",
-        "Integrate the provider without using the transactional verification-email binding",
+        "Verify the selected Resend provider domain, sender, and production credentials",
+        "Configure the signed production webhook without using the transactional verification-email binding",
         "Verify provider idempotency keys or reconciliation so outcome_unknown deliveries cannot be blindly resent",
         "Pass bounce handling and production-representative bulk delivery verification",
         "Pass newsletter reliability tests and one production-safe delivery verification",
