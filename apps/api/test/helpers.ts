@@ -7,10 +7,14 @@ import { createApp, type AppConfig } from "../src/app";
 import * as schema from "../src/db/schema";
 
 export function makeApp(config: AppConfig = {}) {
+  return makeContext(config).app;
+}
+
+export function makeContext(config: AppConfig = {}) {
   const sqlite = new Database(":memory:");
   const db = drizzle(sqlite, { schema });
   migrate(db, { migrationsFolder: fileURLToPath(new URL("../drizzle", import.meta.url)) });
-  return createApp(db, config);
+  return { app: createApp(db, config), db, sqlite };
 }
 
 export const DEVICE = "test-device-1234";
