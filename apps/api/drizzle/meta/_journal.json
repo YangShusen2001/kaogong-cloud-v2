@@ -99,6 +99,13 @@
       "when": 1786761129540,
       "tag": "0013_owner_namespace_and_subscription_nonce",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1786782264144,
+      "tag": "0014_resend_newsletter_delivery",
+      "breakpoints": true
     }
   ]
 }

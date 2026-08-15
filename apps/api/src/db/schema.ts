@@ -100,6 +100,9 @@ export const subscriptions = sqliteTable("subscriptions", {
   unsubscribedAt: integer("unsubscribed_at"),
   unsubscribeTokenHash: text("unsubscribe_token_hash"),
   unsubscribeTokenNonce: text("unsubscribe_token_nonce"),
+  suppressionReason: text("suppression_reason"),
+  suppressedAt: integer("suppressed_at"),
+  suppressionProviderMessageId: text("suppression_provider_message_id"),
   updatedAt: integer("updated_at").notNull(),
 });
 
@@ -124,5 +127,23 @@ export const mailDeliveries = sqliteTable("mail_deliveries", {
   leaseToken: text("lease_token"),
   leaseExpiresAt: integer("lease_expires_at"),
   sentAt: integer("sent_at"),
+  providerMessageId: text("provider_message_id"),
+  providerEvent: text("provider_event"),
+  providerEventAt: integer("provider_event_at"),
+  lastReconciledAt: integer("last_reconciled_at"),
+  reconcileAttempts: integer("reconcile_attempts").notNull().default(0),
+  nextReconcileAt: integer("next_reconcile_at").notNull().default(0),
   createdAt: integer("created_at").notNull(),
-}, (t) => ({ issueUser: uniqueIndex("mail_issue_user_idx").on(t.issueId, t.userId) }));
+}, (t) => ({
+  issueUser: uniqueIndex("mail_issue_user_idx").on(t.issueId, t.userId),
+  providerMessage: uniqueIndex("mail_provider_message_idx").on(t.providerMessageId),
+}));
+
+export const resendWebhookEvents = sqliteTable("resend_webhook_events", {
+  svixId: text("svix_id").primaryKey(),
+  providerMessageId: text("provider_message_id").notNull(),
+  eventType: text("event_type").notNull(),
+  suppressionReason: text("suppression_reason"),
+  eventAt: integer("event_at").notNull(),
+  processedAt: integer("processed_at").notNull(),
+}, (t) => ({ providerMessage: index("resend_webhook_provider_idx").on(t.providerMessageId) }));
