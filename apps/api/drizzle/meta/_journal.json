@@ -43,6 +43,62 @@
       "when": 1786665466234,
       "tag": "0005_highlight_styles_offsets",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1786667953773,
+      "tag": "0006_drop_highlights_style",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1786716309117,
+      "tag": "0007_silky_ultron",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1786718972199,
+      "tag": "0008_windy_colonel_america",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1786719347617,
+      "tag": "0009_overjoyed_marvel_apes",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1786720273083,
+      "tag": "0010_pink_the_executioner",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1786720421206,
+      "tag": "0011_chubby_medusa",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1786758152818,
+      "tag": "0012_atomic_persistence_foundation",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1786761129540,
+      "tag": "0013_owner_namespace_and_subscription_nonce",
+      "breakpoints": true
     }
   ]
 }

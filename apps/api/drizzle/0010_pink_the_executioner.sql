@@ -1,0 +1,1 @@
+ALTER TABLE `mail_deliveries` ADD `next_attempt_at` integer DEFAULT 0 NOT NULL;

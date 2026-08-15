@@ -1,6 +1,6 @@
 {
-  "id": "3fbb59de-9ffc-4355-a6c4-066853f4b7a1",
-  "prevId": "8aaec2b4-484b-4317-9781-f902e0ad38c7",
+  "id": "3bda660b-b189-48ae-a094-9c21ebba5b75",
+  "prevId": "c2c86368-c3c9-44d6-81a1-d5ccff36b803",
   "version": "6",
   "dialect": "sqlite",
   "tables": {
@@ -104,13 +104,37 @@
           "autoincrement": false,
           "default": "''"
         },
-        "style": {
-          "name": "style",
+        "styles": {
+          "name": "styles",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'yellow'"
+          "default": "'[]'"
+        },
+        "paragraph_index": {
+          "name": "paragraph_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "start_offset": {
+          "name": "start_offset",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "end_offset": {
+          "name": "end_offset",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -202,6 +226,38 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
+        },
+        "subscribed": {
+          "name": "subscribed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
