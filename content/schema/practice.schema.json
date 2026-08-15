@@ -4,11 +4,12 @@
   "title": "PracticeSet",
   "description": "一天的每日一练题集（管道产出 → apps/web 消费）。",
   "type": "object",
+  "additionalProperties": false,
   "required": ["date", "total", "questions"],
   "properties": {
-    "date": { "type": "string", "description": "YYYY-MM-DD" },
-    "total": { "type": "integer" },
-    "source": { "type": "string" },
+    "date": { "type": "string", "format": "date", "description": "YYYY-MM-DD" },
+    "total": { "type": "integer", "minimum": 0 },
+    "source": { "type": "string", "minLength": 1 },
     "questions": {
       "type": "array",
       "items": { "$ref": "#/$defs/question" }
@@ -17,14 +18,15 @@
   "$defs": {
     "question": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["id", "q", "options", "answer", "analysis", "topic"],
       "properties": {
-        "id": { "type": "string" },
-        "q": { "type": "string" },
-        "options": { "type": "array", "items": { "type": "string" }, "minItems": 4, "maxItems": 4 },
+        "id": { "type": "string", "minLength": 1 },
+        "q": { "type": "string", "minLength": 1 },
+        "options": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 4, "maxItems": 4 },
         "answer": { "type": "integer", "minimum": 0, "maximum": 3 },
-        "analysis": { "type": "string" },
-        "topic": { "type": "string" }
+        "analysis": { "type": "string", "minLength": 1 },
+        "topic": { "type": "string", "minLength": 1 }
       }
     }
   }

@@ -4,10 +4,11 @@
   "title": "DailyDigest",
   "description": "一份每日日报（管道产出 → apps/web 消费）。权威契约：Python 侧据此校验产出。",
   "type": "object",
+  "additionalProperties": false,
   "required": ["date", "title", "sections"],
   "properties": {
-    "date": { "type": "string", "description": "YYYY-MM-DD" },
-    "title": { "type": "string" },
+    "date": { "type": "string", "format": "date", "description": "YYYY-MM-DD" },
+    "title": { "type": "string", "minLength": 1 },
     "sections": {
       "type": "array",
       "items": { "$ref": "#/$defs/section" }
@@ -16,10 +17,11 @@
   "$defs": {
     "section": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["id", "title", "items"],
       "properties": {
-        "id": { "type": "string", "description": "栏目 slug，如 national / essay" },
-        "title": { "type": "string", "description": "栏目名，如 全国时政要闻" },
+        "id": { "type": "string", "minLength": 1, "description": "栏目 slug，如 national / essay" },
+        "title": { "type": "string", "minLength": 1, "description": "栏目名，如 全国时政要闻" },
         "items": {
           "type": "array",
           "items": { "$ref": "#/$defs/item" }
@@ -28,15 +30,16 @@
     },
     "item": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["title", "date", "sourceUrl"],
       "properties": {
-        "title": { "type": "string" },
-        "date": { "type": "string", "description": "短写 MM-DD" },
-        "sourceUrl": { "type": "string", "description": "原文链接" },
+        "title": { "type": "string", "minLength": 1 },
+        "date": { "type": "string", "format": "month-day", "description": "短写 MM-DD" },
+        "sourceUrl": { "type": "string", "format": "public-http-url", "description": "原文链接" },
         "summary": { "type": "string", "description": "摘要（政策解读/地区/南方时评等栏目有）" },
         "quotes": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": { "type": "string", "minLength": 1 },
           "description": "金句摘录，可为空"
         }
       }

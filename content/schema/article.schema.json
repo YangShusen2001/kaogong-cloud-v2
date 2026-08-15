@@ -4,27 +4,140 @@
   "title": "ClippedArticle",
   "description": "剪藏原文（对应原项目 data/原文/{date}/*.json）。权威契约：Python 侧据此校验产出。",
   "type": "object",
+  "additionalProperties": false,
   "required": [
     "id", "date", "title", "source", "url",
     "pubDate", "fetchedAt", "status", "paragraphs", "keySentences"
   ],
   "properties": {
-    "id": { "type": "string" },
-    "date": { "type": "string", "description": "YYYY-MM-DD" },
-    "title": { "type": "string" },
-    "source": { "type": "string" },
-    "url": { "type": "string" },
-    "pubDate": { "type": "string", "description": "原文发布日期，可为空字符串" },
-    "fetchedAt": { "type": "string" },
+    "id": { "type": "string", "minLength": 1 },
+    "date": { "type": "string", "format": "date", "description": "YYYY-MM-DD" },
+    "title": { "type": "string", "minLength": 1 },
+    "source": { "type": "string", "minLength": 1 },
+    "url": { "type": "string", "format": "public-http-url" },
+    "pubDate": {
+      "oneOf": [
+        { "const": "" },
+        { "type": "string", "minLength": 1, "format": "date" }
+      ],
+      "description": "原文发布日期，可为空字符串"
+    },
+    "fetchedAt": { "type": "string", "format": "strict-date-time" },
     "status": { "enum": ["ok", "error"] },
     "paragraphs": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": { "type": "string", "minLength": 1 }
     },
     "keySentences": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": { "type": "string", "minLength": 1 },
       "description": "金句摘录"
+    },
+    "aiStatus": {
+      "enum": ["pending", "ok", "error"],
+      "description": "AI 处理状态；历史内容可暂时缺少该字段"
+    },
+    "aiSummary": {
+      "type": "string",
+      "minLength": 60,
+      "maxLength": 150,
+      "description": "首页 AI 概括，目标 80-120 个中文字符，发布允许 60-150"
+    },
+    "aiAnnotations": {
+      "type": "array",
+      "maxItems": 30,
+      "items": { "$ref": "#/$defs/aiAnnotation" }
+    },
+    "aiModel": { "type": "string", "minLength": 1 },
+    "aiPromptVersion": { "type": "string", "minLength": 1 },
+    "aiGeneratedAt": { "type": "string", "format": "strict-date-time" },
+    "sourceTextHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "按 paragraphs 规范化后计算的 SHA-256 十六进制值"
+    },
+    "aiError": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "aiQuality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locationErrors"],
+      "properties": {
+        "locationErrors": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "required": ["aiStatus"], "properties": { "aiStatus": { "const": "ok" } } },
+      "then": {
+        "required": [
+          "aiSummary", "aiAnnotations", "aiModel", "aiPromptVersion",
+          "aiGeneratedAt", "sourceTextHash", "aiQuality"
+        ],
+        "not": { "required": ["aiError"] }
+      }
+    },
+    {
+      "if": { "required": ["aiStatus"], "properties": { "aiStatus": { "const": "error" } } },
+      "then": {
+        "required": [
+          "aiAnnotations", "aiModel", "aiPromptVersion", "aiGeneratedAt",
+          "sourceTextHash", "aiError"
+        ],
+        "properties": {
+          "aiAnnotations": { "maxItems": 0 }
+        },
+        "not": { "anyOf": [{ "required": ["aiSummary"] }, { "required": ["aiQuality"] }] }
+      }
+    },
+    {
+      "if": { "required": ["aiStatus"], "properties": { "aiStatus": { "const": "pending" } } },
+      "then": {
+        "not": {
+          "anyOf": [
+            { "required": ["aiSummary"] },
+            { "required": ["aiError"] },
+            { "required": ["aiAnnotations"] },
+            { "required": ["aiModel"] },
+            { "required": ["aiPromptVersion"] },
+            { "required": ["aiGeneratedAt"] },
+            { "required": ["sourceTextHash"] },
+            { "required": ["aiQuality"] }
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "aiAnnotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "paragraphIndex", "start", "end", "text", "type"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "paragraphIndex": { "type": "integer", "minimum": 0 },
+        "start": { "type": "integer", "minimum": 0 },
+        "end": { "type": "integer", "minimum": 1 },
+        "text": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "type": { "enum": ["viewpoint", "exam_point", "term"] },
+        "explanation": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 80,
+          "description": "仅政策术语使用；生成失败时省略，不得伪造"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "term" } }, "required": ["type"] },
+          "then": {},
+          "else": { "not": { "required": ["explanation"] } }
+        }
+      ]
     }
   }
 }

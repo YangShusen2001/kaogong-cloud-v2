@@ -7,6 +7,22 @@
 // 本文件的 TS 类型必须与其保持字段一致；后续会用“从 JSON Schema 生成 TS 类型”
 // 或“一致性测试”消除手工同步（见 ADR 0001）。
 
+export type AiStatus = "pending" | "ok" | "error";
+
+export type AiAnnotationType = "viewpoint" | "exam_point" | "term";
+
+/** AI 在一段原文中的只读标注；start/end 为段落内左闭右开字符偏移。 */
+export interface AiAnnotation {
+  id: string;
+  paragraphIndex: number;
+  start: number;
+  end: number;
+  text: string;
+  type: AiAnnotationType;
+  /** 仅 term 使用，目标 30-80 个中文字符；生成失败时省略。 */
+  explanation?: string;
+}
+
 /** 剪藏原文（对应原 data/原文/{date}/*.json）。 */
 export interface ClippedArticle {
   /** 原文短 id，如 "14588442ca"。 */
@@ -27,6 +43,20 @@ export interface ClippedArticle {
   paragraphs: string[];
   /** 金句摘录。 */
   keySentences: string[];
+  /** 历史内容可缺少；新 Pipeline 产物必须明确写入处理状态。 */
+  aiStatus?: AiStatus;
+  /** 首页概括目标 80-120 字，发布允许范围 60-150 字。 */
+  aiSummary?: string;
+  /** AI 只读标注，不得写入用户 highlights 数据。 */
+  aiAnnotations?: AiAnnotation[];
+  aiModel?: string;
+  aiPromptVersion?: string;
+  aiGeneratedAt?: string;
+  /** paragraphs 规范化文本的 SHA-256 十六进制值。 */
+  sourceTextHash?: string;
+  /** aiStatus=error 时必填，最多 500 字符。 */
+  aiError?: string;
+  aiQuality?: { locationErrors: number };
 }
 
 /** 日报里的单条新闻。 */
@@ -80,5 +110,7 @@ export interface Question {
 export interface PracticeSet {
   date: string;
   total: number;
+  /** 题目来源（如 "2026-08-12.md"），与 practice.schema.json 的 source 字段对齐。 */
+  source?: string;
   questions: Question[];
 }
