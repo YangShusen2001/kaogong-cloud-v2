@@ -16,8 +16,11 @@ pipeline/
 ## 约定
 
 - **JSON 是跨语言传输格式，键名用 camelCase**；Python 内部用 snake_case，序列化时统一转换。
-- **契约权威在 `content/schema/*.json`**：管道产出必须通过 JSON Schema 校验（测试 `test_content_schema.py` 强制）。
-- 抓取 / AI 生成逻辑在后续阶段接入；本阶段先建立模型与解析器，并用真实数据做回归测试。
+- **契约权威在 `content/schema/*.json`**：管道产出必须通过 JSON Schema 校验，不能只依赖脚本没有抛异常。
+- AI 返回结构化 JSON，程序负责原文片段定位、偏移计算、长度校验和失败状态。
+- 单篇 AI 失败可以降级发布原文，但必须写入 `aiStatus` 和失败原因。
+- 来源失败、内容数量异常或 Schema 失败时，质量状态必须非成功，不得静默发布。
+- 具体规则见 `AGENTS.md`、`docs/product/ai-annotation-rules.md` 和 `docs/architecture/ai-annotation.md`。
 
 ## 运行
 

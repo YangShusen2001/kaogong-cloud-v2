@@ -183,7 +183,7 @@ def clip_article(url: str, title: str, date: str, *, client: httpx.Client | None
         "url": url,
         "pubDate": url_date(url),
         "fetchedAt": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-        "status": "failed",
+        "status": "error",
         "paragraphs": [],
         "keySentences": [],
     }
