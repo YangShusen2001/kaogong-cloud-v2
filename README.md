@@ -1,6 +1,6 @@
 # kaogong-cloud v2
 
-考公（申论/时政）学习网站的规范化重构版。保留原项目「定时抓取 → 静态站 → Serverless」这个被验证的架构骨架，把手搓的部分全部换成工业标准工具，只保留核心功能。
+面向公务员考生的时政文章聚合和学习网站。系统每天聚合官方时政来源，生成 AI 概括和原文标注，并通过 Astro 静态站提供阅读体验；用户通过 QQ 邮箱验证码登录后可以收藏、标注文章并订阅每日摘要。
 
 > 原项目（参考/备份）在 `C:\Users\26671\Desktop\Shizheng\kaogong-cloud`，本仓库是全新绿场重构，与其完全隔离。
 
@@ -26,8 +26,12 @@ packages/
 content/             管道产出的内容 JSON（含 schema/ 与样例）
 pipeline/            Python 内容管道（抓取源 → 组装 → 写 content/）
 docs/
-  adr/               架构决策记录
-  deployment.md      部署指南
+  product/           产品需求、AI 规则和验收标准
+  architecture/      模块边界和技术方案
+  agents/             Agent 角色和协作规范
+  tasks/              可执行任务和 Handoff
+  adr/                架构决策记录
+  deployment.md       部署指南
 .github/workflows/   CI 门禁
 ```
 
@@ -35,10 +39,12 @@ docs/
 
 - [x] 0/1 骨架 + 契约（monorepo + contracts）
 - [x] 2 内容管道（HTTP/去重/DeepSeek/源适配/组装/出题）
-- [x] 3 Astro 前端（日报 / 搜索 / 收藏 / 每日一练 / 划线解释 + 极光粒子 hero）
-- [x] 4 Worker API + D1（收藏/划线/每日一练/解释 + zod 契约闭环）
-- [x] 5 前端接 API（匿名设备标识 + 全功能交互）
-- [ ] 6 部署上线（见 `docs/deployment.md`，需 Cloudflare 账号）
+- [x] 内容管道、静态文章和用户学习功能基础骨架
+- [x] Astro 前端、Worker API、D1 和 CI 基础设施
+- [x] AI 概括和三类 AI 标注质量门禁（本地门禁已实现；2026-08-14 报告因缺少 AI key 为 failed）
+- [x] QQ 邮箱验证码认证（仓库本地已验证；生产事务邮件仍待部署）
+- [ ] 每日摘要订阅和邮件投递（本地订阅/退订/lease 已实现，生产 provider 未接入）
+- [ ] 生产部署和运行监控
 
 ## 本地开发
 
@@ -70,4 +76,4 @@ pnpm -r typecheck && pnpm -r test && pnpm -r build
 
 ## 架构决策
 
-见 `docs/adr/`，入口 `0001-target-architecture.md`。
+开发规范入口是 `AGENTS.md`。产品和任务入口分别是 `docs/product/` 与 `docs/tasks/`；架构决策见 `docs/adr/`。
