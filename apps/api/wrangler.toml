@@ -1,13 +1,21 @@
 name = "kaogong-api"
 main = "src/index.ts"
 compatibility_date = "2026-08-13"
+workers_dev = true
 
 # Verification email binding only; Resend newsletter credentials are environment-only.
 send_email = [{ name = "EMAIL" }]
 
+routes = [{ pattern = "api.meirishizheng.cn", custom_domain = true }]
+
 [observability]
 enabled = true
 head_sampling_rate = 1
+
+[vars]
+PUBLIC_API_URL = "https://api.meirishizheng.cn"
+ALLOWED_ORIGINS = "https://www.meirishizheng.cn,https://meirishizheng.cn"
+MAIL_FROM = "noreply@meirishizheng.cn"
 
 # D1 数据库绑定（database_id 已替换为真实库）
 [[d1_databases]]
