@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 import type { ClippedArticle, DailyDigest, PracticeSet } from "@kaogong/contracts";
 
 export type {
+  AiAnnotation,
+  AiAnnotationType,
+  AiStatus,
   ClippedArticle,
   DailyDigest,
   DigestItem,

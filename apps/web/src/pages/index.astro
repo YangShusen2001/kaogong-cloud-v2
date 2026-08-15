@@ -4,20 +4,36 @@ import { listArticles, listDigests } from "../lib/content";
 
 const digests = listDigests();
 const latest = digests[0];
-const clipMap = new Map(listArticles().map((a) => [a.url, a.id]));
+const clipMap = new Map(listArticles().map((a) => [a.url, a]));
+
+function sourceName(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "官方来源";
+  }
+}
+
+function cardItem(it: { title: string; date: string; sourceUrl: string; summary?: string }, category: string) {
+  const article = clipMap.get(it.sourceUrl);
+  const aiSummary = article?.aiStatus === "ok" ? article.aiSummary?.trim() : "";
+  return {
+    title: it.title,
+    date: it.date,
+    source: article?.source || sourceName(it.sourceUrl),
+    category,
+    summary: aiSummary || it.summary?.trim() || article?.keySentences?.[0] || "暂无摘要，可进入阅读页查看原文。",
+    summaryKind: aiSummary ? "AI 概括" : "内容提示",
+    href: article ? `/read/${article.id}/` : it.sourceUrl,
+    external: !article,
+  };
+}
 
 // 轮播：取最新一期前面的条目，标签显示其所属分类；有剪藏的跳阅读页
 const carouselItems = latest
   ? latest.sections.flatMap((s) =>
       s.items.map((it) => {
-        const id = clipMap.get(it.sourceUrl);
-        return {
-          title: it.title,
-          summary: it.summary ?? "",
-          section: s.title,
-          href: id ? `/read/${id}/` : it.sourceUrl,
-          external: !id,
-        };
+        return cardItem(it, s.title);
       }),
     ).slice(0, 6)
   : [];
@@ -26,15 +42,7 @@ const carouselItems = latest
 const todaySections = latest
   ? latest.sections.map((s) => ({
       title: s.title,
-      items: s.items.map((it) => {
-        const id = clipMap.get(it.sourceUrl);
-        return {
-          title: it.title,
-          date: it.date,
-          href: id ? `/read/${id}/` : it.sourceUrl,
-          external: !id,
-        };
-      }),
+      items: s.items.map((it) => cardItem(it, s.title)),
     }))
   : [];
 ---
@@ -48,9 +56,10 @@ const todaySections = latest
       <div class="carousel-track" id="carousel-track">
         {carouselItems.map((it) => (
           <a class="carousel-slide" href={it.href} {...(it.external ? { target: "_blank", rel: "noopener" } : {})}>
-            <span class="carousel-tag">{it.section}</span>
+            <span class="carousel-tag">{it.category}</span>
             <h2>{it.title}</h2>
-            {it.summary && <p>{it.summary}</p>}
+            <p class="carousel-meta">{it.source} · {it.summaryKind}</p>
+            <p>{it.summary}</p>
           </a>
         ))}
       </div>
@@ -64,13 +73,13 @@ const todaySections = latest
       {todaySections.map((s) => (
         <section class="section">
           <h3>{s.title}</h3>
-          <div class="day-list">
-            {s.items.map((it, i) => (
-              <a class="day-row" href={it.href} {...(it.external ? { target: "_blank", rel: "noopener" } : {})}>
-                <span class="day-num">{String(i + 1).padStart(2, "0")}</span>
-                <span class="day-date">{it.date}</span>
-                <span class="day-title">{it.title}</span>
-                <span class="day-arrow">›</span>
+          <div class="article-grid">
+            {s.items.map((it) => (
+              <a class="article-card" href={it.href} {...(it.external ? { target: "_blank", rel: "noopener" } : {})}>
+                <div class="article-card__meta"><span>{it.category}</span><span>{it.source}</span></div>
+                <h4>{it.title}</h4>
+                <p>{it.summary}</p>
+                <small>{it.summaryKind} · {it.date}</small>
               </a>
             ))}
           </div>
