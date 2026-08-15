@@ -7,6 +7,9 @@ export default defineConfig({
     command: "pnpm dev --host 127.0.0.1",
     port: 4321,
     reuseExistingServer: true,
+    env: {
+      PUBLIC_API_BASE: "http://127.0.0.1:4321",
+    },
   },
   use: {
     baseURL: "http://127.0.0.1:4321",

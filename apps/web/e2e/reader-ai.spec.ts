@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { stubAnonymousSession } from "./helpers";
 
 const explanation = "这一政策术语强调跨部门协同配置资源，以制度衔接提升公共治理的整体效能。";
 
@@ -20,6 +21,7 @@ async function serveArticleWithAi(page: Page) {
 }
 
 test("阅读模式切换展示三类 AI 标注并支持术语 hover/focus", async ({ page }) => {
+  await stubAnonymousSession(page);
   await serveArticleWithAi(page);
   await page.route("**/api/highlights/paragraphs/*", (route) => route.fulfill({ json: {
     ok: true,
@@ -80,6 +82,7 @@ test("阅读模式切换展示三类 AI 标注并支持术语 hover/focus", asyn
 });
 
 test("历史文章降级为原文且移动端无横向溢出", async ({ page }) => {
+  await stubAnonymousSession(page);
   await page.route("**/api/highlights/paragraphs/*", (route) => route.fulfill({ json: { ok: true, data: [] } }));
   await page.goto("/read/14588442ca/");
   await expect(page.getByRole("button", { name: "AI 标注模式" })).toBeDisabled();
@@ -88,6 +91,7 @@ test("历史文章降级为原文且移动端无横向溢出", async ({ page }) 
 });
 
 test("首页文章卡片包含标题、来源、分类和摘要降级", async ({ page }) => {
+  await stubAnonymousSession(page);
   await page.goto("/");
   const card = page.locator(".article-card").first();
   await expect(card.locator("h4")).not.toBeEmpty();

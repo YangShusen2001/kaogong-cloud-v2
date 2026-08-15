@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
+import { stubAnonymousSession } from "./helpers";
 
 test("划线原子保存并在刷新后恢复", async ({ page }) => {
   const pageErrors: string[] = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
+  await stubAnonymousSession(page);
   let version = 0;
   let spans: Array<{ text: string; note: string; styles: string[]; start: number; end: number }> = [];
 
