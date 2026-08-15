@@ -25,7 +25,7 @@ export const favoriteSchema = z.object({
 export type Favorite = z.infer<typeof favoriteSchema>;
 
 export const favoriteCreateSchema = z.object({
-  url: z.string().min(1),
+  url: z.string().min(1).regex(/^https?:\/\//i, "url 必须以 http(s):// 开头"),
   title: z.string().min(1),
   source: z.string().optional(),
   note: z.string().optional(),
@@ -53,18 +53,33 @@ export const highlightSchema = z.object({
 });
 export type Highlight = z.infer<typeof highlightSchema>;
 
-export const highlightCreateSchema = z
-  .object({
-    articleId: z.string().min(1),
-    text: z.string().min(1),
-    note: z.string().optional(),
-    styles: z.array(highlightStyleSchema).min(1),
-    paragraphIndex: z.number().int().min(0),
-    start: z.number().int().min(0),
-    end: z.number().int().min(1),
-  })
-  .refine((v) => v.start < v.end, { message: "划线区间无效（start 必须小于 end）" });
-export type HighlightCreate = z.infer<typeof highlightCreateSchema>;
+export const highlightSpanSchema = z.object({
+  text: z.string().min(1).max(1000),
+  note: z.string().max(2000).default(""),
+  styles: z.array(highlightStyleSchema).min(1).max(3),
+  start: z.number().int().min(0),
+  end: z.number().int().min(1),
+}).refine((v) => v.start < v.end, { message: "划线区间无效（start 必须小于 end）" });
+export type HighlightSpan = z.infer<typeof highlightSpanSchema>;
+
+export const highlightParagraphReplaceSchema = z.object({
+  articleId: z.string().min(1),
+  paragraphIndex: z.number().int().min(0),
+  baseVersion: z.number().int().min(0),
+  spans: z.array(highlightSpanSchema).max(100),
+});
+export type HighlightParagraphReplace = z.infer<typeof highlightParagraphReplaceSchema>;
+
+export const highlightParagraphResponseSchema = z.object({
+  version: z.number().int().min(0),
+  highlights: z.array(highlightSchema),
+});
+export type HighlightParagraphResponse = z.infer<typeof highlightParagraphResponseSchema>;
+
+export const highlightParagraphListItemSchema = highlightParagraphResponseSchema.extend({
+  paragraphIndex: z.number().int().min(0),
+});
+export type HighlightParagraphListItem = z.infer<typeof highlightParagraphListItemSchema>;
 
 // —— 每日一练 ——
 export const practiceRecordSchema = z.object({
@@ -89,32 +104,32 @@ export const explainResponseSchema = z.object({
 });
 export type ExplainResponse = z.infer<typeof explainResponseSchema>;
 
-// —— 账号鉴权 ——
-export const credentialsSchema = z.object({
-  username: z.string().min(2).max(32).regex(/^[a-zA-Z0-9_-]+$/, "用户名只能含字母数字下划线"),
-  password: z.string().min(8).max(64),
-  email: z.string().max(64).optional(), // QQ 邮箱，用于订阅通知
-  name: z.string().max(32).optional(),  // 姓名
+// —— QQ 邮箱验证码鉴权 ——
+export const qqEmailSchema = z.string().trim().toLowerCase()
+  .regex(/^[1-9][0-9]{4,10}@qq\.com$/, "请输入有效的 QQ 邮箱");
+export const emailCodeRequestSchema = z.object({ email: qqEmailSchema });
+export type EmailCodeRequest = z.infer<typeof emailCodeRequestSchema>;
+export const emailCodeVerifySchema = z.object({
+  email: qqEmailSchema,
+  code: z.string().regex(/^\d{6}$/, "验证码必须为 6 位数字"),
 });
-export type Credentials = z.infer<typeof credentialsSchema>;
+export type EmailCodeVerify = z.infer<typeof emailCodeVerifySchema>;
 
 export const authUserSchema = z.object({
   id: z.string(),
-  username: z.string(),
+  email: qqEmailSchema,
 });
 export type AuthUser = z.infer<typeof authUserSchema>;
 
 export const authResponseSchema = z.object({
-  token: z.string(),
   user: authUserSchema,
 });
 export type AuthResponse = z.infer<typeof authResponseSchema>;
 
 // —— 个人资料 ——
 export const profileSchema = z.object({
-  username: z.string(),
   name: z.string(),
-  email: z.string(),
+  email: qqEmailSchema,
   avatar: z.string(),
   subscribed: z.boolean(),
 });
@@ -122,8 +137,15 @@ export type Profile = z.infer<typeof profileSchema>;
 
 export const profileUpdateSchema = z.object({
   name: z.string().max(32).optional(),
-  email: z.string().max(64).optional(),
-  avatar: z.string().max(8).optional(),
-  subscribed: z.boolean().optional(),
+  avatar: z.string().min(1).max(8).optional(),
 });
 export type ProfileUpdate = z.infer<typeof profileUpdateSchema>;
+
+export const subscriptionSchema = z.object({ subscribed: z.boolean() });
+export type Subscription = z.infer<typeof subscriptionSchema>;
+
+export const subscriptionResponseSchema = z.object({
+  subscribed: z.boolean(),
+  deliveryAvailable: z.boolean(),
+});
+export type SubscriptionResponse = z.infer<typeof subscriptionResponseSchema>;
