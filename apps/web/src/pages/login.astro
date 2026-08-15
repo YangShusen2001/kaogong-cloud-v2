@@ -1,89 +1,60 @@
 ---
 import Base from "../layouts/Base.astro";
 ---
-<Base title="登录 · 时政小助手">
+<Base title="QQ 邮箱登录 · 时政小助手">
   <section class="card auth-card">
-    <h2 id="auth-title">登录</h2>
+    <h2>QQ 邮箱验证码登录</h2>
     <form id="auth-form" class="auth-form">
-      <label>
-        用户名
-        <input id="username" type="text" autocomplete="username" required minlength="2" />
-      </label>
-      <label>
-        密码
-        <input id="password" type="password" autocomplete="current-password" required minlength="8" />
-      </label>
-      <label class="reg-only" hidden>
-        确认密码
-        <input id="password2" type="password" required minlength="8" />
-      </label>
-      <label class="reg-only" hidden>
-        QQ 邮箱（用于订阅通知，可选）
-        <input id="email" type="email" placeholder="123456@qq.com" />
-      </label>
-      <label class="reg-only" hidden>
-        姓名（可选）
-        <input id="name" type="text" maxlength="32" />
-      </label>
-      <p id="auth-error" class="auth-error" hidden></p>
-      <div class="auth-actions">
-        <button type="submit" class="btn btn--solid" id="auth-submit">登录</button>
-        <button type="button" class="btn btn--line" id="auth-toggle">去注册</button>
-      </div>
-      <p class="item-summary">注册即创建个人账号，之后你的收藏/划线/练习会随账号同步（下一步实现）。</p>
+      <label>QQ 邮箱<input id="email" type="email" inputmode="email" autocomplete="email" placeholder="123456@qq.com" required /></label>
+      <label id="code-row" hidden>验证码<input id="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" disabled required /></label>
+      <p id="auth-error" class="auth-error" role="alert" hidden></p>
+      <button type="submit" class="btn btn--solid" id="auth-submit">发送验证码</button>
+      <p id="auth-status" class="item-summary" role="status" aria-live="polite"></p>
+      <p class="item-summary">首次验证成功会自动创建账号。登录后，你的<span class="text-unit">收藏</span>、划线和练习记录可随账号同步。</p>
     </form>
   </section>
 </Base>
-
 <script>
-  import type { Credentials } from "@kaogong/contracts";
   import { api } from "../lib/api";
-  import { setToken } from "../lib/auth";
-
-  let mode: "login" | "register" = "login";
   const form = document.getElementById("auth-form") as HTMLFormElement;
-  const title = document.getElementById("auth-title")!;
-  const submit = document.getElementById("auth-submit")!;
-  const toggle = document.getElementById("auth-toggle")!;
-  const err = document.getElementById("auth-error")!;
-  const username = document.getElementById("username") as HTMLInputElement;
-  const password = document.getElementById("password") as HTMLInputElement;
-  const password2 = document.getElementById("password2") as HTMLInputElement;
   const email = document.getElementById("email") as HTMLInputElement;
-  const name = document.getElementById("name") as HTMLInputElement;
-
-  function setMode(m: "login" | "register") {
-    mode = m;
-    title.textContent = m === "login" ? "登录" : "注册";
-    submit.textContent = m === "login" ? "登录" : "注册";
-    toggle.textContent = m === "login" ? "去注册" : "去登录";
-    err.hidden = true;
-    document.querySelectorAll(".reg-only").forEach((el) => {
-      (el as HTMLElement).hidden = m !== "register";
-    });
-  }
-
-  toggle.addEventListener("click", () => setMode(mode === "login" ? "register" : "login"));
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (mode === "register" && password.value !== password2.value) {
-      err.hidden = false;
-      err.textContent = "两次输入的密码不一致";
-      return;
-    }
-    const body: Credentials = { username: username.value.trim(), password: password.value };
-    if (mode === "register") {
-      if (email.value.trim()) body.email = email.value.trim();
-      if (name.value.trim()) body.name = name.value.trim();
-    }
-    const env = mode === "login" ? await api.login(body) : await api.register(body);
-    if (env.ok && env.data) {
-      setToken(env.data.token);
-      location.href = "/";
+  const code = document.getElementById("code") as HTMLInputElement;
+  const codeRow = document.getElementById("code-row") as HTMLElement;
+  const submit = document.getElementById("auth-submit") as HTMLButtonElement;
+  const error = document.getElementById("auth-error") as HTMLElement;
+  const status = document.getElementById("auth-status") as HTMLElement;
+  let sent = false;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    error.hidden = true;
+    status.textContent = "";
+    submit.disabled = true;
+    if (!sent) {
+      submit.textContent = "正在发送…";
+      const result = await api.requestEmailCode({ email: email.value.trim() });
+      if (result.ok) {
+        sent = true;
+        codeRow.hidden = false;
+        code.disabled = false;
+        submit.textContent = "验证并登录";
+        email.readOnly = true;
+        status.textContent = result.data?.message ?? "验证码已发送";
+        code.focus();
+      } else {
+        submit.textContent = "发送验证码";
+        error.textContent = result.error?.message ?? "发送失败，请重试";
+        error.hidden = false;
+      }
     } else {
-      err.hidden = false;
-      err.textContent = env.error?.message ?? "操作失败";
+      submit.textContent = "正在验证…";
+      const result = await api.verifyEmailCode({ email: email.value.trim(), code: code.value.trim() });
+      if (result.ok) location.href = "/";
+      else {
+        submit.textContent = "验证并登录";
+        error.textContent = result.error?.message ?? "验证失败，请重试";
+        error.hidden = false;
+      }
     }
+    submit.disabled = false;
   });
 </script>

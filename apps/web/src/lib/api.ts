@@ -3,17 +3,20 @@ import type {
   ApiError,
   AuthResponse,
   AuthUser,
-  Credentials,
+  EmailCodeRequest,
+  EmailCodeVerify,
   ExplainResponse,
   Favorite,
   FavoriteCreate,
-  Highlight,
-  HighlightCreate,
+  HighlightParagraphReplace,
+  HighlightParagraphListItem,
+  HighlightParagraphResponse,
   PracticeRecord,
   Profile,
   ProfileUpdate,
+  Subscription,
+  SubscriptionResponse,
 } from "@kaogong/contracts";
-import { getToken } from "./auth";
 import { getDeviceId } from "./device";
 
 export interface Envelope<T> {
@@ -26,15 +29,17 @@ export interface Envelope<T> {
 export const API_BASE =
   (import.meta.env.PUBLIC_API_BASE as string | undefined) ?? "http://127.0.0.1:8787";
 
+if (import.meta.env.PROD && !import.meta.env.PUBLIC_API_BASE) {
+  console.error("[kaogong] 生产构建未设置 PUBLIC_API_BASE，前端将回退到 127.0.0.1:8787");
+}
+
 export function createApi(base: string, deviceId: () => string) {
   async function request<T>(path: string, init?: RequestInit): Promise<Envelope<T>> {
     const headers = new Headers(init?.headers);
     headers.set("x-device-id", deviceId());
-    const token = getToken();
-    if (token) headers.set("authorization", `Bearer ${token}`);
     if (init?.body) headers.set("content-type", "application/json");
     try {
-      const res = await fetch(base + path, { ...init, headers });
+      const res = await fetch(base + path, { ...init, headers, credentials: "include" });
       return (await res.json()) as Envelope<T>;
     } catch {
       return { ok: false, data: null, error: { code: "NETWORK", message: "网络错误" } };
@@ -46,22 +51,26 @@ export function createApi(base: string, deviceId: () => string) {
     addFavorite: (body: FavoriteCreate) =>
       request<Favorite>("/api/favorites", { method: "POST", body: JSON.stringify(body) }),
     removeFavorite: (id: string) => request<null>(`/api/favorites/${id}`, { method: "DELETE" }),
-    listHighlights: () => request<Highlight[]>("/api/highlights"),
-    addHighlight: (body: HighlightCreate) =>
-      request<Highlight>("/api/highlights", { method: "POST", body: JSON.stringify(body) }),
-    removeHighlight: (id: string) => request<null>(`/api/highlights/${id}`, { method: "DELETE" }),
+    listHighlightParagraphs: (articleId: string) =>
+      request<HighlightParagraphListItem[]>(`/api/highlights/paragraphs/${encodeURIComponent(articleId)}`),
+    replaceHighlightParagraph: (body: HighlightParagraphReplace) =>
+      request<HighlightParagraphResponse>("/api/highlights/paragraph", { method: "PUT", body: JSON.stringify(body) }),
     submitPractice: (body: PracticeRecord) =>
       request<PracticeRecord>("/api/practice", { method: "POST", body: JSON.stringify(body) }),
     explain: (text: string) =>
       request<ExplainResponse>("/api/explain", { method: "POST", body: JSON.stringify({ text }) }),
-    register: (body: Credentials) =>
-      request<AuthResponse>("/api/auth/register", { method: "POST", body: JSON.stringify(body) }),
-    login: (body: Credentials) =>
-      request<AuthResponse>("/api/auth/login", { method: "POST", body: JSON.stringify(body) }),
-    me: () => request<AuthUser>("/api/auth/me"),
+    requestEmailCode: (body: EmailCodeRequest) =>
+      request<{ message: string }>("/api/auth/email/code", { method: "POST", body: JSON.stringify(body) }),
+    verifyEmailCode: (body: EmailCodeVerify) =>
+      request<AuthResponse>("/api/auth/email/verify", { method: "POST", body: JSON.stringify(body) }),
+    me: () => request<AuthUser>("/api/auth/session"),
+    logout: () => request<null>("/api/auth/logout", { method: "POST" }),
     getProfile: () => request<Profile>("/api/profile"),
     updateProfile: (body: ProfileUpdate) =>
       request<Profile>("/api/profile", { method: "POST", body: JSON.stringify(body) }),
+    getSubscription: () => request<SubscriptionResponse>("/api/subscription"),
+    updateSubscription: (body: Subscription) =>
+      request<SubscriptionResponse>("/api/subscription", { method: "POST", body: JSON.stringify(body) }),
   };
 }
 

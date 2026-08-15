@@ -31,37 +31,60 @@ const {
           <a href="/practice/">每日一练</a>
           <span class="nav-auth" id="kg-auth"><a href="/login/">登录</a></span>
         </nav>
-        <button type="button" class="nav-toggle" id="nav-toggle" aria-label="菜单">☰</button>
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-label="打开菜单" aria-controls="nav" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </button>
       </div>
     </header>
     <main class="wrap"><slot /></main>
     <footer class="foot">时政小助手 · 内容来自官方原文，请以原文为准</footer>
     <script>
-      import { clearToken, tokenUsername } from "../lib/auth";
+      import { api } from "../lib/api";
 
       const box = document.getElementById("kg-auth");
       if (box) {
-        const name = tokenUsername();
-        if (name) {
+        const session = await api.me();
+        if (session.ok && session.data) {
           box.textContent = "";
           const link = document.createElement("a");
           link.href = "/profile/";
-          link.textContent = name;
+          link.textContent = session.data.email.split("@")[0] ?? "账号";
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "nav-logout";
           btn.textContent = "退出";
-          btn.addEventListener("click", () => {
-            clearToken();
-            location.reload();
+          const status = document.createElement("span");
+          status.className = "nav-auth-status";
+          status.setAttribute("role", "status");
+          status.setAttribute("aria-live", "polite");
+          btn.addEventListener("click", async () => {
+            btn.disabled = true;
+            btn.textContent = "退出中…";
+            status.textContent = "";
+            const result = await api.logout();
+            if (result.ok) {
+              location.reload();
+              return;
+            }
+            status.textContent = result.error?.message ?? "退出失败，请重试";
+            btn.textContent = "退出";
+            btn.disabled = false;
           });
-          box.append(link, btn);
+          box.append(link, btn, status);
         }
       }
 
       // 下滑收起导航，悬停展开
       const topEl = document.getElementById("top");
       if (topEl) {
+        const navToggle = document.getElementById("nav-toggle") as HTMLButtonElement | null;
+        navToggle?.addEventListener("click", () => {
+          const open = topEl.classList.toggle("mobile-open");
+          navToggle.setAttribute("aria-expanded", String(open));
+          navToggle.setAttribute("aria-label", open ? "关闭菜单" : "打开菜单");
+        });
         const onScroll = () => topEl.classList.toggle("collapsed", window.scrollY > 140);
         window.addEventListener("scroll", onScroll, { passive: true });
         onScroll();
