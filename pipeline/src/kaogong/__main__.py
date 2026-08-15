@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
 import sys
 from pathlib import Path
 
-from .pipeline import build_content, clip_content
+from .pipeline import build_content, clip_content, practice_content, quality_gate
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -23,8 +24,17 @@ def main(argv: list[str] | None = None) -> int:
     )
     path = build_content(target, content_dir)
     n_clips = clip_content(target, content_dir)
-    print(f"已生成：{path}；剪藏 {n_clips} 篇原文")
-    return 0
+    practice_path = practice_content(target, content_dir)
+    quality = quality_gate(target, content_dir)
+    print(json.dumps({
+        "event": "pipeline.complete",
+        "date": target.isoformat(),
+        "digest": str(path),
+        "articles": n_clips,
+        "practice": str(practice_path) if practice_path else None,
+        "qualityStatus": quality["qualityStatus"],
+    }, ensure_ascii=False))
+    return 1 if quality["qualityStatus"] == "failed" else 0
 
 
 if __name__ == "__main__":
