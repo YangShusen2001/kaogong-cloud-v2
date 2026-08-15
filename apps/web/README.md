@@ -1,9 +1,8 @@
 # apps/web · Astro 前端
 
-占位目录。阶段 3 用 `pnpm create astro` 在此初始化静态站。
+Astro 静态前端，消费 `content/` 产物并调用 API 获取用户数据。
 
 - 消费 `packages/contracts` 的类型；
 - 消费 `content/` 里管道产出的内容（Astro content collection）；
-- 调用 `apps/api` 的接口获取收藏/划线/做题等个性化数据。
-
-现在无需安装任何依赖。
+- 调用 `apps/api` 的接口获取收藏、用户标注、做题和账号数据。
+- AI 标注为内容只读数据，用户标注必须与 AI 标注分开渲染。
