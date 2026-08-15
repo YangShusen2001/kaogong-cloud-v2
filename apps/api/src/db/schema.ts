@@ -1,10 +1,11 @@
-// 数据库 schema（唯一权威）：收藏 / 划线 / 每日一练。
-// 匿名设备标识（device_id）分区用户数据，无账号体系（见 docs/adr/0002）。
-import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
+// 数据库 schema（唯一权威）：收藏 / 划线 / 每日一练 / 用户。
+// owner_id 使用 user:<id> / device:<id> 域前缀隔离登录用户和匿名设备数据。
+import { sql } from "drizzle-orm";
+import { index, integer, primaryKey, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export const favorites = sqliteTable("favorites", {
   id: text("id").primaryKey(),
-  ownerId: text("owner_id").notNull(), // 登录=userId，匿名=设备id
+  ownerId: text("owner_id").notNull(),
   url: text("url").notNull(),
   title: text("title").notNull(),
   source: text("source").notNull().default(""),
@@ -14,18 +15,29 @@ export const favorites = sqliteTable("favorites", {
 
 export const highlights = sqliteTable("highlights", {
   id: text("id").primaryKey(),
-  ownerId: text("owner_id").notNull(), // 登录=userId，匿名=设备id
+  ownerId: text("owner_id").notNull(),
   articleId: text("article_id").notNull(),
   text: text("text").notNull(),
   note: text("note").notNull().default(""),
-  // 旧字段：单值样式，已被 styles 取代；仅保留用于既有数据兼容，不再读写。
-  style: text("style").notNull().default("yellow"),
   styles: text("styles").notNull().default("[]"), // JSON 数组，如 '["green","underline"]'
   paragraphIndex: integer("paragraph_index").notNull().default(0), // 段落序号
   startOffset: integer("start_offset").notNull().default(0), // 段落内起始偏移（含）
   endOffset: integer("end_offset").notNull().default(0), // 段落内结束偏移（不含）
   createdAt: integer("created_at").notNull(), // unix 毫秒
-});
+}, (t) => ({
+  ownerArticleParagraph: index("highlights_owner_article_paragraph_idx").on(t.ownerId, t.articleId, t.paragraphIndex),
+}));
+
+export const highlightParagraphs = sqliteTable("highlight_paragraphs", {
+  ownerId: text("owner_id").notNull(),
+  articleId: text("article_id").notNull(),
+  paragraphIndex: integer("paragraph_index").notNull(),
+  version: integer("version").notNull().default(0),
+  spans: text("spans").notNull().default("[]"),
+  updatedAt: integer("updated_at").notNull(),
+}, (t) => ({
+  pk: primaryKey({ columns: [t.ownerId, t.articleId, t.paragraphIndex] }),
+}));
 
 // 每日一练：每个归属每天一条（复合主键），重复提交即覆盖
 export const practice = sqliteTable(
@@ -50,6 +62,67 @@ export const users = sqliteTable("users", {
   email: text("email").notNull().default(""),
   name: text("name").notNull().default(""),
   avatar: text("avatar").notNull().default(""),
-  subscribed: integer("subscribed").notNull().default(0), // 0/1 订阅 QQ 邮箱通知
   createdAt: integer("created_at").notNull(), // unix 毫秒
+}, (t) => ({
+  verifiedEmail: uniqueIndex("users_verified_email_unique").on(t.email).where(sql`${t.email} <> ''`),
+}));
+
+export const emailVerificationCodes = sqliteTable("email_verification_codes", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  codeHash: text("code_hash").notNull(),
+  expiresAt: integer("expires_at").notNull(),
+  attempts: integer("attempts").notNull().default(0),
+  consumedAt: integer("consumed_at"),
+  consumeToken: text("consume_token"),
+  ipHash: text("ip_hash").notNull(),
+  deviceId: text("device_id").notNull(),
+  createdAt: integer("created_at").notNull(),
+}, (t) => ({
+  emailCreated: index("verification_email_created_idx").on(t.email, t.createdAt),
+  ipCreated: index("verification_ip_created_idx").on(t.ipHash, t.createdAt),
+  deviceCreated: index("verification_device_created_idx").on(t.deviceId, t.createdAt),
+}));
+
+export const sessions = sqliteTable("sessions", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: integer("expires_at").notNull(),
+  revokedAt: integer("revoked_at"),
+  createdAt: integer("created_at").notNull(),
 });
+
+export const subscriptions = sqliteTable("subscriptions", {
+  userId: text("user_id").primaryKey(),
+  status: text("status").notNull().default("unsubscribed"),
+  subscribedAt: integer("subscribed_at"),
+  unsubscribedAt: integer("unsubscribed_at"),
+  unsubscribeTokenHash: text("unsubscribe_token_hash"),
+  unsubscribeTokenNonce: text("unsubscribe_token_nonce"),
+  updatedAt: integer("updated_at").notNull(),
+});
+
+export const newsletterIssues = sqliteTable("newsletter_issues", {
+  id: text("id").primaryKey(),
+  issueDate: text("issue_date").notNull().unique(),
+  subject: text("subject").notNull(),
+  textContent: text("text_content").notNull(),
+  status: text("status").notNull().default("draft"),
+  createdAt: integer("created_at").notNull(),
+});
+
+export const mailDeliveries = sqliteTable("mail_deliveries", {
+  id: text("id").primaryKey(),
+  issueId: text("issue_id").notNull(),
+  userId: text("user_id").notNull(),
+  recipient: text("recipient").notNull(),
+  status: text("status").notNull().default("pending"),
+  attempts: integer("attempts").notNull().default(0),
+  lastError: text("last_error").notNull().default(""),
+  nextAttemptAt: integer("next_attempt_at").notNull().default(0),
+  leaseToken: text("lease_token"),
+  leaseExpiresAt: integer("lease_expires_at"),
+  sentAt: integer("sent_at"),
+  createdAt: integer("created_at").notNull(),
+}, (t) => ({ issueUser: uniqueIndex("mail_issue_user_idx").on(t.issueId, t.userId) }));
