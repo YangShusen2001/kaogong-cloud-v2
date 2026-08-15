@@ -4,6 +4,7 @@ node_modules/
 # 构建产物
 dist/
 .wrangler/
+apps/api/.wrangler-qa/
 .astro/
 test-results/
 playwright-report/
