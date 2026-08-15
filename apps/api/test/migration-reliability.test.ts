@@ -19,6 +19,7 @@ const MIGRATIONS = [
   "0011_chubby_medusa",
   "0012_atomic_persistence_foundation",
   "0013_owner_namespace_and_subscription_nonce",
+  "0014_resend_newsletter_delivery",
 ] as const;
 
 const snapshotSchema = z.object({
@@ -109,12 +110,23 @@ describe("migration reliability", () => {
     expect(userColumns).not.toContain("subscribed");
     const subscriptionColumns = sqlite.prepare("SELECT name FROM pragma_table_info('subscriptions')").pluck().all();
     expect(subscriptionColumns).toContain("unsubscribe_token_nonce");
+    expect(subscriptionColumns).toEqual(expect.arrayContaining([
+      "suppression_reason", "suppressed_at", "suppression_provider_message_id",
+    ]));
+    expect(deliveryColumns).toEqual(expect.arrayContaining([
+      "provider_message_id", "provider_event", "provider_event_at", "last_reconciled_at", "reconcile_attempts", "next_reconcile_at",
+    ]));
+    expect(tables).toContain("resend_webhook_events");
+    const webhookColumns = sqlite.prepare("SELECT name FROM pragma_table_info('resend_webhook_events')").pluck().all();
+    expect(webhookColumns).toContain("suppression_reason");
     const indexes = sqlite.prepare("SELECT name FROM sqlite_master WHERE type = 'index'").pluck().all();
     expect(indexes).toEqual(expect.arrayContaining([
       "verification_ip_created_idx",
       "verification_device_created_idx",
       "users_username_unique",
       "users_verified_email_unique",
+      "mail_provider_message_idx",
+      "resend_webhook_provider_idx",
     ]));
     expect(sqlite.prepare("SELECT name FROM pragma_index_info('verification_ip_created_idx') ORDER BY seqno").pluck().all()).toEqual(["ip_hash", "created_at"]);
     expect(sqlite.prepare("SELECT name FROM pragma_index_info('verification_device_created_idx') ORDER BY seqno").pluck().all()).toEqual(["device_id", "created_at"]);

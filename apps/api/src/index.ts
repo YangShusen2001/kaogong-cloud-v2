@@ -3,6 +3,7 @@
 import { createApp, processScheduledNewsletter, type AppConfig } from "./app";
 import { createDb } from "./db";
 import { cloudflareMailProvider, type EmailBinding } from "./lib/mail";
+import { resendNewsletterMailProvider } from "./lib/resend-newsletter-provider";
 
 interface Env {
   DB: D1Database;
@@ -14,6 +15,9 @@ interface Env {
   MAIL_FROM?: string;
   JOB_SECRET?: string;
   PUBLIC_API_URL?: string;
+  RESEND_API_KEY?: string;
+  RESEND_NEWSLETTER_FROM?: string;
+  RESEND_WEBHOOK_SECRET?: string;
 }
 
 export function createConfig(env: Omit<Env, "DB">): AppConfig {
@@ -25,6 +29,10 @@ export function createConfig(env: Omit<Env, "DB">): AppConfig {
     authSecret: env.AUTH_SECRET,
     allowedOrigins,
     verificationMailProvider: env.EMAIL && env.MAIL_FROM ? cloudflareMailProvider(env.EMAIL, env.MAIL_FROM) : undefined,
+    newsletterMailProvider: env.RESEND_API_KEY && env.RESEND_NEWSLETTER_FROM
+      ? resendNewsletterMailProvider({ apiKey: env.RESEND_API_KEY, from: env.RESEND_NEWSLETTER_FROM })
+      : undefined,
+    resendWebhookSecret: env.RESEND_WEBHOOK_SECRET,
     jobSecret: env.JOB_SECRET,
     publicApiUrl: env.PUBLIC_API_URL,
   };

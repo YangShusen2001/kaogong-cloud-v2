@@ -11,8 +11,10 @@ import { explainRoutes } from "./routes/explain";
 import { authRoutes } from "./routes/auth";
 import { profileRoutes } from "./routes/profile";
 import type { MailProvider } from "./lib/mail";
+import type { NewsletterMailProvider } from "./lib/newsletter-mail-provider";
 import { processNewsletterBatch, type NewsletterBatchResult } from "./lib/newsletter";
 import { newsletterRoutes, subscriptionRoutes } from "./routes/subscription";
+import { webhookRoutes } from "./routes/webhooks";
 
 export type DB = BetterSQLite3Database<typeof schema> | DrizzleD1Database<typeof schema>;
 
@@ -22,10 +24,11 @@ export interface AppConfig {
   /** 允许跨源的 Origin 白名单（如 Pages 域名）；未配置则不发送 CORS 头。 */
   allowedOrigins?: string[];
   verificationMailProvider?: MailProvider;
-  newsletterMailProvider?: MailProvider;
+  newsletterMailProvider?: NewsletterMailProvider;
   secureCookies?: boolean;
   jobSecret?: string;
   publicApiUrl?: string;
+  resendWebhookSecret?: string;
 }
 
 export async function processScheduledNewsletter(db: DB, config: AppConfig): Promise<NewsletterBatchResult> {
@@ -60,5 +63,6 @@ export function createApp(db: DB, config: AppConfig = {}) {
   app.route("/api/explain", explainRoutes(config));
   app.route("/api/subscription", subscriptionRoutes(db, config));
   app.route("/api/newsletter", newsletterRoutes(db, config));
+  app.route("/api/webhooks", webhookRoutes(db, config));
   return app;
 }

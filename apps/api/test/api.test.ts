@@ -257,7 +257,8 @@ describe("subscription and newsletter", () => {
   it("订阅后同一期只建一条投递并可发送", async () => {
     const sent: string[] = [];
     const mailProvider = { async send(m: { text: string }) { sent.push(m.text); return {}; } };
-    const app = makeApp({ authSecret: "secret", jobSecret: "job", publicApiUrl: "https://api.example.com", secureCookies: false, verificationMailProvider: mailProvider, newsletterMailProvider: mailProvider });
+    const newsletter = { async send(m: { text: string }) { sent.push(m.text); return { kind: "accepted", providerMessageId: "provider-id" } as const; }, async reconcile() { return { kind: "found", event: "sent" } as const; } };
+    const app = makeApp({ authSecret: "secret", jobSecret: "job", publicApiUrl: "https://api.example.com", secureCookies: false, verificationMailProvider: mailProvider, newsletterMailProvider: newsletter });
     await app.request("/api/auth/email/code", json("POST", { email: "345678@qq.com" }));
     const code = sent[0]!.match(/\b(\d{6})\b/)![1]!;
     const verified = await app.request("/api/auth/email/verify", json("POST", { email: "345678@qq.com", code }));
@@ -281,7 +282,7 @@ describe("subscription and newsletter", () => {
     const sent: string[] = [];
     const verification = { async send(m: { text: string }) { sent.push(m.text); return {}; } };
     let attempts = 0;
-    const newsletter = { async send() { attempts++; throw new Error("temporary"); } };
+    const newsletter = { async send() { attempts++; return { kind: "retryable", reason: "provider_unavailable" } as const; }, async reconcile() { return { kind: "retryable" } as const; } };
     const app = makeApp({ authSecret: "secret", jobSecret: "job", publicApiUrl: "https://api.example.com", secureCookies: false, verificationMailProvider: verification, newsletterMailProvider: newsletter });
     await app.request("/api/auth/email/code", json("POST", { email: "456789@qq.com" }));
     const code = sent[0]!.match(/\b(\d{6})\b/)![1]!;

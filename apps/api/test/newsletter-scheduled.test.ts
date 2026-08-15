@@ -67,4 +67,15 @@ describe("scheduled newsletter processing", () => {
     expect(config.verificationMailProvider).toBeDefined();
     expect(config.newsletterMailProvider).toBeUndefined();
   });
+
+  it("enables Resend newsletter delivery only when key and sender are complete", () => {
+    // Given / When
+    const partial = createConfig({ RESEND_API_KEY: "secret" });
+    const complete = createConfig({ RESEND_API_KEY: "secret", RESEND_NEWSLETTER_FROM: "brief@example.com" });
+
+    // Then
+    expect(partial.newsletterMailProvider).toBeUndefined();
+    expect(complete.newsletterMailProvider).toBeDefined();
+    expect(complete.verificationMailProvider).toBeUndefined();
+  });
 });

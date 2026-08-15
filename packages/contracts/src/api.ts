@@ -147,5 +147,6 @@ export type Subscription = z.infer<typeof subscriptionSchema>;
 export const subscriptionResponseSchema = z.object({
   subscribed: z.boolean(),
   deliveryAvailable: z.boolean(),
+  suppressionReason: z.string().nullable(),
 });
 export type SubscriptionResponse = z.infer<typeof subscriptionResponseSchema>;

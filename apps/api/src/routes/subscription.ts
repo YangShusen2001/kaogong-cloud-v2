@@ -1,4 +1,4 @@
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, ne } from "drizzle-orm";
 import { Hono } from "hono";
 import { subscriptionSchema } from "@kaogong/contracts";
 import type { AppConfig, DB } from "../app";
@@ -15,7 +15,9 @@ async function changeSubscription(
   tokenHash: string | null,
   tokenNonce: string | null,
   now: number,
-): Promise<void> {
+): Promise<typeof subscriptions.$inferSelect | undefined> {
+  const current = await db.select().from(subscriptions).where(eq(subscriptions.userId, userId)).get();
+  if (!subscribed && current?.status === "suppressed") return current;
   const values = {
     status: subscribed ? "subscribed" : "unsubscribed",
     subscribedAt: subscribed ? now : null,
@@ -25,7 +27,7 @@ async function changeSubscription(
     updatedAt: now,
   };
   const writeSubscription = (executor: DB) => executor.insert(subscriptions).values({ userId, ...values })
-    .onConflictDoUpdate({ target: subscriptions.userId, set: values });
+    .onConflictDoUpdate({ target: subscriptions.userId, set: values, setWhere: subscribed ? ne(subscriptions.status, "suppressed") : undefined });
   const cancelDeliveries = (executor: DB) => executor.update(mailDeliveries).set({
     status: "cancelled",
     leaseToken: null,
@@ -38,12 +40,13 @@ async function changeSubscription(
   if ("batch" in db) {
     if (subscribed) await db.batch([writeSubscription(db)]);
     else await db.batch([writeSubscription(db), cancelDeliveries(db)]);
-    return;
+    return (await db.select().from(subscriptions).where(eq(subscriptions.userId, userId)).get()) ?? current;
   }
   db.transaction((transaction) => {
     writeSubscription(transaction).run();
     if (!subscribed) cancelDeliveries(transaction).run();
   });
+  return (await db.select().from(subscriptions).where(eq(subscriptions.userId, userId)).get()) ?? current;
 }
 
 export function subscriptionRoutes(db: DB, config: AppConfig) {
@@ -55,6 +58,7 @@ export function subscriptionRoutes(db: DB, config: AppConfig) {
     return context.json({ ok: true, data: {
       subscribed: row?.status === "subscribed",
       deliveryAvailable: Boolean(config.newsletterMailProvider),
+      suppressionReason: row?.suppressionReason ?? null,
     } });
   });
   routes.post("/", async (context) => {
@@ -65,14 +69,18 @@ export function subscriptionRoutes(db: DB, config: AppConfig) {
     const parsed = subscriptionSchema.safeParse(raw);
     if (!parsed.success) return badInput(context, parsed.error.issues[0]?.message ?? "参数非法");
     const subscribed = parsed.data.subscribed;
+    const current = await db.select().from(subscriptions).where(eq(subscriptions.userId, userId)).get();
+    if (subscribed && current?.status === "suppressed") return fail(context, 409, "SUBSCRIPTION_SUPPRESSED", "该邮箱已被永久停止投递");
     if (subscribed && !config.newsletterMailProvider) return fail(context, 503, "MAIL_UNAVAILABLE", "摘要邮件服务未配置");
     if (subscribed && !config.authSecret) return fail(context, 503, "AUTH_UNAVAILABLE", "认证服务未配置");
     const tokenNonce = subscribed ? crypto.randomUUID() : null;
     const token = config.authSecret && tokenNonce
       ? await deriveUnsubscribeToken(userId, tokenNonce, config.authSecret)
       : null;
-    await changeSubscription(db, userId, subscribed, token ? await sha256(token) : null, tokenNonce, Date.now());
-    return context.json({ ok: true, data: { subscribed, deliveryAvailable: Boolean(config.newsletterMailProvider) } });
+    const persisted = await changeSubscription(db, userId, subscribed, token ? await sha256(token) : null, tokenNonce, Date.now());
+    if (!persisted) return fail(context, 500, "SUBSCRIPTION_PERSISTENCE_FAILED", "订阅状态保存失败");
+    if (subscribed && persisted.status === "suppressed") return fail(context, 409, "SUBSCRIPTION_SUPPRESSED", "该邮箱已被永久停止投递");
+    return context.json({ ok: true, data: { subscribed: persisted.status === "subscribed", deliveryAvailable: Boolean(config.newsletterMailProvider), suppressionReason: persisted.suppressionReason ?? null } });
   });
   routes.get("/unsubscribe", async (context) => {
     const token = context.req.query("token");
