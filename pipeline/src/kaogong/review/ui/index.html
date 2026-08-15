@@ -130,6 +130,13 @@ async function loadDigest(date) {
   document.querySelector(".empty").style.display = "block";
 }
 
+// —— clipMap：url -> article id，按 MD5(url)[:10] 稳定映射 ——
+function articleIdOf(url) {
+  // 与后端 hashlib.md5(url)[:10] 对齐：纯 JS 算不出，但审核服务会按 id 直接返回；
+  // 这里通过 /api/article-by-url?url=... 让后端解析，前端不重复算。
+  return null;
+}
+
 function buildClipMap() {
   for (const s of digest.sections) for (const it of s.items) {
     if (it.sourceUrl && !(it.sourceUrl in clipMap)) clipMap[it.sourceUrl] = null;
@@ -172,21 +179,18 @@ function select(si, ii, row) {
 
 async function loadPreview(url) {
   const body = $("preview-body");
-  const id = clipMap[url];
-  if (!id) {
-    // 尝试找该 url 对应的原文
-    const { dates } = await j("/api/dates");
-    for (const d of dates) {
-      const dg = await j(`/api/digest/${d}`);
-      for (const s of dg.sections) for (const it of s.items) {
-        if (it.sourceUrl === url && it._articleId) clipMap[url] = it._articleId;
-      }
+  body.textContent = "加载中…";
+  if (!url) { body.textContent = "该条目无原文链接"; return; }
+  try {
+    const art = await j(`/api/article-by-url?url=${encodeURIComponent(url)}`);
+    if (art.paragraphs && art.paragraphs.length) {
+      body.innerHTML = art.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("");
+    } else {
+      body.textContent = "无正文";
     }
+  } catch (e) {
+    body.textContent = "该篇暂无剪藏原文";
   }
-  if (!clipMap[url]) { body.textContent = "该篇暂无剪藏原文"; return; }
-  const art = await j(`/api/article/${clipMap[url]}`);
-  if (art.paragraphs) body.innerHTML = art.paragraphs.map((p) => `<p>${esc(p)}</p>`).join("");
-  else body.textContent = "无正文";
 }
 
 function esc(s) {

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 import json
 import os
 import subprocess
@@ -12,7 +13,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 
-from ..pipeline import build_content, clip_content
+from ..pipeline import build_content, clip_content, practice_content
 
 ROOT = Path(__file__).resolve().parents[4]  # 仓库根（pipeline/src/kaogong/review/ 上溯 4 层）
 CONTENT = ROOT / "content"
@@ -45,6 +46,7 @@ def api_fetch(body: FetchBody) -> dict:
     target = dt.date.fromisoformat(body.date) if body.date else dt.date.today()
     digest_path = build_content(target, CONTENT)
     n_clips = clip_content(target, CONTENT)
+    practice_content(target, CONTENT)
     return {"ok": True, "date": target.isoformat(), "digest": str(digest_path), "clips": n_clips}
 
 
@@ -81,6 +83,21 @@ def api_save_digest(body: DigestBody) -> dict:
 def api_article(id: str) -> dict:
     for d in CONTENT.iterdir():
         p = d / f"article-{id}.json"
+        if p.exists():
+            return json.loads(p.read_text(encoding="utf-8"))
+    raise HTTPException(404, "无该原文")
+
+
+def _article_id(url: str) -> str:
+    return hashlib.md5(url.encode("utf-8")).hexdigest()[:10]
+
+
+@app.get("/api/article-by-url")
+def api_article_by_url(url: str) -> dict:
+    """按原文 URL 解析出 article id 并返回剪藏原文，避免前端反复查 digest 找 _articleId。"""
+    aid = _article_id(url)
+    for d in CONTENT.iterdir():
+        p = d / f"article-{aid}.json"
         if p.exists():
             return json.loads(p.read_text(encoding="utf-8"))
     raise HTTPException(404, "无该原文")
