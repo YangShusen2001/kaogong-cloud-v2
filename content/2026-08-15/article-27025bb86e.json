@@ -1,0 +1,93 @@
+{
+  "id": "27025bb86e",
+  "date": "2026-08-15",
+  "title": "孟凡利会见复星国际郭广昌一行",
+  "source": "news.dayoo.com",
+  "url": "https://news.dayoo.com/guangdong/202608/15/139996_54991085.htm",
+  "pubDate": "",
+  "fetchedAt": "2026-08-15T22:20:15+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "大洋网讯 8月14日，省委副书记、省长孟凡利在广州会见复星国际董事长郭广昌一行。",
+    "郭广昌表示，广东营商环境优越，是全球科技创新高地、制造业高地。双方在多个领域有着良好的合作基础，面向未来也有着广阔的合作前景。复星将积极对接广东发展需求，充分发挥粤港澳大湾区开放程度高、经济活力强、创新能力突出的优势，进一步开展更多的合作和投资，更大力度参与发展生物医药产业，加强国际医疗服务和国际游客导入，积极探讨广东旅游、养老产业发展中的合作机会，加快基金投资、保险、金融等领域合作，积极助力广东高质量发展。",
+    "孟凡利对郭广昌一行表示欢迎。他说，面向“十五五”，希望复星充分发挥优势，在医药、健康养老、旅游、金融等方面与广东进一步加强合作。广东将打造一流营商环境和产业生态，为复星在粤发展做好服务保障。",
+    "复星国际唐斌、祝文魁、刘子瑜等参加会见。（李凤祥、符信）"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-15T22:20:17+00:00",
+  "sourceTextHash": "a74c6f9c61ea7b502f885777b4232dac276a8f3cde5861952b3fbf8fc77602b4",
+  "aiStatus": "ok",
+  "aiSummary": "8月14日，广东省长孟凡利会见复星国际董事长郭广昌，双方就医药、健康养老、旅游、金融等领域合作进行交流，复星表示将加大在粤投资，助力广东高质量发展。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-19-39-viewpoint",
+      "paragraphIndex": 0,
+      "start": 19,
+      "end": 39,
+      "text": "孟凡利在广州会见复星国际董事长郭广昌一行",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-6-30-viewpoint",
+      "paragraphIndex": 1,
+      "start": 6,
+      "end": 30,
+      "text": "广东营商环境优越，是全球科技创新高地、制造业高地",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-123-137-exam_point",
+      "paragraphIndex": 1,
+      "start": 123,
+      "end": 137,
+      "text": "更大力度参与发展生物医药产业",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-138-153-exam_point",
+      "paragraphIndex": 1,
+      "start": 138,
+      "end": 153,
+      "text": "加强国际医疗服务和国际游客导入",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-154-175-exam_point",
+      "paragraphIndex": 1,
+      "start": 154,
+      "end": 175,
+      "text": "积极探讨广东旅游、养老产业发展中的合作机会",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-176-193-exam_point",
+      "paragraphIndex": 1,
+      "start": 176,
+      "end": 193,
+      "text": "加快基金投资、保险、金融等领域合作",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-17-24-term",
+      "paragraphIndex": 2,
+      "start": 17,
+      "end": 24,
+      "text": "面向“十五五”",
+      "type": "term",
+      "explanation": "指中国国民经济和社会发展的第十五个五年规划，时间范围为2026-2030年。"
+    },
+    {
+      "id": "ai-2-67-80-viewpoint",
+      "paragraphIndex": 2,
+      "start": 67,
+      "end": 80,
+      "text": "打造一流营商环境和产业生态",
+      "type": "viewpoint"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

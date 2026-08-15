@@ -1,0 +1,84 @@
+{
+  "id": "1b1a84fe27",
+  "date": "2026-08-15",
+  "title": "天府新区眉山片区称谓统一，背后释放出什么信号？丨时堂",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83305880.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-15T22:20:49+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "近日，在网络上，关于天府新区眉山片区统一称谓的消息热传，引发关注。",
+    "不少网友纷纷晒出现场图片，天府大道成眉交界点上曾经的“眉山天府新区欢迎您”九个大字变成了“天府新区眉山欢迎您”；位于视高街道的“眉山天府新区展示中心”也更名了，新的名字叫“天府新区眉山展示中心”。",
+    "关于这些变化，当地目前还没有相关回应。但记者梳理发现，称谓统一工作确实正在进行。如眉山天府新区官方微信公众号名称，已于7月31日变更为了“天府新眉”；当地官方媒体也统一使用“天府新区眉山片区”的表述了。这背后，释放了什么信号？"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-15T22:20:50+00:00",
+  "sourceTextHash": "1ec8c86e696ba6a1248ad763a58d95536c971c422bddb9452229797ec4a45de1",
+  "aiStatus": "ok",
+  "aiSummary": "天府新区眉山片区统一称谓，从“眉山天府新区”变为“天府新区眉山”，官方媒体和公众号已同步更新，释放出区域协同发展、强化天府新区整体品牌、提升眉山片区融入成都都市圈信号的深层含义。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-8-27-viewpoint",
+      "paragraphIndex": 0,
+      "start": 8,
+      "end": 27,
+      "text": "关于天府新区眉山片区统一称谓的消息热传",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-13-55-viewpoint",
+      "paragraphIndex": 1,
+      "start": 13,
+      "end": 55,
+      "text": "天府大道成眉交界点上曾经的“眉山天府新区欢迎您”九个大字变成了“天府新区眉山欢迎您”",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-27-39-viewpoint",
+      "paragraphIndex": 2,
+      "start": 27,
+      "end": 39,
+      "text": "称谓统一工作确实正在进行",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-10-18-term",
+      "paragraphIndex": 0,
+      "start": 10,
+      "end": 18,
+      "text": "天府新区眉山片区",
+      "type": "term",
+      "explanation": "指四川天府新区下辖的眉山部分，是国家级新区的重要组成部分，强调与成都片区的整体性。"
+    },
+    {
+      "id": "ai-0-18-22-exam_point",
+      "paragraphIndex": 0,
+      "start": 18,
+      "end": 22,
+      "text": "统一称谓",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-13-17-exam_point",
+      "paragraphIndex": 1,
+      "start": 13,
+      "end": 17,
+      "text": "天府大道",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-47-54-exam_point",
+      "paragraphIndex": 2,
+      "start": 47,
+      "end": 54,
+      "text": "官方微信公众号",
+      "type": "exam_point"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 5
+  }
+}

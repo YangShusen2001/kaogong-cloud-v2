@@ -1,0 +1,108 @@
+{
+  "id": "3906b37260",
+  "date": "2026-08-15",
+  "title": "江苏省人民政府 要闻关注 我省启动沿江地区防汛Ⅳ级应急响应 太湖将发生流域性较大洪水",
+  "source": "中国政府网",
+  "url": "http://www.jiangsu.gov.cn/art/2026/8/15/art_84322_11816657.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-15T22:21:32+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "因省气象台发布暴雨蓝色预警，省防汛抗旱指挥部决定，8月14日10时起，启动沿江地区防汛Ⅳ级应急响应。相关地区各级政府及有关部门要密切关注雨水情，加强应急值守和分析研判，强化风险管控，做好防洪排涝应急处置准备，果断组织风险区域群众转移避险。",
+    "据水利部信息，受台风“白海豚”残余环流、冷空气及季风槽等影响，预计14—16日，江苏南部、上海、浙江、安徽东部南部等地将有大到暴雨；其中，江苏南部、浙江东北部、广东中部等地局部将有大暴雨。预计，太湖将发生流域性较大洪水，滁河可能发生2026年第2号洪水。太湖周边河网，长江下游支流滁河及江苏里下河等主要河流将出现明显涨水过程，暴雨区内部分中小河流可能发生超警洪水。",
+    "水利部信息中心14日升级发布洪水黄色预警，提醒江苏、上海、浙江、安徽、河南、江西、福建、广东等省市相关地区社会公众注意防范。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-15T22:21:33+00:00",
+  "sourceTextHash": "9e727f347622aef5f38435ceba7517775a5b82847a0f59c76a2d083e9d00a62a",
+  "aiStatus": "ok",
+  "aiSummary": "江苏省因暴雨蓝色预警启动沿江地区防汛Ⅳ级应急响应，要求加强值守和风险管控，组织群众转移避险。受台风残余环流等影响，太湖将发生流域性较大洪水，水利部发布洪水黄色预警，提醒相关地区防范。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-35-49-viewpoint",
+      "paragraphIndex": 0,
+      "start": 35,
+      "end": 49,
+      "text": "启动沿江地区防汛Ⅳ级应急响应",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-104-118-viewpoint",
+      "paragraphIndex": 0,
+      "start": 104,
+      "end": 118,
+      "text": "果断组织风险区域群众转移避险",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-97-109-viewpoint",
+      "paragraphIndex": 1,
+      "start": 97,
+      "end": 109,
+      "text": "太湖将发生流域性较大洪水",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-14-24-exam_point",
+      "paragraphIndex": 0,
+      "start": 14,
+      "end": 24,
+      "text": "省防汛抗旱指挥部决定",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-25-34-exam_point",
+      "paragraphIndex": 0,
+      "start": 25,
+      "end": 34,
+      "text": "8月14日10时起",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-41-49-term",
+      "paragraphIndex": 0,
+      "start": 41,
+      "end": 49,
+      "text": "防汛Ⅳ级应急响应",
+      "type": "term",
+      "explanation": "防汛应急响应级别之一，表示汛情较为严重，需启动相应防御措施。"
+    },
+    {
+      "id": "ai-1-8-19-exam_point",
+      "paragraphIndex": 1,
+      "start": 8,
+      "end": 19,
+      "text": "台风“白海豚”残余环流",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-110-126-exam_point",
+      "paragraphIndex": 1,
+      "start": 110,
+      "end": 126,
+      "text": "滁河可能发生2026年第2号洪水",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-0-20-exam_point",
+      "paragraphIndex": 2,
+      "start": 0,
+      "end": 20,
+      "text": "水利部信息中心14日升级发布洪水黄色预警",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-14-20-term",
+      "paragraphIndex": 2,
+      "start": 14,
+      "end": 20,
+      "text": "洪水黄色预警",
+      "type": "term"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

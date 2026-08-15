@@ -1,0 +1,15 @@
+{
+  "date": "2026-08-15",
+  "sourcesOk": 15,
+  "sourceErrors": [],
+  "candidates": 17,
+  "articles": 11,
+  "aiOk": 11,
+  "aiError": 0,
+  "aiFailures": [],
+  "locationErrors": 12,
+  "schemaErrors": [],
+  "semanticErrors": [],
+  "volumeErrors": [],
+  "qualityStatus": "degraded"
+}
