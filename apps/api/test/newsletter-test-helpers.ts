@@ -1,11 +1,23 @@
 import type { MailProvider } from "../src/lib/mail";
+import type { NewsletterMailMessage, NewsletterMailProvider } from "../src/lib/newsletter-mail-provider";
 import { json, makeContext } from "./helpers";
 
 export const JOB_HEADERS = { "x-job-secret": "job" } as const;
 export const ISSUE = { date: "2026-08-15", subject: "Daily brief", text: "Issue body" } as const;
 
-export function provider(send: MailProvider["send"]): MailProvider {
-  return { send };
+export function provider(send: (message: NewsletterMailMessage) => Promise<unknown>): NewsletterMailProvider {
+  return {
+    async send(message) {
+      try {
+        await send(message);
+        return { kind: "accepted", providerMessageId: `provider-${message.idempotencyKey}` };
+      } catch (error) {
+        if (error instanceof Error) return { kind: "retryable", reason: "provider_unavailable" };
+        throw error;
+      }
+    },
+    async reconcile() { return { kind: "found", event: "sent" }; },
+  };
 }
 
 export async function authenticatedContext(overrides: Parameters<typeof makeContext>[0] = {}) {
@@ -15,10 +27,10 @@ export async function authenticatedContext(overrides: Parameters<typeof makeCont
     jobSecret: "job",
     publicApiUrl: "https://api.example.com",
     secureCookies: false,
-    verificationMailProvider: provider(async (message) => {
+    verificationMailProvider: { async send(message) {
       verification.push(message.text);
       return {};
-    }),
+    } },
     ...overrides,
   });
   await context.app.request("/api/auth/email/code", json("POST", { email: "123456@qq.com" }));

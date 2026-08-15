@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { eq } from "drizzle-orm";
 import { mailDeliveries, newsletterIssues, sessions, subscriptions, users } from "../src/db/schema";
 import { createApp } from "../src/app";
 import { makeContext, readJson } from "./helpers";
@@ -25,7 +26,7 @@ describe("newsletter reliability", () => {
     const availableState = await available.app.request("/api/subscription", { headers: { cookie: available.cookie } });
     const subscribe = await setSubscription(app, cookie, true);
 
-    expect((await readJson<{ subscribed: boolean; deliveryAvailable: boolean }>(state)).data).toEqual({ subscribed: false, deliveryAvailable: false });
+    expect((await readJson<{ subscribed: boolean; deliveryAvailable: boolean; suppressionReason: string | null }>(state)).data).toEqual({ subscribed: false, deliveryAvailable: false, suppressionReason: null });
     expect((await readJson<{ deliveryAvailable: boolean }>(availableState)).data.deliveryAvailable).toBe(true);
     expect(subscribe.status).toBe(503);
   });
@@ -37,6 +38,72 @@ describe("newsletter reliability", () => {
     const response = await setSubscription(appWithoutServices, context.cookie, false);
 
     expect(response.status).toBe(200);
+  });
+
+  it("blocks resubscribe after provider suppression and keeps suppression on unsubscribe", async () => {
+    // Given
+    const context = await authenticatedContext({ newsletterMailProvider: provider(async () => undefined) });
+    await context.db.insert(subscriptions).values({
+      userId: (await context.db.select().from(users).get())?.id ?? "missing",
+      status: "suppressed", suppressionReason: "complaint", suppressedAt: Date.now(), updatedAt: Date.now(),
+    }).onConflictDoUpdate({ target: subscriptions.userId, set: { status: "suppressed", suppressionReason: "complaint", suppressedAt: Date.now() } }).run();
+
+    // When
+    const resubscribe = await setSubscription(context.app, context.cookie, true);
+    const unsubscribe = await setSubscription(context.app, context.cookie, false);
+
+    // Then
+    expect(resubscribe.status).toBe(409);
+    expect(unsubscribe.status).toBe(200);
+    expect(await context.db.select().from(subscriptions).get()).toMatchObject({ suppressionReason: "complaint", suppressedAt: Date.now() });
+  });
+
+  it("keeps suppression when subscribe races with terminal provider suppression", async () => {
+    // Given
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { return { kind: "accepted", providerMessageId: "race-provider" }; },
+      async reconcile() { return { kind: "found", event: "complained" }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "race-provider", nextReconcileAt: Date.now(),
+    }).run();
+
+    // When
+    await Promise.all([
+      setSubscription(context.app, context.cookie, true),
+      processBatch(context.app),
+    ]);
+
+    // Then
+    expect(await context.db.select().from(subscriptions).get()).toMatchObject({
+      status: "suppressed", suppressionReason: "complaint", unsubscribeTokenHash: null,
+    });
+  });
+
+  it("returns suppression conflict when subscribe loses to terminal provider suppression", async () => {
+    // Given
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { return { kind: "accepted", providerMessageId: "response-race-provider" }; },
+      async reconcile() { return { kind: "found", event: "complained" }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "response-race-provider", nextReconcileAt: Date.now(),
+    }).run();
+
+    // When
+    const [subscribeResponse] = await Promise.all([
+      setSubscription(context.app, context.cookie, true),
+      processBatch(context.app),
+    ]);
+
+    // Then
+    expect(subscribeResponse?.status).toBe(409);
+    expect((await readJson<never>(subscribeResponse as Response)).error).toMatchObject({ code: "SUBSCRIPTION_SUPPRESSED" });
+    expect(await context.db.select().from(subscriptions).get()).toMatchObject({ status: "suppressed", suppressionReason: "complaint" });
   });
 
   it("requires auth secret for subscribing even when delivery exists", async () => {
@@ -75,6 +142,319 @@ describe("newsletter reliability", () => {
     expect(await db.select().from(newsletterIssues).all()).toHaveLength(1);
     expect(await db.select().from(mailDeliveries).all()).toHaveLength(1);
     expect(sent).toHaveLength(1);
+    expect((await db.select().from(mailDeliveries).get())?.providerMessageId).toBeTruthy();
+  });
+
+  it("reconciles an expired provider-known delivery without another POST", async () => {
+    // Given
+    let sends = 0;
+    let reconciles = 0;
+    const newsletterMailProvider = {
+      async send() { sends += 1; return { kind: "accepted", providerMessageId: "provider-known" } as const; },
+      async reconcile() { reconciles += 1; return { kind: "found", event: "delivered" } as const; },
+    };
+    const context = await authenticatedContext({ newsletterMailProvider });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    await context.db.update(mailDeliveries).set({
+      status: "processing", attempts: 2, leaseToken: "expired", leaseExpiresAt: Date.now() - 1,
+      providerMessageId: "provider-known",
+    }).run();
+
+    // When
+    await processBatch(context.app);
+
+    // Then
+    expect(sends).toBe(0);
+    expect(reconciles).toBe(1);
+    expect(await context.db.select().from(mailDeliveries).get()).toMatchObject({ status: "sent", providerEvent: "delivered" });
+  });
+
+  it("reconciles a due provider-known unknown outcome without another POST", async () => {
+    // Given
+    let sends = 0;
+    let reconciles = 0;
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { sends += 1; return { kind: "accepted", providerMessageId: "unexpected" }; },
+      async reconcile() { reconciles += 1; return { kind: "found", event: "delivered" }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", attempts: 3, providerMessageId: "provider-known", reconcileAttempts: 1,
+      nextReconcileAt: Date.now(),
+    }).run();
+
+    // When
+    await processBatch(context.app);
+
+    // Then
+    expect(sends).toBe(0);
+    expect(reconciles).toBe(1);
+    expect(await context.db.select().from(mailDeliveries).get()).toMatchObject({
+      status: "sent", attempts: 3, reconcileAttempts: 2, nextReconcileAt: 0,
+    });
+  });
+
+  it("backs off bounded reconciliation and leaves unknown rows without provider IDs untouched", async () => {
+    // Given
+    let sends = 0;
+    let reconciles = 0;
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { sends += 1; return { kind: "accepted", providerMessageId: "unexpected" }; },
+      async reconcile() { reconciles += 1; return { kind: "retryable" }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    const existing = await context.db.select().from(mailDeliveries).get();
+    if (!existing) throw new Error("delivery fixture missing");
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "provider-known", reconcileAttempts: 2, nextReconcileAt: Date.now(),
+    }).run();
+    await context.db.insert(mailDeliveries).values({
+      id: "unknown-without-provider", issueId: existing.issueId, userId: "other-user", recipient: "other@example.com",
+      status: "outcome_unknown", attempts: 3, lastError: "provider_error", nextAttemptAt: 0, nextReconcileAt: 0, createdAt: 1,
+    }).run();
+
+    // When
+    await processBatch(context.app);
+    const afterFailure = await context.db.select().from(mailDeliveries).where(eq(mailDeliveries.id, existing.id)).get();
+    await processBatch(context.app);
+
+    // Then
+    expect(sends).toBe(0);
+    expect(reconciles).toBe(1);
+    expect(afterFailure).toMatchObject({ status: "outcome_unknown", attempts: 0, reconcileAttempts: 3 });
+    expect(afterFailure?.nextReconcileAt).toBeGreaterThan(Date.now());
+    expect(await context.db.select().from(mailDeliveries).where(eq(mailDeliveries.id, "unknown-without-provider")).get()).toMatchObject({
+      status: "outcome_unknown", reconcileAttempts: 0,
+    });
+  });
+
+  it("leaves a provider-known unknown outcome terminal after the fifth reconciliation", async () => {
+    // Given
+    let reconciles = 0;
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { return { kind: "accepted", providerMessageId: "unexpected" }; },
+      async reconcile() { reconciles += 1; return { kind: "outcome_unknown" }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "provider-known", reconcileAttempts: 4, nextReconcileAt: Date.now(),
+    }).run();
+
+    // When
+    await processBatch(context.app);
+    vi.advanceTimersByTime(24 * 60 * 60_000);
+    await processBatch(context.app);
+
+    // Then
+    expect(reconciles).toBe(1);
+    expect(await context.db.select().from(mailDeliveries).get()).toMatchObject({
+      status: "outcome_unknown", reconcileAttempts: 5, nextReconcileAt: 0, leaseToken: null,
+    });
+  });
+
+  it.each([
+    ["complained", "complaint"],
+    ["suppressed", "provider_suppressed"],
+  ] as const)("durably suppresses a subscription when reconciliation finds %s", async (event, reason) => {
+    // Given
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { return { kind: "accepted", providerMessageId: "unexpected" }; },
+      async reconcile() { return { kind: "found", event }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    const delivery = await context.db.select().from(mailDeliveries).get();
+    if (!delivery) throw new Error("delivery fixture missing");
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "provider-known", nextReconcileAt: Date.now(),
+    }).run();
+    await context.db.insert(newsletterIssues).values({
+      id: "next-issue", issueDate: "2026-08-16", subject: "Next brief", textContent: "Next body", status: "published", createdAt: 2,
+    }).run();
+    await context.db.insert(mailDeliveries).values({
+      id: "open-delivery", issueId: "next-issue", userId: delivery.userId, recipient: delivery.recipient,
+      status: "pending", attempts: 0, lastError: "", nextAttemptAt: 0, createdAt: 2,
+    }).run();
+
+    // When
+    await processBatch(context.app);
+
+    // Then
+    expect(await context.db.select().from(subscriptions).get()).toMatchObject({
+      status: "suppressed", suppressionReason: reason, unsubscribeTokenHash: null, unsubscribeTokenNonce: null,
+    });
+    expect(await context.db.select().from(mailDeliveries).where(eq(mailDeliveries.id, delivery.id)).get()).toMatchObject({
+      status: "cancelled", providerEvent: event,
+    });
+    expect(await context.db.select().from(mailDeliveries).where(eq(mailDeliveries.id, "open-delivery")).get()).toMatchObject({ status: "cancelled" });
+  });
+
+  it("records a reconciled bounce without inventing permanent suppression", async () => {
+    // Given
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { return { kind: "accepted", providerMessageId: "unexpected" }; },
+      async reconcile() { return { kind: "found", event: "bounced" }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "provider-known", nextReconcileAt: Date.now(),
+    }).run();
+
+    // When
+    await processBatch(context.app);
+
+    // Then
+    expect(await context.db.select().from(subscriptions).get()).toMatchObject({ status: "subscribed", suppressionReason: null });
+    expect(await context.db.select().from(mailDeliveries).get()).toMatchObject({ status: "failed", providerEvent: "bounced" });
+  });
+
+  it("backs off a provider not-found reconciliation instead of selecting it every schedule", async () => {
+    // Given
+    let reconciles = 0;
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { return { kind: "accepted", providerMessageId: "unexpected" }; },
+      async reconcile() { reconciles += 1; return { kind: "not_found" }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "provider-known", nextReconcileAt: Date.now(),
+    }).run();
+
+    // When
+    await processBatch(context.app);
+    const afterFirst = await context.db.select().from(mailDeliveries).get();
+    await processBatch(context.app);
+
+    // Then
+    expect(reconciles).toBe(1);
+    expect(afterFirst?.nextReconcileAt).toBeGreaterThan(Date.now());
+  });
+
+  it("contains a throwing send provider and safely releases the delivery lease", async () => {
+    // Given
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { throw new Error("send exploded"); },
+      async reconcile() { return { kind: "found", event: "sent" }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+
+    // When
+    const response = await processBatch(context.app);
+
+    // Then
+    expect(response.status).toBe(200);
+    expect(await context.db.select().from(mailDeliveries).get()).toMatchObject({ status: "retry", leaseToken: null, leaseExpiresAt: null });
+  });
+
+  it.each([
+    ["a string", "send exploded"],
+    ["an object", { reason: "send exploded" }],
+  ] as const)("contains %s send provider rejection and safely releases the delivery lease", async (_label, rejection) => {
+    // Given
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { throw rejection; },
+      async reconcile() { return { kind: "found", event: "sent" }; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+
+    // When
+    const response = await processBatch(context.app);
+
+    // Then
+    expect(response.status).toBe(200);
+    expect(await context.db.select().from(mailDeliveries).get()).toMatchObject({ status: "retry", leaseToken: null, leaseExpiresAt: null });
+  });
+
+  it("contains a throwing reconcile provider and schedules a bounded retry", async () => {
+    // Given
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { return { kind: "accepted", providerMessageId: "unexpected" }; },
+      async reconcile() { throw new Error("reconcile exploded"); },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "provider-known", nextReconcileAt: Date.now(),
+    }).run();
+
+    // When
+    const response = await processBatch(context.app);
+
+    // Then
+    expect(response.status).toBe(200);
+    expect(await context.db.select().from(mailDeliveries).get()).toMatchObject({
+      status: "outcome_unknown", reconcileAttempts: 1, leaseToken: null, leaseExpiresAt: null,
+    });
+    expect((await context.db.select().from(mailDeliveries).get())?.nextReconcileAt).toBeGreaterThan(Date.now());
+  });
+
+  it("does not suppress after reconciliation loses its lease before a complained result returns", async () => {
+    // Given
+    let releaseReconcile: (() => void) | undefined;
+    let reconcileStarted: (() => void) | undefined;
+    const started = new Promise<void>((resolve) => { reconcileStarted = resolve; });
+    const blocked = new Promise<void>((resolve) => { releaseReconcile = resolve; });
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { return { kind: "accepted", providerMessageId: "stale-suppression-provider" }; },
+      async reconcile() {
+        reconcileStarted?.();
+        await blocked;
+        return { kind: "found", event: "complained" };
+      },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    const delivery = await context.db.select().from(mailDeliveries).get();
+    if (!delivery) throw new Error("delivery fixture missing");
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "stale-suppression-provider", nextReconcileAt: Date.now(),
+    }).run();
+
+    // When
+    const staleWorker = processBatch(context.app);
+    await started;
+    await context.db.update(mailDeliveries).set({
+      status: "processing", leaseToken: "new-owner", leaseExpiresAt: Date.now() + 60_000,
+    }).where(eq(mailDeliveries.id, delivery.id)).run();
+    releaseReconcile?.();
+    await staleWorker;
+
+    // Then
+    expect(await context.db.select().from(subscriptions).get()).toMatchObject({ status: "subscribed", suppressionReason: null });
+    expect(await context.db.select().from(mailDeliveries).get()).toMatchObject({ status: "processing", leaseToken: "new-owner" });
+  });
+
+  it.each([
+    ["a string", "reconcile exploded"],
+    ["an object", { reason: "reconcile exploded" }],
+  ] as const)("contains %s reconcile provider rejection and schedules a bounded retry", async (_label, rejection) => {
+    // Given
+    const context = await authenticatedContext({ newsletterMailProvider: {
+      async send() { return { kind: "accepted", providerMessageId: "unexpected" }; },
+      async reconcile() { throw rejection; },
+    } });
+    await setSubscription(context.app, context.cookie, true);
+    await createIssue(context.app);
+    await context.db.update(mailDeliveries).set({
+      status: "outcome_unknown", providerMessageId: "provider-known", nextReconcileAt: Date.now(),
+    }).run();
+
+    // When
+    const response = await processBatch(context.app);
+
+    // Then
+    expect(response.status).toBe(200);
+    expect(await context.db.select().from(mailDeliveries).get()).toMatchObject({
+      status: "outcome_unknown", reconcileAttempts: 1, leaseToken: null, leaseExpiresAt: null,
+    });
   });
 
   it("returns 201 for creation and 200 for an exact issue replay", async () => {
@@ -239,7 +619,7 @@ describe("newsletter reliability", () => {
     expect(delivery).toMatchObject({ status: "sent", attempts: 2, leaseToken: null, leaseExpiresAt: null });
   });
 
-  it("prevents a stale worker from finalizing after its lease expires", async () => {
+  it("prevents a stale successful worker from finalizing after its lease expires", async () => {
     let releaseFirst: (() => void) | undefined;
     let firstStarted: (() => void) | undefined;
     const started = new Promise<void>((resolve) => { firstStarted = resolve; });
@@ -250,9 +630,9 @@ describe("newsletter reliability", () => {
       if (sends === 1) {
         firstStarted?.();
         await blocked;
-        throw new Error("stale failure");
+        return { kind: "accepted", providerMessageId: "stale-provider" } as const;
       }
-      return {};
+      return { kind: "accepted", providerMessageId: "fresh-provider" } as const;
     }) });
     await setSubscription(context.app, context.cookie, true);
     await createIssue(context.app);
@@ -267,6 +647,7 @@ describe("newsletter reliability", () => {
 
     expect((await readJson<{ processed: number; sent: number }>(freshWorker)).data).toEqual({ processed: 1, sent: 1 });
     expect(delivery).toMatchObject({ status: "sent", attempts: 2, lastError: "", leaseToken: null, leaseExpiresAt: null });
+    expect(delivery?.providerMessageId).not.toBe("stale-provider");
   });
 
   it("does not mutate subscription state through profile updates", async () => {
