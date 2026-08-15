@@ -10,9 +10,9 @@ export function favoritesRoutes(db: DB, config: AppConfig) {
   const r = new Hono();
 
   r.get("/", async (c) => {
-    const owner = await resolveOwnerId(c, config.authSecret ?? "");
+    const owner = await resolveOwnerId(c, db);
     if (!owner) return fail(c, 400, "IDENTITY_REQUIRED", "缺少身份标识");
-    const rows = db.select().from(favorites)
+    const rows = await db.select().from(favorites)
       .where(eq(favorites.ownerId, owner))
       .orderBy(desc(favorites.createdAt)).all();
     const data: Favorite[] = rows.map((row) => ({
@@ -27,7 +27,7 @@ export function favoritesRoutes(db: DB, config: AppConfig) {
   });
 
   r.post("/", async (c) => {
-    const owner = await resolveOwnerId(c, config.authSecret ?? "");
+    const owner = await resolveOwnerId(c, db);
     if (!owner) return fail(c, 400, "IDENTITY_REQUIRED", "缺少身份标识");
     let raw: unknown = {};
     try { raw = await c.req.json(); } catch { raw = {}; }
@@ -43,16 +43,16 @@ export function favoritesRoutes(db: DB, config: AppConfig) {
       note: note ?? "",
       createdAt: Date.now(),
     };
-    db.insert(favorites).values(row).run();
+    await db.insert(favorites).values(row).run();
     const data: Favorite = { id: row.id, url, title, source: source ?? "", note: note ?? "", createdAt: row.createdAt };
     return c.json({ ok: true, data }, 201);
   });
 
   r.delete("/:id", async (c) => {
-    const owner = await resolveOwnerId(c, config.authSecret ?? "");
+    const owner = await resolveOwnerId(c, db);
     if (!owner) return fail(c, 400, "IDENTITY_REQUIRED", "缺少身份标识");
     const id = c.req.param("id");
-    db.delete(favorites).where(and(eq(favorites.id, id), eq(favorites.ownerId, owner))).run();
+    await db.delete(favorites).where(and(eq(favorites.id, id), eq(favorites.ownerId, owner))).run();
     return c.json({ ok: true, data: null });
   });
 
