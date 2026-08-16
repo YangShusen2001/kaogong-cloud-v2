@@ -1,0 +1,24 @@
+{
+  "id": "fa5ff53bee",
+  "date": "2026-08-16",
+  "title": "祝贺！四川队拿下中国女子数学奥赛团体总分第一，4人直通CMO",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83306115.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-16T22:19:15+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "近日，第25届中国女子数学奥林匹克（CGMO）在湖南师范大学附属中学落下帷幕。本届赛事共有来自中国和新加坡的39支代表队、230余名队员参赛，最终22人进入全国数学奥林匹克竞赛决赛（CMO）。其中，四川代表队拿下团体总分第一，4人直通CMO。",
+    "根据赛事公布名单，今年共有72人获一等奖、103人获二等奖、57人获三等奖，四川代表队获团体总分第一名。",
+    "据悉，四川代表队共计6名同学。在此次比赛中，天府七中张炘蕊、成都七中（林荫校区）马熠林、绵阳中学陈奕霖、成都市实验外国语学校吴嘉怡4名同学进入全国数学奥林匹克竞赛决赛；成都七中（林荫校区）李彦羲同学获一等奖、嘉祥锦江杨雨萱同学获二等奖。",
+    "中国女子数学奥林匹克（Chinese&nbsp;Girls&#39;&nbsp;Mathematical&nbsp;Olympiad，CGMO）是由中国数学会主办的女生专项数学竞赛，始办于2002年，每年8月举行。此项赛事致力于为女同学展示数学才华与才能搭设舞台，增加女同学学习数学的兴趣，提高女同学的数学学习水平。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-16T22:19:16+00:00",
+  "sourceTextHash": "37626ca78d42da88f16a105c2165829cc0a016ebd64c14d788b0d140d5ab7539",
+  "aiStatus": "error",
+  "aiAnnotations": [],
+  "aiError": "ai_semantic:summary_length"
+}

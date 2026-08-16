@@ -1,0 +1,118 @@
+{
+  "id": "b60a34aae7",
+  "date": "2026-08-16",
+  "title": "空气质量总体优良，四川盆地8月下半月空气质量预报发布",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83306093.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-16T22:19:42+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "8月16日，记者从省生态环境厅获悉，根据四川省生态环境监测总站最新预测，8月下半月，四川盆地空气质量总体以优良为主。",
+    "8月16日，盆地大部以多云间阴天气为主，西部有阵雨，东部和南部气温较高，辐射较强，个别城市有臭氧轻度污染风险。",
+    "8月17日—31日，盆地大部多云间阴，有降水过程，空气质量有望维持优良。",
+    "8月16日，个别城市有轻度污染风险。17日—31日，以优良为主。",
+    "近期冷空气活动和降水不确定性较大，后期形势可能调整，有待持续跟踪。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-16T22:19:43+00:00",
+  "sourceTextHash": "c38212aa417f6dc03ab9d0a42aa4cecbad141f593b50afd7f567e8461f487198",
+  "aiStatus": "ok",
+  "aiSummary": "四川省生态环境监测总站预测，8月下半月四川盆地空气质量总体优良，16日个别城市有臭氧轻度污染风险，17日至31日以优良为主，后期受冷空气和降水不确定性影响，形势可能调整。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-46-57-viewpoint",
+      "paragraphIndex": 0,
+      "start": 46,
+      "end": 57,
+      "text": "空气质量总体以优良为主",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-41-54-viewpoint",
+      "paragraphIndex": 1,
+      "start": 41,
+      "end": 54,
+      "text": "个别城市有臭氧轻度污染风险",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-3-26-31-viewpoint",
+      "paragraphIndex": 3,
+      "start": 26,
+      "end": 31,
+      "text": "以优良为主",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-4-17-25-viewpoint",
+      "paragraphIndex": 4,
+      "start": 17,
+      "end": 25,
+      "text": "后期形势可能调整",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-36-41-exam_point",
+      "paragraphIndex": 0,
+      "start": 36,
+      "end": 41,
+      "text": "8月下半月",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-42-46-exam_point",
+      "paragraphIndex": 0,
+      "start": 42,
+      "end": 46,
+      "text": "四川盆地",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-46-52-exam_point",
+      "paragraphIndex": 1,
+      "start": 46,
+      "end": 52,
+      "text": "臭氧轻度污染",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-20-24-exam_point",
+      "paragraphIndex": 2,
+      "start": 20,
+      "end": 24,
+      "text": "降水过程",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-4-2-7-exam_point",
+      "paragraphIndex": 4,
+      "start": 2,
+      "end": 7,
+      "text": "冷空气活动",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-4-10-14-exam_point",
+      "paragraphIndex": 4,
+      "start": 10,
+      "end": 14,
+      "text": "不确定性",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-20-31-term",
+      "paragraphIndex": 0,
+      "start": 20,
+      "end": 31,
+      "text": "四川省生态环境监测总站",
+      "type": "term",
+      "explanation": "负责四川省生态环境质量监测与预测的机构，发布空气质量预报信息。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

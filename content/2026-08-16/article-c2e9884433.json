@@ -1,0 +1,22 @@
+{
+  "id": "c2e9884433",
+  "date": "2026-08-16",
+  "title": "江苏省人民政府 要闻关注 两部门将针对江苏的防汛四级应急响应提升至三级",
+  "source": "中国政府网",
+  "url": "http://www.jiangsu.gov.cn/art/2026/8/16/art_84322_11816797.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-16T22:20:03+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "根据《国家防汛抗旱应急预案》及有关规定，国家防总、应急管理部决定于8月15日12时，将针对江苏的防汛四级应急响应提升至三级，针对浙江启动防汛四级应急响应。",
+    "受今年第13号台风“白海豚”和近期强降雨共同影响，太湖发生流域性较大洪水，据预测，太湖水位后期仍将缓慢上涨。8月15日至16日浙江东部和南部部分地区有暴雨，局地大暴雨。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-16T22:20:04+00:00",
+  "sourceTextHash": "ba729255e6c245c25c35337a4ef52515c88cca87c9795736582855215fb9de92",
+  "aiStatus": "error",
+  "aiAnnotations": [],
+  "aiError": "ai_semantic:summary_length"
+}

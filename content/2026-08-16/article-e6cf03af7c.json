@@ -1,0 +1,22 @@
+{
+  "id": "e6cf03af7c",
+  "date": "2026-08-16",
+  "title": "新华视点丨极端降雨考验北方城市韧性",
+  "source": "news.cn",
+  "url": "https://www.news.cn/politics/20260816/98739e768f7649ec92d777b9da2081e4/c.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-16T22:18:51+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "&emsp;&emsp;近年来，北方地区极端降雨天气频发，给城市防洪排涝带来挑战，也暴露出一些城市防洪排涝体系的薄弱环节。",
+    "&emsp;&emsp;围绕这些新情况新问题，新华社记者近期进行了调研。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-16T22:18:52+00:00",
+  "sourceTextHash": "c57b5aa00dc59c3981bcab6e27f0b44e54bc30e22f48442b20730f897ecd74a1",
+  "aiStatus": "error",
+  "aiAnnotations": [],
+  "aiError": "ai_semantic:summary_length"
+}

@@ -1,0 +1,96 @@
+{
+  "date": "2026-08-16",
+  "title": "每日日报 · 2026-08-16（周日）",
+  "sections": [
+    {
+      "id": "essay",
+      "title": "申论精读",
+      "items": [
+        {
+          "title": "跃江出海：青藏高原冷水鱼远销世界",
+          "date": "08-16",
+          "sourceUrl": "https://www.news.cn/local/20260816/68c069af858a4618878ebd3e5e649a0d/c.html"
+        },
+        {
+          "title": "极端降雨考验北方城市韧性",
+          "date": "08-16",
+          "sourceUrl": "https://www.news.cn/politics/20260816/98739e768f7649ec92d777b9da2081e4/c.html"
+        }
+      ]
+    },
+    {
+      "id": "guangdong",
+      "title": "广东要闻动态",
+      "items": [
+        {
+          "title": "港珠澳大桥海事局完成2026年开渔首日护航任务",
+          "date": "08-16",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/16/139996_54991526.htm"
+        },
+        {
+          "title": "习近平：提高防灾减灾救灾能力",
+          "date": "08-16",
+          "sourceUrl": "https://www.gd.gov.cn/gdywdt/xwdt/content/post_4942801.html",
+          "summary": "《求是》杂志发表习近平总书记重要文章《提高防灾减灾救灾能力》"
+        }
+      ]
+    },
+    {
+      "id": "sichuan",
+      "title": "四川要闻动态",
+      "items": [
+        {
+          "title": "祝贺！四川队拿下中国女子数学奥赛团体总分第一，4人直通CMO",
+          "date": "08-16",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306115.html"
+        },
+        {
+          "title": "今年为什么只有三价流感疫苗？够用吗？医生解答丨健康科代表",
+          "date": "08-16",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306097.html"
+        },
+        {
+          "title": "老区巴中为未来3年“科普强市”画出“施工图”丨市州观察",
+          "date": "08-16",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306095.html"
+        },
+        {
+          "title": "四川“三预警”齐发！迎来“退烧雨”，警惕旱涝急转风险",
+          "date": "08-16",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306094.html"
+        },
+        {
+          "title": "空气质量总体优良，四川盆地8月下半月空气质量预报发布",
+          "date": "08-16",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306093.html"
+        },
+        {
+          "title": "同比增长6.5% 巴中市今年上半年固定资产投资表现亮眼丨市州观察",
+          "date": "08-16",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306085.html"
+        }
+      ]
+    },
+    {
+      "id": "jiangsu",
+      "title": "江苏要闻动态",
+      "items": [
+        {
+          "title": "2026两岸青年企业家菁英论坛在昆山举办",
+          "date": "08-16",
+          "sourceUrl": "http://www.jiangsu.gov.cn/art/2026/8/16/art_84322_11816805.html"
+        },
+        {
+          "title": "江苏发布高水平大学建设方案 鼓励高水平大学扩大招生规模",
+          "date": "08-16",
+          "sourceUrl": "http://www.jiangsu.gov.cn/art/2026/8/16/art_84322_11816796.html"
+        },
+        {
+          "title": "两部门将针对江苏的防汛四级应急响应提升至三级",
+          "date": "08-16",
+          "sourceUrl": "http://www.jiangsu.gov.cn/art/2026/8/16/art_84322_11816797.html"
+        }
+      ]
+    }
+  ]
+}
