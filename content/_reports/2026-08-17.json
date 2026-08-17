@@ -1,0 +1,24 @@
+{
+  "date": "2026-08-17",
+  "sourcesOk": 15,
+  "sourceErrors": [],
+  "candidates": 19,
+  "articles": 16,
+  "aiOk": 14,
+  "aiError": 2,
+  "aiFailures": [
+    {
+      "articleId": "bc700cad38",
+      "reason": "ai_semantic:annotation_count_viewpoint"
+    },
+    {
+      "articleId": "dacef148f3",
+      "reason": "ai_semantic:summary_length"
+    }
+  ],
+  "locationErrors": 6,
+  "schemaErrors": [],
+  "semanticErrors": [],
+  "volumeErrors": [],
+  "qualityStatus": "degraded"
+}

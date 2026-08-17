@@ -1,0 +1,133 @@
+{
+  "date": "2026-08-17",
+  "title": "每日日报 · 2026-08-17（周一）",
+  "sections": [
+    {
+      "id": "national",
+      "title": "全国时政要闻",
+      "items": [
+        {
+          "title": "国务院关于《特殊教育发展提升“十五五”行动计划》的批复",
+          "date": "08-17",
+          "sourceUrl": "https://www.gov.cn/zhengce/content/202608/content_7078320.htm"
+        }
+      ]
+    },
+    {
+      "id": "essay",
+      "title": "申论精读",
+      "items": [
+        {
+          "title": "纪念江泽民同志诞辰100周年大会在京隆重举行 习近平发表重要讲话",
+          "date": "08-17",
+          "sourceUrl": "https://www.qstheory.cn/20260817/611852f5979341a5a45733cb6addf9a6/c.html"
+        },
+        {
+          "title": "讲话全文",
+          "date": "08-17",
+          "sourceUrl": "https://www.qstheory.cn/20260817/ed2f221e712b483a84b43e09a1986aaa/c.html"
+        },
+        {
+          "title": "揭秘代理退保黑灰产链条",
+          "date": "08-17",
+          "sourceUrl": "https://www.news.cn/fortune/20260817/cbcc11131c7d4b8e84a75c47b1008ef8/c.html"
+        }
+      ]
+    },
+    {
+      "id": "guangdong",
+      "title": "广东要闻动态",
+      "items": [
+        {
+          "title": "35公里、60公里、90公里......跨城合影！这些年，从广东各地拍到的广州塔",
+          "date": "08-17",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/17/139996_54991848.htm"
+        },
+        {
+          "title": "4636个监测站点，广东实现流域面积200平方公里以上河流水文监测全覆盖",
+          "date": "08-17",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/17/139996_54991819.htm"
+        },
+        {
+          "title": "外卖封签破损可拒收，广东新规10月起实施",
+          "date": "08-17",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/17/139996_54991829.htm"
+        }
+      ]
+    },
+    {
+      "id": "sichuan",
+      "title": "四川要闻动态",
+      "items": [
+        {
+          "title": "最后3天！船城为你准备的七夕甜蜜，快来领取丨马到成功闯关有礼・七夕③",
+          "date": "08-17",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306703.html"
+        },
+        {
+          "title": "从无人问津到资本重仓，空中“变形金刚”有多猛？丨跟着基金经理去挖宝",
+          "date": "08-17",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306702.html"
+        },
+        {
+          "title": "阿坝州加快推进年度十大民生实事，村民“足不出村、快件到家”丨市州观察",
+          "date": "08-17",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306685.html"
+        },
+        {
+          "title": "“最高薪专业”榜易主，释放出什么就业信号？",
+          "date": "08-17",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306680.html"
+        },
+        {
+          "title": "理县明确四大重点任务推进城市更新，新家园“小而精、小而美”丨市州观察",
+          "date": "08-17",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306679.html"
+        },
+        {
+          "title": "阿坝州聚力打响“南繁三亚·夏繁阿坝”种业IP，高原县城走上夏繁“芯”征程丨市州观察",
+          "date": "08-17",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83306678.html"
+        }
+      ]
+    },
+    {
+      "id": "jiangsu",
+      "title": "江苏要闻动态",
+      "items": [
+        {
+          "title": "前7月我省对上合组织其他成员国进出口同比增长15.9%",
+          "date": "08-17",
+          "sourceUrl": "http://www.jiangsu.gov.cn/art/2026/8/17/art_84322_11816901.html"
+        }
+      ]
+    },
+    {
+      "id": "today-talk",
+      "title": "今日谈（半月谈·申论素材）",
+      "items": [
+        {
+          "title": "“我想静静”",
+          "date": "08-17",
+          "sourceUrl": "http://www.banyuetan.org/jrt/detail/20260817/1000200033134991786947451104254690_1.html"
+        },
+        {
+          "title": "理性“抗幽”，别交智商税",
+          "date": "08-17",
+          "sourceUrl": "http://www.banyuetan.org/jrt/detail/20260817/1000200033134991786932637478281765_1.html"
+        }
+      ]
+    },
+    {
+      "id": "south-review",
+      "title": "南方时评（南方网·广东申论素材）",
+      "items": [
+        {
+          "title": "南方快评",
+          "date": "08-17",
+          "sourceUrl": "https://opinion.southcn.com/node_e4f9db6b4d"
+        }
+      ]
+    }
+  ]
+}

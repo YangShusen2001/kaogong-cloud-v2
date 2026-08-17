@@ -1,0 +1,142 @@
+{
+  "id": "119b43c730",
+  "date": "2026-08-17",
+  "title": "从无人问津到资本重仓，空中“变形金刚”有多猛？丨跟着基金经理去挖宝",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83306702.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-17T22:23:25+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "资本投给谁、怎么投、投完之后发生了什么？这些看似属于专业领域的问题，其实与每一座城市、每一个产业的未来息息相关。",
+    "立足四川培育高质效“耐心资本”的发展契机，川观新闻从今日起推出《川企合伙人——跟着基金经理去挖宝》。我们将镜头对准四川产业基金及其投资布局的川企群落，对话头部投研人士，跟随基金经理走进工厂车间、研发一线，拆解一笔笔产业基金从研判到落地的完整逻辑。",
+    "这期视频，我们走进沃飞长空。这家总部位于成都的低空经济独角兽，凭借倾转旋翼技术构建起500余项全球专利的护城河。2025年9月，AE200-100首架机在成都下线；2026年2月，公司完成近10亿元融资。从技术攻关到首飞成功，这场“长跑”持续了近十年。产业基金如何陪跑硬科技？"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-17T22:23:27+00:00",
+  "sourceTextHash": "82dc494cc8d6e5e2145d92f7630e7fc8f5de68e0b1c49bf2ddce838f3263bd59",
+  "aiStatus": "ok",
+  "aiSummary": "本文介绍川观新闻新栏目《川企合伙人》，聚焦四川产业基金投资布局。以沃飞长空为例，展示低空经济独角兽凭借倾转旋翼技术构建专利护城河，从技术攻关到融资下线，产业基金如何陪跑硬科技企业。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-0-19-viewpoint",
+      "paragraphIndex": 0,
+      "start": 0,
+      "end": 19,
+      "text": "资本投给谁、怎么投、投完之后发生了什么",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-36-55-viewpoint",
+      "paragraphIndex": 0,
+      "start": 36,
+      "end": 55,
+      "text": "与每一座城市、每一个产业的未来息息相关",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-0-20-viewpoint",
+      "paragraphIndex": 1,
+      "start": 0,
+      "end": 20,
+      "text": "立足四川培育高质效“耐心资本”的发展契机",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-31-55-viewpoint",
+      "paragraphIndex": 2,
+      "start": 31,
+      "end": 55,
+      "text": "凭借倾转旋翼技术构建起500余项全球专利的护城河",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-10-14-term",
+      "paragraphIndex": 1,
+      "start": 10,
+      "end": 14,
+      "text": "耐心资本",
+      "type": "term",
+      "explanation": "指注重长期投资回报、不追求短期收益的资本，通常用于支持科技创新和产业升级。"
+    },
+    {
+      "id": "ai-2-23-27-term",
+      "paragraphIndex": 2,
+      "start": 23,
+      "end": 27,
+      "text": "低空经济",
+      "type": "term",
+      "explanation": "指以低空空域为依托，通过有人或无人驾驶航空器开展飞行活动，带动相关产业发展的经济形态。"
+    },
+    {
+      "id": "ai-2-33-39-term",
+      "paragraphIndex": 2,
+      "start": 33,
+      "end": 39,
+      "text": "倾转旋翼技术",
+      "type": "term",
+      "explanation": "一种航空技术，通过旋转发动机和旋翼实现垂直起降与水平飞行的转换，兼具直升机和固定翼飞机优势。"
+    },
+    {
+      "id": "ai-0-0-5-exam_point",
+      "paragraphIndex": 0,
+      "start": 0,
+      "end": 5,
+      "text": "资本投给谁",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-6-9-exam_point",
+      "paragraphIndex": 0,
+      "start": 6,
+      "end": 9,
+      "text": "怎么投",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-10-19-exam_point",
+      "paragraphIndex": 0,
+      "start": 10,
+      "end": 19,
+      "text": "投完之后发生了什么",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-57-63-exam_point",
+      "paragraphIndex": 1,
+      "start": 57,
+      "end": 63,
+      "text": "四川产业基金",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-42-51-exam_point",
+      "paragraphIndex": 2,
+      "start": 42,
+      "end": 51,
+      "text": "500余项全球专利",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-94-101-exam_point",
+      "paragraphIndex": 2,
+      "start": 94,
+      "end": 101,
+      "text": "近10亿元融资",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-122-125-exam_point",
+      "paragraphIndex": 2,
+      "start": 122,
+      "end": 125,
+      "text": "近十年",
+      "type": "exam_point"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "dacef148f3",
+  "date": "2026-08-17",
+  "title": "35公里、60公里、90公里......跨城合影！这些年，从广东各地拍到的广州塔",
+  "source": "news.dayoo.com",
+  "url": "https://news.dayoo.com/guangdong/202608/17/139996_54991848.htm",
+  "pubDate": "",
+  "fetchedAt": "2026-08-17T22:22:57+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "从一张“清澈对望”图，到一座座城市与广州塔的同框，广东的好空气，正在被镜头一次次“实锤认证”。",
+    "2026年上半年广东省生态环境质量状况新闻发布会公布的数据显示：今年1—6月，全省优良天数比率（AQI）达到95.8% ，同比改善3.1个百分点，高于全国平均水平13个百分点；其中PM2.5浓度为21微克/立方米，同比改善7.5%，比全国平均水平低8.9微克/立方米。",
+    "素材来源：广东发布、江门日报、网信江门、南方都市报、大湾区之声、东莞日报、广州日报"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-17T22:23:00+00:00",
+  "sourceTextHash": "94b78bf1ff62d87c7d8f068b06169a07d7e5c5dd433a51d25d466ca374da474e",
+  "aiStatus": "error",
+  "aiAnnotations": [],
+  "aiError": "ai_semantic:summary_length"
+}
