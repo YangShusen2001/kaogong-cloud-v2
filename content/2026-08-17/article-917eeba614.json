@@ -1,0 +1,119 @@
+{
+  "id": "917eeba614",
+  "date": "2026-08-17",
+  "title": "思想耀岭南｜在“超级个体”浪潮中，看见大湾区的AI未来",
+  "source": "南方网",
+  "url": "https://opinion.southcn.com/node_36c8142995/09ed853c21.shtml",
+  "pubDate": "",
+  "fetchedAt": "2026-08-17T15:44:35+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "在全球顶尖的AI语音合成盲测榜单上，一款名为“悟声”的中国模型超越一众估值数百亿美元的独角兽企业，登顶世界第一。在新一期《思想耀岭南》中，实现这一突破的广州烁谷科技创始人、CEO谢伟铎分享了一路走来的心路历程。",
+    "AI极大降低了技术门槛，将个体的创造力极致放大。谢伟铎团队的核心人员只有三四个人，比起大团队，他们决策更快、迭代更勤、试错更勇敢。创新不再单纯依赖规模与资本，“超级个体”的时代悄然来临。",
+    "粤港澳大湾区独特的创新生态，正是催生这股“后浪”力量的绝佳土壤。顶尖人才、完整产业链、澎湃市场、活跃资本、强力政策，这些要素能够同时汇集在同一个地方，放眼全球可能只有大湾区。这种生态意味着，一个极客有了一个灵光乍现的念头，就能以最快速度找到合作伙伴、算力支持、应用场景和资本助力，迅速把创意变成产品，把产品推向全球。",
+    "去年4月，习近平总书记在上海考察时指出，“人工智能技术加速迭代，正迎来爆发式发展”“人工智能是年轻的事业，也是年轻人的事业”。谢伟铎、梁文锋、杨植麟、洪乐潼、陈广宇……一张张年轻的面孔，正从不同的AI赛道呼啸而出。当AI事业被交到这群说干就干的年轻人手中，跑出的将是一个时代的加速度。他们用不服输的韧性与敢为人先的锐气，让世界看到，中国创新的“后浪”，已经在全球技术浪潮的最前沿奔涌。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-17T15:44:36+00:00",
+  "sourceTextHash": "536d944cc894bf2afcbf1ea32b89728ddf9182efd64c475e4c28acb2ff68689b",
+  "aiStatus": "ok",
+  "aiSummary": "本文聚焦广州烁谷科技创始人谢伟铎，其团队以“超级个体”模式在AI语音合成领域登顶世界第一，展现粤港澳大湾区创新生态对年轻创业者的强大支撑，并呼应习近平总书记对AI年轻事业的期许，凸显中国创新的后浪力量。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-49-55-viewpoint",
+      "paragraphIndex": 0,
+      "start": 49,
+      "end": 55,
+      "text": "登顶世界第一",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-0-23-viewpoint",
+      "paragraphIndex": 1,
+      "start": 0,
+      "end": 23,
+      "text": "AI极大降低了技术门槛，将个体的创造力极致放大",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-0-31-viewpoint",
+      "paragraphIndex": 2,
+      "start": 0,
+      "end": 31,
+      "text": "粤港澳大湾区独特的创新生态，正是催生这股“后浪”力量的绝佳土壤",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-3-42-61-viewpoint",
+      "paragraphIndex": 3,
+      "start": 42,
+      "end": 61,
+      "text": "人工智能是年轻的事业，也是年轻人的事业",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-6-16-exam_point",
+      "paragraphIndex": 0,
+      "start": 6,
+      "end": 16,
+      "text": "AI语音合成盲测榜单",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-80-84-term",
+      "paragraphIndex": 1,
+      "start": 80,
+      "end": 84,
+      "text": "超级个体",
+      "type": "term",
+      "explanation": "指在AI等技术赋能下，个体或小团队能发挥出超越传统大组织的创造力与效率，实现快速创新和突破。"
+    },
+    {
+      "id": "ai-2-0-6-term",
+      "paragraphIndex": 2,
+      "start": 0,
+      "end": 6,
+      "text": "粤港澳大湾区",
+      "type": "term",
+      "explanation": "中国国家战略区域，涵盖广东九市及港澳，以创新生态和完整产业链著称，是科技创业的重要高地。"
+    },
+    {
+      "id": "ai-2-9-13-exam_point",
+      "paragraphIndex": 2,
+      "start": 9,
+      "end": 13,
+      "text": "创新生态",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-5-19-exam_point",
+      "paragraphIndex": 3,
+      "start": 5,
+      "end": 19,
+      "text": "习近平总书记在上海考察时指出",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-21-40-exam_point",
+      "paragraphIndex": 3,
+      "start": 21,
+      "end": 40,
+      "text": "人工智能技术加速迭代，正迎来爆发式发展",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-172-174-term",
+      "paragraphIndex": 3,
+      "start": 172,
+      "end": 174,
+      "text": "后浪",
+      "type": "term",
+      "explanation": "比喻新一代年轻力量，此处指中国年轻AI创业者，象征创新活力与未来趋势。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

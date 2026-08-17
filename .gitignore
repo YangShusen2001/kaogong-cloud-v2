@@ -1,0 +1,57 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+.wrangler/
+apps/api/.wrangler-qa/
+.astro/
+test-results/
+playwright-report/
+
+# 环境变量（含密钥，永不入库）
+.env
+.env.*
+.dev.vars
+!.env.example
+!.env.local.example
+
+# 日志 / 系统文件
+*.log
+.DS_Store
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# 本地运行时配置（审核后台写入；仓库构建对缺失有默认回退）
+apps/web/src/site-config.json
+apps/web/src/font-config.json
+
+# 生产配置：本地保留真实值，仓库只放 wrangler.toml.example
+apps/api/wrangler.toml
+
+# 抓取内容：真实日期内容与质量报告不进仓库（版权与体积），仅保留 2026-08-17 示例日
+content/20*/
+content/_reports/
+!content/2026-08-17/
+content/2026-08-17/*
+!content/2026-08-17/digest.json
+!content/2026-08-17/summary.json
+!content/2026-08-17/practice.json
+!content/2026-08-17/article-f80313d7b2.json
+!content/2026-08-17/article-6e0c51c3aa.json
+!content/2026-08-17/article-4f3380992f.json
+!content/2026-08-17/article-917eeba614.json
+
+# 商用字体（版权未授权，需自备；缺失时回退系统字体）
+apps/web/public/fonts/*
+!apps/web/public/fonts/README.md
+
+# 本地杂物
+.omo/
+pipeline/_test_subset.woff2
+scripts/local-daily.bat

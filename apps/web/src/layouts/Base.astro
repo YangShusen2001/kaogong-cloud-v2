@@ -1,0 +1,156 @@
+---
+import "../styles/global.css";
+import fs from "node:fs";
+import path from "node:path";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const {
+  title,
+  description = "每天整理全国时政、申论精读与政策解读，来源均为官方原文。",
+} = Astro.props;
+
+// 字体配置：本地审核后台上传/选择后写入 src/font-config.json，构建时注入 @font-face 与变量。
+let fontCss = "";
+try {
+  const cfgPath = path.join(process.cwd(), "src", "font-config.json");
+  const cfg = JSON.parse(fs.readFileSync(cfgPath, "utf-8")) as { logo?: string | null; nav?: string | null };
+  if (cfg.logo) {
+    fontCss += `@font-face{font-family:"UserLogoFont";src:url("/fonts/uploads/${cfg.logo}") format("woff2");font-display:swap;}`
+      + `.logo-text{font-family:"UserLogoFont","STXingkai","华文行楷","KaiTi",cursive !important;}`;
+  }
+  if (cfg.nav) {
+    fontCss += `@font-face{font-family:"UserNavFont";src:url("/fonts/uploads/${cfg.nav}") format("woff2");font-display:swap;}`
+      + `.nav a,.nav-auth a{font-family:"UserNavFont",var(--font) !important;}`;
+  }
+} catch { /* 无配置则用默认字体 */ }
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <script>
+      // 提前应用主题，避免切换时闪白
+      try { document.documentElement.dataset.theme = localStorage.getItem("kaogong.theme") || "green"; } catch (e) {}
+    </script>
+    {fontCss && <style set:html={fontCss} />}
+  </head>
+  <body>
+    <header class="top" id="top">
+      <a class="logo" href="/" aria-label="每日时政">
+        <span class="logo-text">每日时政</span>
+      </a>
+      <div class="top-in">
+        <nav class="nav" id="nav">
+          <a href="/">首页</a>
+          <a href="/search/">搜索</a>
+          <a href="/favorites/">收藏</a>
+          <a href="/practice/">每日一练</a>
+          <a href="/wrong/">错题本</a>
+          <span class="nav-auth" id="kg-auth"><a href="/login/">登录</a></span>
+        </nav>
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-label="打开菜单" aria-controls="nav" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+        </button>
+        <button type="button" class="theme-toggle" id="theme-toggle" title="切换主题">主题</button>
+      </div>
+    </header>
+    <main class="wrap"><slot /></main>
+    <footer class="foot">时政小助手 · 内容来自官方原文，请以原文为准</footer>
+    <script>
+      import { api } from "../lib/api";
+
+      // 主题切换：默认 / 阅读 / 护眼（浅色系），localStorage 记忆
+      const THEMES = ["light", "reading", "green"];
+      const THEME_LABELS: Record<string, string> = { light: "默认", reading: "阅读", green: "护眼" };
+      const themeToggle = document.getElementById("theme-toggle");
+      if (themeToggle) {
+        let idx = Math.max(0, THEMES.indexOf(localStorage.getItem("kaogong.theme") ?? "green"));
+        const applyTheme = () => {
+          const theme = THEMES[idx] ?? "light";
+          document.documentElement.dataset.theme = theme;
+          themeToggle.textContent = `主题·${THEME_LABELS[theme] ?? ""}`;
+          localStorage.setItem("kaogong.theme", theme);
+        };
+        applyTheme();
+        themeToggle.addEventListener("click", () => { idx = (idx + 1) % THEMES.length; applyTheme(); });
+      }
+
+      const box = document.getElementById("kg-auth");
+      if (box) {
+        const session = await api.me();
+        if (session.ok && session.data) {
+          box.textContent = "";
+          // 确定性 emoji 头像：对邮箱哈希 → 固定头像（微软 Fluent 风格回退原生 emoji）
+          const AVATARS = ["🦊", "🐼", "🐯", "🦁", "🐨", "🐸", "🐙", "🦉", "🐢", "🦋", "🐳", "🦄", "🐧", "🐹", "🐰", "🦅"];
+          const hash = session.data.email.split("").reduce((acc, ch) => (acc * 31 + ch.charCodeAt(0)) >>> 0, 0);
+          const avatar = document.createElement("span");
+          avatar.className = "nav-avatar";
+          avatar.textContent = AVATARS[hash % AVATARS.length]!;
+          avatar.setAttribute("aria-hidden", "true");
+          const link = document.createElement("a");
+          link.href = "/profile/";
+          link.textContent = session.data.email.split("@")[0] ?? "账号";
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "nav-logout";
+          btn.textContent = "退出";
+          const status = document.createElement("span");
+          status.className = "nav-auth-status";
+          status.setAttribute("role", "status");
+          status.setAttribute("aria-live", "polite");
+          btn.addEventListener("click", async () => {
+            btn.disabled = true;
+            btn.textContent = "退出中…";
+            status.textContent = "";
+            const result = await api.logout();
+            if (result.ok) {
+              location.reload();
+              return;
+            }
+            status.textContent = result.error?.message ?? "退出失败，请重试";
+            btn.textContent = "退出";
+            btn.disabled = false;
+          });
+          box.append(avatar, link, btn, status);
+        } else {
+          const invite = await api.inviteStatus();
+          if (invite.ok && invite.data?.active) {
+            box.textContent = "";
+            const label = document.createElement("span");
+            label.className = "nav-invite";
+            label.textContent = `${invite.data.code}（邀请码），剩余 ${invite.data.remaining} 次`;
+            const loginLink = document.createElement("a");
+            loginLink.href = "/login/";
+            loginLink.textContent = "登录";
+            box.append(label, loginLink);
+          }
+        }
+      }
+
+      // 下滑收起导航，悬停展开
+      const topEl = document.getElementById("top");
+      if (topEl) {
+        const navToggle = document.getElementById("nav-toggle") as HTMLButtonElement | null;
+        navToggle?.addEventListener("click", () => {
+          const open = topEl.classList.toggle("mobile-open");
+          navToggle.setAttribute("aria-expanded", String(open));
+          navToggle.setAttribute("aria-label", open ? "关闭菜单" : "打开菜单");
+        });
+        const onScroll = () => {
+          topEl.classList.toggle("scrolled", window.scrollY > 8);
+          topEl.classList.toggle("collapsed", window.scrollY > 140);
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+      }
+    </script>
+  </body>
+</html>

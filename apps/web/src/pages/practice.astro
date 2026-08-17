@@ -1,0 +1,108 @@
+---
+import Base from "../layouts/Base.astro";
+import { listPracticeSets } from "../lib/content";
+
+const sets = listPracticeSets();
+const [latest, ...history] = sets;
+---
+<Base title="每日一练 · 时政小助手">
+  {latest ? (
+    <section class="card practice-set" data-date={latest.date}>
+      <h2>每日一练 · {latest.date}</h2>
+      <p class="item-summary practice-progress">共 {latest.total} 题 · 点选作答</p>
+      <div class="questions">
+        {latest.questions.map((q, i) => (
+          <div class="question" data-answer={q.answer}>
+            <p class="q-text">{i + 1}. {q.q}</p>
+            <div class="q-options">
+              {q.options.map((opt, j) => (
+                <button type="button" class="q-opt" data-opt={j}>{opt}</button>
+              ))}
+            </div>
+            <p class="q-analysis" hidden>{q.analysis}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  ) : (
+    <section class="card"><p>还没有题目。</p></section>
+  )}
+
+  {history.length > 0 && (
+    <section class="card">
+      <h2>历史刷题</h2>
+      {history.map((s) => (
+        <details class="practice-set" data-date={s.date}>
+          <summary><span class="h-date">{s.date}</span><span class="h-total">{s.total} 题</span><span class="h-hint">点击展开</span></summary>
+          <p class="item-summary practice-progress">共 {s.total} 题 · 点选作答</p>
+          <div class="questions">
+            {s.questions.map((q, i) => (
+              <div class="question" data-answer={q.answer}>
+                <p class="q-text">{i + 1}. {q.q}</p>
+                <div class="q-options">
+                  {q.options.map((opt, j) => (
+                    <button type="button" class="q-opt" data-opt={j}>{opt}</button>
+                  ))}
+                </div>
+                <p class="q-analysis" hidden>{q.analysis}</p>
+              </div>
+            ))}
+          </div>
+        </details>
+      ))}
+    </section>
+  )}
+</Base>
+
+<script>
+  import { api } from "../lib/api";
+  import type { WrongQuestionInput } from "@kaogong/contracts";
+
+  // 每个题集（最新 + 历史）独立作答与交卷
+  document.querySelectorAll<HTMLElement>(".practice-set").forEach((set) => {
+    const date = set.dataset.date || "";
+    const questions = Array.from(set.querySelectorAll<HTMLElement>(".question"));
+    const progress = set.querySelector<HTMLElement>(".practice-progress");
+    let answered = 0;
+    let correct = 0;
+    const wrong: WrongQuestionInput[] = [];
+
+    const qText = (q: HTMLElement) => (q.querySelector(".q-text")?.textContent ?? "").replace(/^\d+\.\s*/, "");
+    const qOptions = (q: HTMLElement) => Array.from(q.querySelectorAll<HTMLElement>(".q-opt")).map((b) => b.textContent ?? "");
+    const qAnalysis = (q: HTMLElement) => q.querySelector(".q-analysis")?.textContent ?? "";
+
+    const update = () => {
+      if (progress) progress.textContent = `已答 ${answered}/${questions.length} · 答对 ${correct}`;
+    };
+
+    async function submit() {
+      const env = await api.submitPractice({ date, correct, total: questions.length, wrong });
+      if (progress) {
+        progress.textContent = env.ok
+          ? `交卷完成 · 答对 ${correct}/${questions.length}`
+          : "交卷失败，记录未保存";
+      }
+    }
+
+    questions.forEach((q) => {
+      const answer = Number(q.dataset.answer);
+      q.querySelectorAll<HTMLButtonElement>(".q-opt").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (btn.classList.contains("answered")) return; // 已作答
+          const chosen = Number(btn.dataset.opt);
+          const isCorrect = chosen === answer;
+          btn.classList.add(isCorrect ? "correct" : "wrong");
+          q.querySelector<HTMLButtonElement>(`.q-opt[data-opt="${answer}"]`)?.classList.add("correct");
+          q.querySelectorAll(".q-opt").forEach((b) => b.classList.add("answered"));
+          const analysis = q.querySelector<HTMLElement>(".q-analysis");
+          if (analysis) analysis.hidden = false;
+          answered += 1;
+          if (isCorrect) correct += 1;
+          else wrong.push({ question: qText(q), options: qOptions(q), answer, chosen, analysis: qAnalysis(q) });
+          update();
+          if (answered === questions.length) submit();
+        });
+      });
+    });
+  });
+</script>

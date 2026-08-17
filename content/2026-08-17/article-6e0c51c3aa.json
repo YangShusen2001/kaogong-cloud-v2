@@ -1,0 +1,143 @@
+{
+  "id": "6e0c51c3aa",
+  "date": "2026-08-17",
+  "title": "今年前7月全国铁路完成固定资产投资4406亿元",
+  "source": "news.cn",
+  "url": "https://www.news.cn/fortune/20260817/a4f1bc19d0df4829bb3740f0a3bdf03e/c.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-17T15:44:16+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "新华社北京8月17日电（记者樊曦）记者17日从中国国家铁路集团有限公司获悉，今年以来，铁路建设优质高效推进，1至7月全国铁路完成固定资产投资4406亿元，同比增长1.8%，现代化铁路基础设施体系加快构建，铁路建设投资拉动效应显著，为区域经济社会发展注入强劲动能。",
+    "国铁集团相关部门负责人介绍，今年以来，国铁集团聚焦服务支撑国家重大战略和区域经济社会发展，扎实推进强网强链行动，科学有序推进铁路规划建设，持续提升路网规模质量，推动重点工程项目取得积极进展。近期，广州至湛江高铁佛山站开通运营，西安至安康高铁启动全线拉通试验，哈尔滨至铁力至伊春高铁联调联试圆满完成，雄安新区至忻州高铁山西段完成铺轨。",
+    "与此同时，国铁集团组织各参建单位统筹建设资源，一批铁路控制性工程建设稳步推进。在焦平铁路沁河特大桥跨沁河主墩施工中，中铁二十三局建设者有效应对水下厚流沙层及超长桩灌注等挑战，完成16根长达108米的超长桩基施工；在浙江，由中铁十一局承建的衢丽铁路衢江特大桥跨沪昆铁路转体连续梁加快建设，连续梁转体重量达2.4万吨，需跨越既有沪昆铁路；在陕西，由中铁十四局承建的延榆铁路九里山隧道掘进突破7000米，全隧位于黄土高原丘陵沟壑区，最浅埋深仅约2米，施工难度大、安全风险高。",
+    "国铁集团相关部门负责人表示，下一步，国铁集团将统筹安排新线规划建设与普速铁路提质扩能，统筹铁路规划、建设与运营，加快推进重点项目前期工作，科学优化在建项目施工组织，持续提升铁路投资质量和效益，确保完成全年建设任务，助力经济社会高质量发展。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-17T15:44:17+00:00",
+  "sourceTextHash": "1cb4f0554ba05da688eb20a939a5bc96978fbd8f1e688d2f15776f86aabb52a0",
+  "aiStatus": "ok",
+  "aiSummary": "今年1至7月全国铁路完成固定资产投资4406亿元，同比增长1.8%，铁路建设优质高效推进，多个重点项目取得进展，投资拉动效应显著，为区域发展注入动能，下一步将统筹规划建设，确保完成全年任务。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-102-114-viewpoint",
+      "paragraphIndex": 0,
+      "start": 102,
+      "end": 114,
+      "text": "铁路建设投资拉动效应显著",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-86-101-viewpoint",
+      "paragraphIndex": 0,
+      "start": 86,
+      "end": 101,
+      "text": "现代化铁路基础设施体系加快构建",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-45-55-viewpoint",
+      "paragraphIndex": 1,
+      "start": 45,
+      "end": 55,
+      "text": "扎实推进强网强链行动",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-3-23-42-viewpoint",
+      "paragraphIndex": 3,
+      "start": 23,
+      "end": 42,
+      "text": "统筹安排新线规划建设与普速铁路提质扩能",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-70-76-exam_point",
+      "paragraphIndex": 0,
+      "start": 70,
+      "end": 76,
+      "text": "4406亿元",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-77-85-exam_point",
+      "paragraphIndex": 0,
+      "start": 77,
+      "end": 85,
+      "text": "同比增长1.8%",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-98-112-exam_point",
+      "paragraphIndex": 1,
+      "start": 98,
+      "end": 112,
+      "text": "广州至湛江高铁佛山站开通运营",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-113-128-exam_point",
+      "paragraphIndex": 1,
+      "start": 113,
+      "end": 128,
+      "text": "西安至安康高铁启动全线拉通试验",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-143-156-exam_point",
+      "paragraphIndex": 2,
+      "start": 143,
+      "end": 156,
+      "text": "连续梁转体重量达2.4万吨",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-213-221-exam_point",
+      "paragraphIndex": 2,
+      "start": 213,
+      "end": 221,
+      "text": "最浅埋深仅约2米",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-96-106-exam_point",
+      "paragraphIndex": 3,
+      "start": 96,
+      "end": 106,
+      "text": "确保完成全年建设任务",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-64-70-term",
+      "paragraphIndex": 0,
+      "start": 64,
+      "end": 70,
+      "text": "固定资产投资",
+      "type": "term",
+      "explanation": "指以货币形式表现的建造和购置固定资产的工作量，是反映投资规模、结构和发展速度的综合性指标。"
+    },
+    {
+      "id": "ai-1-49-55-term",
+      "paragraphIndex": 1,
+      "start": 49,
+      "end": 55,
+      "text": "强网强链行动",
+      "type": "term",
+      "explanation": "指铁路部门为优化路网结构、提升运输链条效能而实施的专项建设行动。"
+    },
+    {
+      "id": "ai-2-27-32-term",
+      "paragraphIndex": 2,
+      "start": 27,
+      "end": 32,
+      "text": "控制性工程",
+      "type": "term",
+      "explanation": "指在工程建设中起关键控制作用、影响整体工期和质量的难点工程。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

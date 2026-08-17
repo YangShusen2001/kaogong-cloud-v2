@@ -1,0 +1,132 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1786652178669,
+      "tag": "0000_adorable_the_anarchist",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1786655202144,
+      "tag": "0001_flashy_prima",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1786655683296,
+      "tag": "0002_low_giant_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1786656381165,
+      "tag": "0003_rename_owner_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1786660912273,
+      "tag": "0004_add_profile_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1786665466234,
+      "tag": "0005_highlight_styles_offsets",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1786667953773,
+      "tag": "0006_drop_highlights_style",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1786716309117,
+      "tag": "0007_silky_ultron",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1786718972199,
+      "tag": "0008_windy_colonel_america",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1786719347617,
+      "tag": "0009_overjoyed_marvel_apes",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1786720273083,
+      "tag": "0010_pink_the_executioner",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1786720421206,
+      "tag": "0011_chubby_medusa",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1786758152818,
+      "tag": "0012_atomic_persistence_foundation",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1786761129540,
+      "tag": "0013_owner_namespace_and_subscription_nonce",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1786782264144,
+      "tag": "0014_resend_newsletter_delivery",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "6",
+      "when": 1786869296075,
+      "tag": "0015_abandoned_thunderball",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "6",
+      "when": 1786893566954,
+      "tag": "0016_majestic_layla_miller",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "6",
+      "when": 1786904091007,
+      "tag": "0017_vengeful_shatterstar",
+      "breakpoints": true
+    }
+  ]
+}

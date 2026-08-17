@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="zh-CN" data-bs-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日时政 · 本地审核</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
+<style>
+  /* 覆盖 Tabler 默认背景：更干净、去掉「蒙猪油」的灰调和浮起阴影 */
+  body { background: #ffffff; }
+  .card { box-shadow: none; border-color: #e4e8ef; }
+  /* 审核特定样式（Tabler 没有的） */
+  .sec-title { font-weight: 700; margin: 14px 0 6px; font-size: 13px; color: var(--tblr-primary); }
+  .sec-title:first-child { margin-top: 0; }
+  .art { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px; cursor: pointer; color: inherit; }
+  .art:hover { background: var(--tblr-light); }
+  .art.on { background: var(--tblr-primary); color: #fff; }
+  .art .num { flex: none; font-size: 12px; color: var(--tblr-muted); width: 22px; }
+  .art.on .num { color: rgba(255,255,255,.7); }
+  .art .t { flex: 1; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .empty { color: var(--tblr-muted); text-align: center; padding: 60px 0; }
+  .preview { margin-top: 16px; border-top: 1px dashed var(--tblr-border-color); padding-top: 14px; }
+  .preview h3 { font-size: 14px; margin: 0 0 8px; color: var(--tblr-muted); }
+  .preview summary { cursor: pointer; font-size: 14px; color: var(--tblr-muted); user-select: none; }
+  .preview .body { max-height: 360px; overflow: auto; line-height: 1.9; font-size: 14px; }
+  .preview .body p { text-indent: 2em; margin: 0 0 10px; }
+  .check { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--tblr-danger); cursor: pointer; }
+  #log { margin-top: 16px; padding: 12px; background: #0d1117; color: #e6edf3; border-radius: 6px; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 200px; overflow: auto; display: none; }
+  .nav-dropdown { position: relative; }
+  .dropdown-panel { position: absolute; top: 100%; right: 0; width: 420px; background: var(--tblr-bg-surface); border: 1px solid var(--tblr-border-color); border-radius: 8px; padding: 18px; box-shadow: 0 8px 30px rgba(16,42,86,.15); z-index: 30; display: none; }
+  .nav-dropdown:hover .dropdown-panel { display: block; }
+  .font-panel h3, .config-panel h3 { margin: 0 0 12px; font-size: 15px; }
+  .font-panel .row, .config-panel .row { display: flex; gap: 10px; align-items: center; margin: 10px 0; }
+  .font-panel label { font-size: 13px; color: var(--tblr-muted); display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .font-panel select, .font-panel input[type="file"] { border: 1px solid var(--tblr-border-color); border-radius: 6px; padding: 6px 8px; font-family: inherit; font-size: 13px; }
+  .config-panel label { display: block; font-size: 13px; color: var(--tblr-muted); margin-bottom: 10px; }
+  .config-panel textarea { display: block; width: 100%; margin-top: 4px; border: 1px solid var(--tblr-border-color); border-radius: 6px; padding: 8px; font-family: monospace; font-size: 12px; }
+  .config-panel .check { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--tblr-muted); }
+  .font-panel #font-msg, .config-panel #cfg-msg { font-size: 13px; color: var(--tblr-muted); margin-top: 8px; min-height: 18px; }
+  .font-preview { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--tblr-border-color); font-size: 13px; color: var(--tblr-muted); }
+  .fp-logo { font-size: 28px; }
+  .fp-nav { font-size: 17px; }
+  /* AI 标注可视化 */
+  .ai-summary { font-size: 14px; color: var(--tblr-body-color); background: var(--tblr-light); border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; line-height: 1.7; }
+  .ai-ann { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; padding: 5px 0; border-bottom: 1px dashed var(--tblr-border-color); font-size: 13px; }
+  .ai-ann:last-child { border-bottom: none; }
+  .ai-ann-type { font-size: 11px; padding: 1px 8px; border-radius: 999px; color: #fff; }
+  .ai-ann-type.ai-viewpoint { background: #1d4ed8; }
+  .ai-ann-type.ai-exam-point { background: #d97706; }
+  .ai-ann-type.ai-term { background: #0f766e; }
+  .ai-ann-text { color: var(--tblr-body-color); }
+  .ai-ann-para { color: var(--tblr-muted); font-size: 12px; }
+  .ai-ann-expl { width: 100%; color: var(--tblr-muted); font-size: 12px; line-height: 1.6; }
+  .ai-ann-empty { color: var(--tblr-muted); font-size: 13px; }
+  /* 原文内联高亮：三类标注三色 */
+  .preview .body mark.ai-viewpoint { background: transparent; font-weight: 700; padding: 0; }
+  .preview .body mark.ai-exam-point { background: #fde68a; padding: 0 1px; }
+  .preview .body mark.ai-term { background: transparent; box-shadow: inset 0 -2px #2563eb; padding: 0 1px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="navbar navbar-expand-md d-print-none">
+    <div class="container-xl">
+      <div class="navbar-brand navbar-brand-autodark">每日时政 · 本地审核</div>
+      <div class="navbar-nav flex-row order-md-last ms-auto">
+        <div class="nav-item me-2"><input type="date" id="date" class="form-control"></div>
+        <div class="nav-item me-2"><button class="btn btn-outline-secondary" id="fetch">🔄 抓取</button></div>
+        <div class="nav-item me-2"><button class="btn btn-outline-secondary" id="reanalyze">♻️ 补跑 AI</button></div>
+        <div class="nav-item nav-dropdown me-2" id="drop-review">
+          <button class="btn btn-outline-secondary" id="review-agent">🤖 AI 审核</button>
+          <div class="dropdown-panel config-panel" id="review-panel">
+            <h3>AI 审核（判 + 改，可回退）</h3>
+            <div class="row">
+              <button class="btn btn-primary" id="review-run">开始 AI 审核</button>
+              <button class="btn btn-success" id="review-apply">应用审核结果</button>
+              <button class="btn btn-outline-danger" id="review-rollback">回退</button>
+            </div>
+            <div id="review-body" style="max-height:320px;overflow:auto;margin-top:12px"></div>
+            <div id="review-diff" style="max-height:200px;overflow:auto;margin-top:12px"></div>
+          </div>
+        </div>
+        <div class="nav-item nav-dropdown me-2" id="drop-fonts">
+          <button class="btn btn-outline-secondary" id="fonts">🎨 字体</button>
+          <div class="dropdown-panel font-panel" id="font-panel">
+            <h3>字体管理</h3>
+            <div class="row">
+              <input type="file" id="font-file" accept=".ttf,.otf,.woff2">
+              <button class="btn btn-primary" id="font-upload">上传并子集化</button>
+            </div>
+            <div class="row">
+              <label>Logo 字体<select id="font-logo"></select></label>
+              <label>导航字体<select id="font-nav"></select></label>
+            </div>
+            <div class="font-preview">
+              <div>Logo 预览：<span class="fp-logo" id="fp-logo">每日时政</span></div>
+              <div>导航预览：<span class="fp-nav" id="fp-nav">首页 搜索 收藏 每日一练 登录</span></div>
+            </div>
+            <div class="row">
+              <button class="btn btn-outline-secondary" id="font-apply">应用（重新构建发布后生效）</button>
+            </div>
+            <div id="font-msg"></div>
+          </div>
+        </div>
+        <div class="nav-item nav-dropdown me-2" id="drop-config">
+          <button class="btn btn-outline-secondary" id="config">⚙️ 配置</button>
+          <div class="dropdown-panel config-panel" id="config-panel">
+            <h3>站点配置（新闻源 / 内容筛选 / 开关）</h3>
+            <label>新闻源（JSON，含 name/slot/page/href_re/mode/date_fn/limit 等）
+              <textarea id="cfg-sources" rows="10"></textarea>
+            </label>
+            <label>内容筛选关键词（每行一个）
+              <textarea id="cfg-noise" rows="4"></textarea>
+            </label>
+            <div class="row">
+              <label class="check"><input type="checkbox" id="cfg-carousel"> 首页轮播</label>
+              <label class="check"><input type="checkbox" id="cfg-banner"> AI 今日速览</label>
+            </div>
+            <div class="row">
+              <button class="btn btn-primary" id="cfg-save">保存配置</button>
+            </div>
+            <div id="cfg-msg"></div>
+          </div>
+        </div>
+        <div class="nav-item nav-dropdown me-2" id="drop-stats">
+          <button class="btn btn-outline-secondary" id="stats">📊 统计</button>
+          <div class="dropdown-panel config-panel" id="stats-panel">
+            <h3>数据统计</h3>
+            <div id="stats-body" style="max-height:420px;overflow:auto"></div>
+          </div>
+        </div>
+        <div class="nav-item nav-dropdown me-2" id="drop-invite">
+          <button class="btn btn-outline-secondary" id="invite">🔑 邀请码</button>
+          <div class="dropdown-panel config-panel" id="invite-panel">
+            <h3>AI 解析邀请码（共享码，每码 100 次）</h3>
+            <div class="row">
+              <button class="btn btn-primary" id="invite-gen">生成新邀请码</button>
+              <button class="btn btn-outline-secondary" id="invite-refresh">刷新</button>
+            </div>
+            <div id="invite-body" style="max-height:320px;overflow:auto;margin-top:12px"></div>
+            <div id="invite-msg" style="font-size:13px;color:var(--tblr-muted);margin-top:8px"></div>
+          </div>
+        </div>
+        <div class="nav-item me-2"><button class="btn btn-outline-secondary" id="preview">👁 预览</button></div>
+        <div class="nav-item"><button class="btn btn-warning" id="publish">🚀 发布到 CF</button></div>
+      </div>
+    </div>
+  </header>
+  <div class="page-wrapper">
+    <div class="page-body">
+      <div class="container-xl">
+        <div id="log" style="margin-bottom:16px"></div>
+        <div class="row g-3">
+          <div class="col-12 col-md-4 col-lg-3">
+            <div class="card"><div class="card-body" id="aside"></div></div>
+          </div>
+          <div class="col-12 col-md-8 col-lg-9">
+            <div class="card"><div class="card-body">
+              <div class="empty">选择左侧文章进行编辑</div>
+              <div id="edit-form" style="display:none">
+                <label class="form-label">标题<input id="f-title" class="form-control"></label>
+                <label class="form-label">摘要<textarea id="f-summary" class="form-control"></textarea></label>
+                <div class="row mt-3">
+                  <div class="col-auto"><button class="btn btn-primary" id="save">保存</button></div>
+                  <div class="col-auto d-flex align-items-center"><label class="check"><input type="checkbox" id="f-del" class="form-check-input"> 本期不发布（删除）</label></div>
+                </div>
+                <details class="preview" id="ai-brief-box" hidden>
+                  <summary>🤖 AI 速览与标注 <span id="ai-ann-count" style="color:var(--tblr-muted);font-weight:400"></span></summary>
+                  <div id="ai-summary"></div>
+                  <div id="ai-annotations"></div>
+                </details>
+                <div class="preview">
+                  <h3>原文预览（标注片段已内联高亮）</h3>
+                  <div class="body" id="preview-body">暂无原文</div>
+                </div>
+              </div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let digest = null;            // 当前日报 JSON
+let selected = null;          // {si, ii} 选中的文章
+const clipMap = {};           // url -> article id
+
+async function j(url, opts) {
+  const r = await fetch(url, opts);
+  return r.json();
+}
+
+function log(msg) {
+  const el = $("log");
+  el.style.display = "block";
+  el.textContent = msg;
+}
+
+// —— 加载日期 ——
+async function loadDates() {
+  const { dates } = await j("/api/dates");
+  const dp = $("date");
+  if (dates.length) dp.value = dates[0];
+}
+
+// —— 加载日报 ——
+async function loadDigest(date) {
+  if (!date) return;
+  digest = await j(`/api/digest/${date}`);
+  buildClipMap();
+  renderAside();
+  selected = null;
+  $("edit-form").style.display = "none";
+  document.querySelector(".empty").style.display = "block";
+}
+
+// —— clipMap：url -> article id，按 MD5(url)[:10] 稳定映射 ——
+function articleIdOf(url) {
+  // 与后端 hashlib.md5(url)[:10] 对齐：纯 JS 算不出，但审核服务会按 id 直接返回；
+  // 这里通过 /api/article-by-url?url=... 让后端解析，前端不重复算。
+  return null;
+}
+
+function buildClipMap() {
+  for (const s of digest.sections) for (const it of s.items) {
+    if (it.sourceUrl && !(it.sourceUrl in clipMap)) clipMap[it.sourceUrl] = null;
+  }
+}
+
+function renderAside() {
+  const aside = $("aside");
+  aside.innerHTML = "";
+  let n = 0;
+  digest.sections.forEach((s, si) => {
+    const h = document.createElement("div");
+    h.className = "sec-title";
+    h.textContent = s.title;
+    aside.appendChild(h);
+    s.items.forEach((it, ii) => {
+      n++;
+      const row = document.createElement("div");
+      row.className = "art" + (selected && selected.si === si && selected.ii === ii ? " on" : "");
+      row.innerHTML = `<span class="num">${String(n).padStart(2,"0")}</span><span class="t"></span>`;
+      row.querySelector(".t").textContent = it.title;
+      row.onclick = () => select(si, ii, row);
+      aside.appendChild(row);
+    });
+  });
+}
+
+function select(si, ii, row) {
+  selected = { si, ii };
+  document.querySelectorAll(".art").forEach((a) => a.classList.remove("on"));
+  row.classList.add("on");
+  const it = digest.sections[si].items[ii];
+  document.querySelector(".empty").style.display = "none";
+  $("edit-form").style.display = "block";
+  $("f-title").value = it.title;
+  $("f-summary").value = it.summary || "";
+  $("f-del").checked = false;
+  loadPreview(it.sourceUrl);
+}
+
+const AI_TYPE_LABEL = { viewpoint: "观点", exam_point: "考点", term: "术语" };
+
+// 段落内联高亮：把标注片段包上 mark，其余原文正常输出
+function highlightParagraph(text, annotations) {
+  if (!annotations || !annotations.length) return esc(text);
+  const sorted = [...annotations].sort((a, b) => a.start - b.start);
+  let out = "";
+  let cursor = 0;
+  for (const a of sorted) {
+    if (a.start < cursor || a.end > text.length || a.start >= a.end) continue;
+    out += esc(text.slice(cursor, a.start));
+    const cls = "ai-" + (a.type === "exam_point" ? "exam-point" : a.type);
+    const titleAttr = a.explanation ? ` title="${esc(a.explanation)}"` : "";
+    out += `<mark class="${cls}"${titleAttr}>${esc(text.slice(a.start, a.end))}</mark>`;
+    cursor = a.end;
+  }
+  out += esc(text.slice(cursor));
+  return out;
+}
+
+async function loadPreview(url) {
+  const body = $("preview-body");
+  const brief = $("ai-brief-box");
+  body.textContent = "加载中…";
+  brief.hidden = true;
+  brief.removeAttribute("open");
+  if (!url) { body.textContent = "该条目无原文链接"; return; }
+  try {
+    const art = await j(`/api/article-by-url?url=${encodeURIComponent(url)}`);
+    const paragraphs = art.paragraphs || [];
+    const annotations = art.aiAnnotations || [];
+
+    // 原文（内联高亮标注片段）
+    if (paragraphs.length) {
+      const byPara = {};
+      for (const a of annotations) {
+        if (typeof a.paragraphIndex !== "number") continue;
+        (byPara[a.paragraphIndex] = byPara[a.paragraphIndex] || []).push(a);
+      }
+      body.innerHTML = paragraphs.map((p, i) => `<p>${highlightParagraph(p, byPara[i] || [])}</p>`).join("");
+    } else {
+      body.textContent = "无正文";
+    }
+
+    // AI 速览 + 标注列表
+    const hasAi = Boolean(art.aiSummary) || annotations.length > 0;
+    if (hasAi) {
+      $("ai-summary").innerHTML = art.aiSummary ? `<div class="ai-summary">${esc(art.aiSummary)}</div>` : "";
+      $("ai-ann-count").textContent = annotations.length ? `（${annotations.length} 条）` : "";
+      $("ai-annotations").innerHTML = annotations.length
+        ? annotations.map((a) => {
+            const label = AI_TYPE_LABEL[a.type] || a.type;
+            const expl = a.explanation ? `<div class="ai-ann-expl">${esc(a.explanation)}</div>` : "";
+            return `<div class="ai-ann"><span class="ai-ann-type ai-${a.type === "exam_point" ? "exam-point" : a.type}">${label}</span><span class="ai-ann-text">${esc(a.text)}</span><span class="ai-ann-para">第${(a.paragraphIndex ?? 0) + 1}段</span>${expl}</div>`;
+          }).join("")
+        : '<div class="ai-ann-empty">无标注（可能 AI 失败或未标注）</div>';
+      brief.hidden = false;
+    }
+  } catch (e) {
+    body.textContent = "该篇暂无剪藏原文";
+  }
+}
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+$("save").onclick = async () => {
+  if (!selected) return;
+  const it = digest.sections[selected.si].items[selected.ii];
+  it.title = $("f-title").value.trim();
+  it.summary = $("f-summary").value.trim();
+  if ($("f-del").checked) {
+    digest.sections[selected.si].items.splice(selected.ii, 1);
+  }
+  await j("/api/digest", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ date: $("date").value, digest }),
+  });
+  renderAside();
+  $("edit-form").style.display = "none";
+  document.querySelector(".empty").style.display = "block";
+  selected = null;
+  log("已保存");
+};
+
+function qualityLine(r) {
+  if (!r.quality || !r.quality.qualityStatus) return '（无质量报告，抓取未完成或产物为空）';
+  const q = r.quality;
+  const aiNote = r.aiKeyConfigured === false ? ' ⚠️ 未配置 DEEPSEEK_API_KEY，AI 概括/标注将全部失败' : '';
+  const errors = [
+    ...(q.sourceErrors || []).map((e) => '来源失败:' + e.error),
+    ...(q.schemaErrors || []).map((e) => 'schema:' + e.error),
+    ...(q.semanticErrors || []).map((e) => '语义:' + e.error),
+    ...(q.volumeErrors || []).map((e) => '数量:' + e.error),
+  ];
+  let line = '质量门禁：' + q.qualityStatus + '（候选 ' + q.candidates + ' / 文章 ' + q.articles + ' / AI成功 ' + q.aiOk + ' / AI失败 ' + q.aiError + '）' + aiNote +
+    (errors.length ? '\n' + errors.slice(0, 10).join('\n') : '');
+  const details = q.clipDetails || [];
+  if (details.length) {
+    const bad = details.filter((d) => d.status !== 'ok');
+    line += '\n\n剪藏明细：成功 ' + details.filter((d) => d.status === 'ok').length + ' 篇';
+    for (const d of bad) line += '\n  ❌ ' + d.title + '（' + (d.reason || '失败') + '）';
+  }
+  return line;
+}
+
+$("fetch").onclick = async () => {
+  $("fetch").disabled = true;
+  log('抓取中（抓取 + 剪藏 + AI + 每日一练 + 质量门禁）…');
+  try {
+    const r = await j('/api/fetch', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ date: $('date').value }),
+    });
+    if (r.ok) {
+      log('抓取完成：' + r.date + '，剪藏 ' + r.clips + ' 篇\n' + qualityLine(r) + '\n\n门禁为 failed 时「发布到 CF」会被拒绝，可先「补跑 AI」或核对来源。');
+      await loadDates(); await loadDigest(r.date);
+    } else log('抓取失败：' + JSON.stringify(r));
+  } catch (e) { log('抓取请求失败：' + e); }
+  $("fetch").disabled = false;
+};
+
+$("reanalyze").onclick = async () => {
+  $("reanalyze").disabled = true;
+  log('补跑 AI 中（只对已有原文重新分析，不重新抓取）…');
+  try {
+    const r = await j('/api/reanalyze', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ date: $('date').value }),
+    });
+    if (r.ok) log('补跑完成：' + r.date + '，重写 ' + r.rewritten + ' 篇\n' + qualityLine(r));
+    else log('补跑失败：' + (r.detail || JSON.stringify(r)));
+  } catch (e) { log('补跑请求失败：' + e); }
+  $("reanalyze").disabled = false;
+};
+
+$("publish").onclick = async () => {
+  $("publish").disabled = true;
+  const r = await j("/api/publish", { method: "POST" });
+  if (!r.ok) {
+    $("publish").disabled = false;
+    log("❌ " + (r.step || "发布失败") + "\n\n" + r.log);
+    return;
+  }
+  log("发布已启动（后台构建 + 部署），请稍候…");
+  const timer = setInterval(async () => {
+    const s = await j("/api/publish/status");
+    log(`[${s.step || "进行中"}] ${s.log || ""}`);
+    if (s.done) {
+      clearInterval(timer);
+      $("publish").disabled = false;
+      log(s.ok ? "✅ 发布成功\n\n" + s.log : "❌ " + (s.step || "发布") + " 失败\n\n" + s.log);
+    }
+  }, 2000);
+};
+
+$("date").onchange = () => loadDigest($("date").value);
+
+// —— 字体管理 ——
+function applyPreview(fontFile, el) {
+  if (!fontFile) { el.style.fontFamily = ""; return; }
+  const family = "prev_" + fontFile.replace(/[^a-z0-9]/gi, "_");
+  let st = document.getElementById("font-preview-style");
+  if (!st) { st = document.createElement("style"); st.id = "font-preview-style"; document.head.appendChild(st); }
+  st.textContent = `@font-face{font-family:"${family}";src:url("/fonts/uploads/${fontFile}") format("woff2");font-display:swap;}`;
+  el.style.fontFamily = `"${family}",sans-serif`;
+}
+
+async function loadFonts() {
+  const { fonts, config } = await j("/api/fonts");
+  const fill = (id, val) => {
+    const s = $(id);
+    s.innerHTML = '<option value="default">系统默认</option>'
+      + fonts.map((f) => `<option value="${f}">${f}</option>`).join("");
+    s.value = val || "default";
+  };
+  fill("font-logo", config.logo);
+  fill("font-nav", config.nav);
+  $("font-logo").onchange = () => applyPreview($("font-logo").value === "default" ? "" : $("font-logo").value, $("fp-logo"));
+  $("font-nav").onchange = () => applyPreview($("font-nav").value === "default" ? "" : $("font-nav").value, $("fp-nav"));
+  applyPreview(config.logo || "", $("fp-logo"));
+  applyPreview(config.nav || "", $("fp-nav"));
+}
+// 悬停下拉：首次悬停时懒加载数据（配合 CSS :hover 显示/收回）
+function lazyOnHover(wrapperId, loader) {
+  const wrapper = document.getElementById(wrapperId);
+  let loaded = false;
+  wrapper.addEventListener("mouseenter", () => {
+    if (!loaded) { loaded = true; loader(); }
+  });
+}
+lazyOnHover("drop-fonts", loadFonts);
+$("font-upload").onclick = async () => {
+  const f = $("font-file").files[0];
+  if (!f) { $("font-msg").textContent = "请先选择字体文件"; return; }
+  const btn = $("font-upload");
+  btn.disabled = true;
+  btn.textContent = "子集化处理中…";
+  $("font-msg").textContent = `正在处理 ${f.name}（约几秒）…`;
+  try {
+    const fd = new FormData();
+    fd.append("file", f);
+    const r = await fetch("/api/fonts/upload", { method: "POST", body: fd });
+    const text = await r.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = { detail: text || "上传失败" }; }
+    if (data.ok) {
+      $("font-msg").textContent = `✅ 已上传 ${data.file}，请在下拉选择后点「应用」`;
+      await loadFonts();
+    } else {
+      $("font-msg").textContent = `❌ ${data.detail || "上传/子集化失败"}`;
+    }
+  } catch (e) {
+    $("font-msg").textContent = `❌ 上传失败：${e}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "上传并子集化";
+  }
+};
+$("font-apply").onclick = async () => {
+  const body = { logo: $("font-logo").value, nav: $("font-nav").value };
+  await j("/api/fonts/config", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  $("font-msg").textContent = "已保存（重新构建发布后生效）";
+};
+
+// —— 站点配置 ——
+async function loadSiteConfig() {
+  const cfg = await j("/api/config");
+  $("cfg-sources").value = JSON.stringify(cfg.sources, null, 2);
+  $("cfg-noise").value = (cfg.noiseTitle || []).join("\n");
+  $("cfg-carousel").checked = !!cfg.carousel;
+  $("cfg-banner").checked = !!cfg.aiBanner;
+}
+lazyOnHover("drop-config", loadSiteConfig);
+$("cfg-save").onclick = async () => {
+  try {
+    const sources = JSON.parse($("cfg-sources").value);
+    const body = {
+      sources,
+      noiseTitle: $("cfg-noise").value.split("\n").map((s) => s.trim()).filter(Boolean),
+      carousel: $("cfg-carousel").checked,
+      aiBanner: $("cfg-banner").checked,
+    };
+    await j("/api/config", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    $("cfg-msg").textContent = "已保存（下次抓取/构建生效）";
+  } catch (e) {
+    $("cfg-msg").textContent = "保存失败：新闻源 JSON 格式错误";
+  }
+};
+
+// —— 数据统计 ——
+async function loadStats() {
+  const { data } = await j("/api/stats");
+  const rows = (data || []).slice().reverse().map((r) => {
+    const badge = r.qualityStatus === "ok" ? "bg-success" : r.qualityStatus === "degraded" ? "bg-warning" : "bg-danger";
+    return `<tr><td>${r.date}</td><td>${r.candidates}</td><td>${r.articles}</td><td>${r.aiOk}</td><td>${r.aiError}</td><td><span class="badge ${badge}">${r.qualityStatus || "-"}</span></td></tr>`;
+  }).join("");
+  $("stats-body").innerHTML = `<table class="table table-sm table-vcenter"><thead><tr><th>日期</th><th>候选</th><th>文章</th><th>AI成功</th><th>AI失败</th><th>门禁</th></tr></thead><tbody>${rows || '<tr><td colspan="6">暂无报告</td></tr>'}</tbody></table>`;
+}
+lazyOnHover("drop-stats", loadStats);
+
+// —— 邀请码管理（转发到生产 Worker admin API，需后端 JOB_SECRET）——
+async function loadInvites() {
+  try {
+    const r = await j("/api/invite-codes");
+    const rows = r.data || [];
+    $("invite-body").innerHTML = rows.length
+      ? '<table class="table table-sm table-vcenter"><thead><tr><th>邀请码</th><th>剩余</th><th>总量</th><th>创建时间</th></tr></thead><tbody>'
+        + rows.slice().reverse().map((c) => `<tr><td><code>${esc(c.code)}</code></td><td>${c.remaining}</td><td>${c.total}</td><td>${new Date(c.createdAt).toLocaleString()}</td></tr>`).join("")
+        + '</tbody></table>'
+      : '<p style="font-size:13px;color:var(--tblr-muted)">暂无邀请码</p>';
+    $("invite-msg").textContent = "";
+  } catch (e) {
+    $("invite-body").innerHTML = "";
+    $("invite-msg").textContent = "加载失败：" + e;
+  }
+}
+lazyOnHover("drop-invite", loadInvites);
+$("invite-refresh").onclick = loadInvites;
+$("invite-gen").onclick = async () => {
+  const btn = $("invite-gen");
+  btn.disabled = true;
+  $("invite-msg").textContent = "生成中…";
+  try {
+    const r = await j("/api/invite-codes", { method: "POST" });
+    if (r.ok && r.data) {
+      $("invite-msg").textContent = `✅ 新邀请码：${r.data.code}（${r.data.total} 次）`;
+      await loadInvites();
+    } else {
+      $("invite-msg").textContent = "❌ " + (r.detail || JSON.stringify(r));
+    }
+  } catch (e) {
+    $("invite-msg").textContent = "❌ 生成失败：" + e;
+  } finally {
+    btn.disabled = false;
+  }
+};
+
+// —— AI 审核（Phase 1：只判不改，后台线程 + 轮询）——
+const VERDICT_LABEL = { keep: "✅ 保留", rewrite: "✏️ 建议改写", drop: "🗑️ 建议删除", rerun: "🔁 建议补跑", needs_human: "⚠️ 待人工" };
+const VERDICT_BADGE = { keep: "bg-success", rewrite: "bg-warning", drop: "bg-danger", rerun: "bg-info", needs_human: "bg-secondary" };
+
+function renderReview(report) {
+  const rows = (report.decisions || []).map((d) => {
+    const badge = VERDICT_BADGE[d.verdict] || "bg-secondary";
+    const label = VERDICT_LABEL[d.verdict] || d.verdict;
+    let extra = "";
+    if (d.verdict === "rewrite") {
+      if (d.newTitle) extra += `<div style="font-size:12px;color:var(--tblr-primary);margin-top:2px">新标题：${esc(d.newTitle)}</div>`;
+      if (d.newSummary) extra += `<div style="font-size:12px;color:var(--tblr-primary);margin-top:2px">新摘要：${esc(d.newSummary)}</div>`;
+    }
+    return `<div style="padding:8px 0;border-bottom:1px solid var(--tblr-border-color)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="badge ${badge}">${label}</span>
+        <span class="badge bg-light text-dark">${d.score} 分</span>
+      </div>
+      <div style="font-size:13px;margin-top:4px">${esc(d.title)}</div>
+      <div style="font-size:12px;color:var(--tblr-muted);margin-top:2px">${esc(d.reason)}</div>
+      ${extra}
+    </div>`;
+  }).join("");
+  $("review-body").innerHTML = rows || '<p style="font-size:13px;color:var(--tblr-muted)">暂无判定结果</p>';
+}
+
+$("review-run").onclick = async () => {
+  const btn = $("review-run");
+  btn.disabled = true;
+  btn.textContent = "审核中…";
+  const r = await j("/api/review-agent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date: $("date").value }),
+  });
+  if (!r.ok) {
+    btn.disabled = false;
+    btn.textContent = "开始 AI 审核";
+    log("❌ " + (r.step || "AI 审核") + "\n\n" + r.log);
+    return;
+  }
+  log("AI 审核已启动，请稍候…");
+  const timer = setInterval(async () => {
+    const s = await j("/api/review-agent/status");
+    log(`[${s.step || "进行中"}] ${s.log || ""}`);
+    if (s.done) {
+      clearInterval(timer);
+      btn.disabled = false;
+      btn.textContent = "开始 AI 审核";
+      if (s.ok && s.report) {
+        renderReview(s.report);
+        log("✅ AI 审核完成\n\n" + s.log);
+      } else {
+        log("❌ AI 审核失败\n\n" + s.log);
+      }
+    }
+  }, 2000);
+};
+
+function renderDiff(changes) {
+  const rows = (changes || []).map((c) => {
+    if (c.verdict === "drop") {
+      return `<div style="font-size:12px;color:var(--tblr-danger);padding:4px 0;border-bottom:1px dashed var(--tblr-border-color)">🗑️ 已删除：${esc(c.title)}（${esc(c.reason)}）</div>`;
+    }
+    if (c.verdict === "rewrite") {
+      let line = `<div style="font-size:12px;padding:4px 0;border-bottom:1px dashed var(--tblr-border-color)">✏️ 改写：${esc(c.title)}`;
+      if (c.before.title !== c.after.title) {
+        line += `<div style="color:var(--tblr-danger)">旧标题：${esc(c.before.title)}</div><div style="color:var(--tblr-primary)">新标题：${esc(c.after.title)}</div>`;
+      }
+      if (c.before.summary !== c.after.summary) {
+        line += `<div style="color:var(--tblr-danger)">旧摘要：${esc(c.before.summary)}</div><div style="color:var(--tblr-primary)">新摘要：${esc(c.after.summary)}</div>`;
+      }
+      return line + "</div>";
+    }
+    return "";
+  }).join("");
+  $("review-diff").innerHTML = rows ? '<h3 style="font-size:13px;margin:0 0 8px">已应用的改动</h3>' + rows : "";
+}
+
+$("review-apply").onclick = async () => {
+  const r = await j("/api/review-agent/apply", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date: $("date").value }),
+  });
+  if (r.ok) {
+    renderDiff(r.changes);
+    let msg = `✅ 已应用 ${r.appliedCount} 条改动`;
+    if (r.rerun) msg += `，补跑 AI ${r.rerunWritten} 篇`;
+    const q = r.quality || {};
+    msg += `\n\n质量门禁：${q.qualityStatus || "-"}（schema ${q.schemaErrors ?? 0} / 语义 ${q.semanticErrors ?? 0} / AI失败 ${q.aiError ?? 0}）`;
+    if (q.qualityStatus === "failed") msg += "\n⚠️ 门禁仍 failed，发布会拦截，请检查剩余错误或人工处理";
+    log(msg + "\n（可点「回退」恢复）");
+    await loadDigest($("date").value);
+  } else {
+    log("❌ 应用失败：" + (r.log || ""));
+  }
+};
+
+$("review-rollback").onclick = async () => {
+  const r = await j("/api/review-agent/rollback", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date: $("date").value }),
+  });
+  if (r.ok) {
+    $("review-diff").innerHTML = "";
+    log("✅ 已回退，恢复原内容（" + (r.restored || []).join(", ") + "）");
+    await loadDigest($("date").value);
+  } else {
+    log("❌ 回退失败");
+  }
+};
+
+// 预览：打开本地前端（每日时政网页）；后端负责拉起 dev 服务
+$("preview").onclick = async () => {
+  log("打开本地预览（若无前端服务则先启动）…");
+  await j("/api/preview", { method: "POST" });
+};
+
+(async () => {
+  await loadDates();
+  await loadDigest($("date").value);
+})();
+</script>
+</body>
+</html>

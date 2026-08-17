@@ -1,0 +1,754 @@
+---
+import Base from "../../layouts/Base.astro";
+import { listArticles } from "../../lib/content";
+
+export function getStaticPaths() {
+  return listArticles().map((a) => ({ params: { id: a.id }, props: { article: a } }));
+}
+
+const { article } = Astro.props;
+const aiAnnotations = article.aiStatus === "ok" ? article.aiAnnotations ?? [] : [];
+const aiSummary = article.aiStatus === "ok" ? article.aiSummary?.trim() ?? "" : "";
+const keySentences = article.keySentences ?? [];
+const annotationGroups = [
+  { type: "exam_point", label: "考点", icon: "🎯" },
+  { type: "viewpoint", label: "观点", icon: "📌" },
+  { type: "term", label: "术语", icon: "📖" },
+]
+  .map((g) => ({ ...g, items: aiAnnotations.filter((a) => a.type === g.type) }))
+  .filter((g) => g.items.length > 0);
+const hasBrief = Boolean(aiSummary || annotationGroups.length || keySentences.length);
+---
+<Base title={`${article.title} · 时政小助手`}>
+  <div class="reading-head">
+    <p class="item-summary">{article.source} · {article.date} · <a href={article.url} target="_blank" rel="noopener">查看原文 ↗</a></p>
+    <h1 class="reading-title">{article.title}</h1>
+    <div class="read-actions">
+      <button type="button" class="read-fav" id="read-fav" data-title={article.title} data-url={article.url}>☆ 收藏本文</button>
+      <div class="reader-mode" role="group" aria-label="阅读模式">
+        <button type="button" id="mode-original" class="on" aria-pressed="true">原文模式</button>
+        <button type="button" id="mode-ai" aria-pressed="false" disabled>AI 标注模式</button>
+      </div>
+      <div class="read-toolbar">
+        <button type="button" id="font-minus" title="缩小字体">A−</button>
+        <button type="button" id="font-plus" title="放大字体">A＋</button>
+        <select id="font-select" title="字体">
+          <option value="default">默认</option>
+          <option value="serif">宋体</option>
+          <option value="kai">楷体</option>
+          <option value="hei">黑体</option>
+          <option value="shoujin">瘦金简体</option>
+        </select>
+        <button type="button" id="immersive" title="沉浸式阅读">沉浸</button>
+        <button type="button" id="fullscreen" title="全屏">⛶</button>
+      </div>
+    </div>
+    <div class="ai-quota" id="ai-quota">
+      <span class="ai-quota-text" id="ai-quota-text">AI 解析加载中…</span>
+      <button type="button" class="ai-quota-action" id="ai-quota-action" hidden>输入邀请码</button>
+    </div>
+  </div>
+
+  <p class="ai-mode-status" id="ai-mode-status" hidden></p>
+
+  {hasBrief && (
+    <details class="ai-brief" id="ai-brief">
+      <summary>AI 速览<span class="ai-brief-hint">展开查看考点 / 观点 / 术语 / 金句</span></summary>
+      <div class="ai-brief-body">
+        {aiSummary && <p class="ai-brief-summary">{aiSummary}</p>}
+        {annotationGroups.map((g) => (
+          <div class="ai-group">
+            <div class="ai-group-title">{g.icon} {g.label}</div>
+            {g.items.map((a) => (
+              <button type="button" class="ai-node" data-para={a.paragraphIndex} title={a.explanation}>{a.text}</button>
+            ))}
+          </div>
+        ))}
+        {keySentences.length > 0 && (
+          <div class="ai-group">
+            <div class="ai-group-title">💡 金句</div>
+            {keySentences.map((k) => <div class="ai-node ai-node-static">{k}</div>)}
+          </div>
+        )}
+      </div>
+    </details>
+  )}
+
+  <article class="reading" id="article" data-id={article.id} data-ai-status={article.aiStatus ?? "legacy"}>
+    {article.keySentences?.length > 0 && <blockquote>{article.keySentences[0]}</blockquote>}
+    {article.paragraphs.map((p) => <p class="reading-para">{p}</p>)}
+  </article>
+  <script type="application/json" id="ai-annotations" set:html={JSON.stringify(aiAnnotations).replace(/</g, "\\u003c")}></script>
+
+  <div id="hl-toolbar" class="hl-toolbar" hidden>
+    <button type="button" data-act="green">荧光笔</button>
+    <button type="button" data-act="underline">下划线</button>
+    <button type="button" data-act="bold">加粗</button>
+    <button type="button" data-act="explain">AI 解释</button>
+    <button type="button" data-act="favorite">收藏</button>
+  </div>
+
+  <div class="invite-modal" id="invite-modal" hidden>
+    <div class="invite-modal-card" role="dialog" aria-modal="true" aria-labelledby="invite-modal-title">
+      <h3 id="invite-modal-title">输入 AI 解析邀请码</h3>
+      <p class="item-summary">未登录时，AI 解析需要邀请码。激活后绑定到当前设备，从共享额度按次扣减。</p>
+      <input id="invite-input" type="text" autocomplete="off" spellcheck="false" placeholder="请输入邀请码" />
+      <p class="invite-error" id="invite-error" role="alert" hidden></p>
+      <div class="invite-modal-actions">
+        <button type="button" id="invite-cancel" class="btn btn--line btn--sm">取消</button>
+        <button type="button" id="invite-submit" class="btn btn--solid btn--sm">激活</button>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { api } from "../../lib/api";
+  import { applyStyle, removeRange, resolveSpanNotes, type Span } from "../../lib/highlights";
+  import { readerSegmentsToHtml, validAiAnnotations, buildReaderSegments } from "../../lib/reader-annotations";
+  import { renderMarkdown } from "../../lib/markdown";
+  import type { AiAnnotation, HighlightStyle } from "@kaogong/contracts";
+
+  const articleEl = document.getElementById("article") as HTMLElement;
+  const toolbar = document.getElementById("hl-toolbar") as HTMLElement;
+  const articleId = articleEl.dataset.id || "";
+  const paraEls = Array.from(articleEl.querySelectorAll<HTMLElement>(".reading-para"));
+
+  // AI 速览：点击考点/观点/术语节点跳转到对应段落
+  document.querySelectorAll<HTMLButtonElement>(".ai-node[data-para]").forEach((node) => {
+    node.addEventListener("click", () => {
+      const idx = Number(node.dataset.para);
+      const para = paraEls[idx];
+      if (para) {
+        para.scrollIntoView({ behavior: "smooth", block: "center" });
+        para.classList.add("ai-jump-flash");
+        window.setTimeout(() => para.classList.remove("ai-jump-flash"), 1500);
+      }
+    });
+  });
+
+  // 文章各段落原文（从初始 DOM 读取，重渲染前捕获一次），是偏移计算与重渲染的唯一事实源。
+  const paraText: string[] = paraEls.map((el) => el.textContent ?? "");
+  const aiStatus = articleEl.dataset.aiStatus;
+  const annotationData = document.getElementById("ai-annotations")?.textContent ?? "[]";
+  let aiAnnotations: AiAnnotation[] = [];
+  try {
+    aiAnnotations = JSON.parse(annotationData) as AiAnnotation[];
+  } catch {
+    aiAnnotations = [];
+  }
+  const validAnnotations = aiAnnotations.filter((annotation) => {
+    const text = paraText[annotation.paragraphIndex];
+    return text !== undefined && validAiAnnotations(text, [annotation]).length === 1;
+  });
+  let aiMode = false;
+
+  const originalModeButton = document.getElementById("mode-original") as HTMLButtonElement;
+  const aiModeButton = document.getElementById("mode-ai") as HTMLButtonElement;
+  const aiModeStatus = document.getElementById("ai-mode-status") as HTMLElement;
+  const aiAvailable = aiStatus === "ok" && validAnnotations.length > 0;
+  aiModeButton.disabled = !aiAvailable;
+  if (!aiAvailable) {
+    aiModeStatus.hidden = false;
+    aiModeStatus.textContent = aiStatus === "error"
+      ? "AI 标注生成失败，当前仍可阅读完整原文。"
+      : "这篇文章暂时没有 AI 标注，当前显示完整原文。";
+  }
+
+  // ===== 字体 / 沉浸 / 全屏 =====
+  const FONT_SIZE_KEY = "kaogong.read.fontsize";
+  const FONT_NAME_KEY = "kaogong.read.font";
+  const FONTS: Record<string, string> = {
+    default: "var(--font)",
+    serif: "var(--font-serif)",
+    kai: '"KaiTi", "楷体", "STKaiti", serif',
+    hei: '"SimHei", "黑体", "Microsoft YaHei", sans-serif',
+    shoujin: '"瘦金简体", "汉仪瘦金书简", "ShouJinTi", "STKaiti", serif',
+  };
+
+  let fontSize = Number(localStorage.getItem(FONT_SIZE_KEY)) || 17;
+  function setFontSize(n: number) {
+    fontSize = Math.min(26, Math.max(13, n));
+    articleEl.style.fontSize = `${fontSize}px`;
+    localStorage.setItem(FONT_SIZE_KEY, String(fontSize));
+  }
+  setFontSize(fontSize);
+
+  function setFont(name: string) {
+    articleEl.style.fontFamily = FONTS[name] || FONTS.default!;
+    localStorage.setItem(FONT_NAME_KEY, name);
+  }
+  const savedFont = localStorage.getItem(FONT_NAME_KEY);
+  if (savedFont) {
+    (document.getElementById("font-select") as HTMLSelectElement).value = savedFont;
+    setFont(savedFont);
+  }
+
+  document.getElementById("font-minus")!.addEventListener("click", () => setFontSize(fontSize - 1));
+  document.getElementById("font-plus")!.addEventListener("click", () => setFontSize(fontSize + 1));
+  document.getElementById("font-select")!.addEventListener("change", (e) => setFont((e.target as HTMLSelectElement).value));
+  document.getElementById("immersive")!.addEventListener("click", (e) => {
+    document.body.classList.toggle("immersive");
+    (e.target as HTMLButtonElement).textContent = document.body.classList.contains("immersive") ? "退出" : "沉浸";
+  });
+  document.getElementById("fullscreen")!.addEventListener("click", () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  });
+
+  const favBtn = document.getElementById("read-fav") as HTMLButtonElement;
+  favBtn.addEventListener("click", async () => {
+    const url = favBtn.dataset.url || "";
+    const title = favBtn.dataset.title || "";
+    const env = await api.addFavorite({ url, title });
+    favBtn.textContent = env.ok ? "★ 已收藏" : "☆ 收藏失败";
+    favBtn.disabled = env.ok;
+  });
+
+  // ===== 划线：本地 localStorage 存储，段落内偏移为源，数据驱动重渲染 =====
+  interface LocalHighlight {
+    paragraphIndex: number;
+    start: number;
+    end: number;
+    styles: HighlightStyle[];
+    note?: string;
+    explanation?: string;
+  }
+  const HIGHLIGHTS_KEY = `kaogong.highlights.v1.${articleId}`;
+  let records: LocalHighlight[] = [];
+  // 保存期间禁用同段重复操作，不再静默丢弃操作。
+  const reconcileBusy: Record<number, boolean> = {};
+
+  function spansFor(index: number): Span[] {
+    const byKey = new Map<string, Span>();
+    for (const r of records.filter((r) => r.paragraphIndex === index)) {
+      const key = `${r.start}:${r.end}`;
+      const prev = byKey.get(key);
+      byKey.set(key, prev
+        ? { start: r.start, end: r.end, styles: [...new Set([...prev.styles, ...r.styles])].sort(), note: prev.note || r.note || undefined, explanation: prev.explanation || r.explanation || undefined }
+        : { start: r.start, end: r.end, styles: [...r.styles].sort(), note: r.note || undefined, explanation: r.explanation || undefined });
+    }
+    return [...byKey.values()].sort((a, b) => a.start - b.start || a.end - b.end);
+  }
+
+  function renderParagraph(index: number) {
+    const para = paraEls[index];
+    if (!para) return;
+    const text = paraText[index] ?? para.textContent ?? "";
+    const annotations = aiMode ? validAnnotations.filter((annotation) => annotation.paragraphIndex === index) : [];
+    para.innerHTML = readerSegmentsToHtml(buildReaderSegments(text, spansFor(index), annotations));
+  }
+
+  function renderAll() {
+    paraEls.forEach((_, i) => renderParagraph(i));
+  }
+
+  function setAiMode(enabled: boolean) {
+    aiMode = enabled && aiAvailable;
+    originalModeButton.classList.toggle("on", !aiMode);
+    aiModeButton.classList.toggle("on", aiMode);
+    originalModeButton.setAttribute("aria-pressed", String(!aiMode));
+    aiModeButton.setAttribute("aria-pressed", String(aiMode));
+    articleEl.dataset.mode = aiMode ? "ai" : "original";
+    renderAll();
+  }
+  originalModeButton.addEventListener("click", () => setAiMode(false));
+  aiModeButton.addEventListener("click", () => setAiMode(true));
+  // 默认 AI 标注模式（仅当文章有可用 AI 标注）
+  setAiMode(aiAvailable);
+
+  function loadHighlights() {
+    try {
+      const raw = localStorage.getItem(HIGHLIGHTS_KEY);
+      const parsed: unknown = raw ? JSON.parse(raw) : [];
+      records = Array.isArray(parsed)
+        ? (parsed as LocalHighlight[]).filter((r) =>
+            Number.isInteger(r.paragraphIndex) && r.paragraphIndex >= 0 &&
+            Number.isInteger(r.start) && Number.isInteger(r.end) && r.start >= 0 && r.start < r.end &&
+            Array.isArray(r.styles))
+        : [];
+    } catch {
+      records = [];
+    }
+    renderAll();
+  }
+
+  function saveHighlights() {
+    try {
+      localStorage.setItem(HIGHLIGHTS_KEY, JSON.stringify(records));
+    } catch {
+      /* 存储不可用（隐私模式/已满）时静默降级为不持久化 */
+    }
+  }
+
+  async function reconcileParagraph(
+    index: number,
+    spans: Span[],
+    noteOverrides: Record<string, string> = {},
+    explanationOverrides: Record<string, string> = {},
+  ) {
+    if (reconcileBusy[index]) {
+      toast("正在保存上一项操作");
+      return false;
+    }
+    reconcileBusy[index] = true;
+    try {
+      const old = records.filter((r) => r.paragraphIndex === index).map((r) => ({ start: r.start, end: r.end, note: r.note ?? "" }));
+      const noteBySpan = resolveSpanNotes(spans, old, noteOverrides);
+      const explanationEntries = Object.entries(explanationOverrides).map(([key, explanation]) => {
+        const [s, e] = key.split(":").map(Number);
+        return { start: s, end: e, explanation };
+      });
+
+      const next = spans.map((span) => {
+        const explanation = explanationEntries.find((o) => o.start <= span.start && span.end <= o.end)?.explanation ?? "";
+        return {
+          paragraphIndex: index,
+          note: noteBySpan[`${span.start}:${span.end}`] ?? "",
+          explanation,
+          styles: span.styles,
+          start: span.start,
+          end: span.end,
+        };
+      });
+      records = records.filter((r) => r.paragraphIndex !== index).concat(next);
+      saveHighlights();
+      renderParagraph(index);
+      return true;
+    } finally {
+      reconcileBusy[index] = false;
+    }
+  }
+
+  // 选区 → 段落内字符偏移（Range.toString() 统一处理文本节点与元素节点锚定的选区，
+  // 避免三击整段 / 从缩进空白处拖选时 startContainer 为元素节点而被丢弃）。
+  function pointOffset(para: HTMLElement, node: Node, offset: number): number | null {
+    try {
+      const range = document.createRange();
+      range.selectNodeContents(para);
+      range.setEnd(node, offset);
+      return range.toString().length;
+    } catch {
+      return null;
+    }
+  }
+
+  interface SelectionOffsets {
+    paragraphIndex: number;
+    start: number;
+    end: number;
+    text: string;
+    rect: DOMRect;
+  }
+
+  let current: SelectionOffsets[] | null = null;
+
+  // 选区 → 逐段区间列表：支持跨段落划线，把选区按段落拆分为多个单段区间。
+  function selectionToOffsets(): SelectionOffsets[] | null {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return null;
+    const range = sel.getRangeAt(0);
+    const startContainer = range.startContainer;
+    const endContainer = range.endContainer;
+    const startEl = startContainer.nodeType === Node.TEXT_NODE
+      ? (startContainer as Text).parentElement
+      : (startContainer as Element);
+    const endEl = endContainer.nodeType === Node.TEXT_NODE
+      ? (endContainer as Text).parentElement
+      : (endContainer as Element);
+    const startPara = startEl ? (startEl.closest(".reading-para") as HTMLElement | null) : null;
+    const endPara = endEl ? (endEl.closest(".reading-para") as HTMLElement | null) : null;
+    if (!startPara || !endPara) return null;
+
+    const paras: HTMLElement[] = [];
+    let inRange = false;
+    for (const p of paraEls) {
+      if (p === startPara) inRange = true;
+      if (inRange) paras.push(p);
+      if (p === endPara) break;
+    }
+    if (paras.length === 0) return null;
+
+    const offsets: SelectionOffsets[] = [];
+    for (const para of paras) {
+      const index = paraEls.indexOf(para);
+      if (index < 0) continue;
+      const start = para === startPara ? pointOffset(para, startContainer, range.startOffset) : 0;
+      const end = para === endPara ? pointOffset(para, endContainer, range.endOffset) : (paraText[index] ?? "").length;
+      if (start === null || end === null || start >= end) continue;
+      offsets.push({
+        paragraphIndex: index,
+        start,
+        end,
+        text: (paraText[index] ?? "").slice(start, end),
+        rect: range.getBoundingClientRect(),
+      });
+    }
+    return offsets.length ? offsets : null;
+  }
+
+  function placeFloating(el: HTMLElement, rect: DOMRect, preferAbove = false) {
+    const viewport = window.visualViewport;
+    const leftEdge = viewport?.offsetLeft ?? 0;
+    const topEdge = viewport?.offsetTop ?? 0;
+    const width = viewport?.width ?? window.innerWidth;
+    const height = viewport?.height ?? window.innerHeight;
+    const margin = 8;
+    if (width <= 600) {
+      el.style.left = `${leftEdge + margin}px`;
+      el.style.right = `${margin}px`;
+      el.style.top = "auto";
+      el.style.bottom = "calc(8px + env(safe-area-inset-bottom))";
+      return;
+    }
+    el.style.right = "auto";
+    el.style.bottom = "auto";
+    const preferredLeft = rect.left + rect.width / 2 - el.offsetWidth / 2;
+    el.style.left = `${Math.max(leftEdge + margin, Math.min(preferredLeft, leftEdge + width - el.offsetWidth - margin))}px`;
+    const below = rect.bottom + margin;
+    const above = rect.top - el.offsetHeight - margin;
+    const top = preferAbove
+      ? (above >= topEdge + margin ? above : below)
+      : (below + el.offsetHeight <= topEdge + height - margin ? below : above);
+    el.style.top = `${Math.max(topEdge + margin, Math.min(top, topEdge + height - el.offsetHeight - margin))}px`;
+  }
+
+  function showSelectionToolbar() {
+    const offs = selectionToOffsets();
+    const text = offs?.map((o) => o.text).join(" ") ?? "";
+    if (!offs || text.trim().length < 2 || text.trim().length > 300) {
+      hide();
+      return;
+    }
+    current = offs;
+    toolbar.hidden = false;
+    placeFloating(toolbar, offs[0]!.rect);
+  }
+
+  const hide = () => {
+    toolbar.hidden = true;
+    current = null;
+    window.getSelection()?.removeAllRanges();
+  };
+
+  document.addEventListener("pointerup", (e) => {
+    if (toolbar.contains(e.target as Node)) return;
+    setTimeout(showSelectionToolbar, 0);
+  });
+
+  let selectionTimer = 0;
+  document.addEventListener("selectionchange", () => {
+    if (!toolbar.hidden) return;
+    window.clearTimeout(selectionTimer);
+    selectionTimer = window.setTimeout(showSelectionToolbar, 120);
+  });
+
+  document.addEventListener("pointerdown", (e) => {
+    const t = e.target as HTMLElement;
+    if (!toolbar.hidden && !toolbar.contains(t) && !t.closest("mark[data-user-highlight]")) {
+      hide();
+    }
+  });
+
+  // ===== AI 解析邀请码：额度状态 + 输入弹窗 =====
+  const quotaText = document.getElementById("ai-quota-text") as HTMLElement;
+  const quotaAction = document.getElementById("ai-quota-action") as HTMLButtonElement;
+  const inviteModal = document.getElementById("invite-modal") as HTMLElement;
+  const inviteInput = document.getElementById("invite-input") as HTMLInputElement;
+  const inviteError = document.getElementById("invite-error") as HTMLElement;
+  const inviteSubmit = document.getElementById("invite-submit") as HTMLButtonElement;
+  const inviteCancel = document.getElementById("invite-cancel") as HTMLButtonElement;
+
+  async function refreshInviteStatus() {
+    const me = await api.me();
+    if (me.ok && me.data) {
+      quotaText.textContent = "已登录 · 不限次";
+      quotaAction.hidden = true;
+      return;
+    }
+    const status = await api.inviteStatus();
+    if (status.ok && status.data?.active) {
+      quotaText.textContent = `剩余 ${status.data.remaining} 次`;
+      quotaAction.textContent = "更换邀请码";
+    } else {
+      quotaText.textContent = "需登录或邀请码";
+      quotaAction.textContent = "输入邀请码";
+    }
+    quotaAction.hidden = false;
+  }
+
+  function openInviteModal(): Promise<boolean> {
+    return new Promise((resolve) => {
+      inviteError.hidden = true;
+      inviteInput.value = "";
+      inviteModal.hidden = false;
+      inviteInput.focus();
+      const close = (ok: boolean) => {
+        inviteModal.hidden = true;
+        inviteSubmit.onclick = null;
+        inviteCancel.onclick = null;
+        inviteInput.onkeydown = null;
+        resolve(ok);
+      };
+      inviteSubmit.onclick = async () => {
+        const code = inviteInput.value.trim();
+        if (!code) {
+          inviteError.textContent = "请输入邀请码";
+          inviteError.hidden = false;
+          return;
+        }
+        inviteSubmit.disabled = true;
+        inviteSubmit.textContent = "激活中…";
+        const act = await api.activateInvite(code);
+        inviteSubmit.disabled = false;
+        inviteSubmit.textContent = "激活";
+        if (act.ok && act.data?.active) {
+          await refreshInviteStatus();
+          close(true);
+        } else {
+          inviteError.textContent = act.error?.message ?? "邀请码无效";
+          inviteError.hidden = false;
+        }
+      };
+      inviteCancel.onclick = () => close(false);
+      inviteInput.onkeydown = (e) => {
+        if (e.key === "Enter") inviteSubmit.click();
+        if (e.key === "Escape") inviteCancel.click();
+      };
+    });
+  }
+
+  quotaAction.addEventListener("click", () => { void openInviteModal(); });
+  void refreshInviteStatus();
+
+  async function fetchExplanation(text: string): Promise<string | null> {
+    let env = await api.explain(text);
+    if (env.ok && env.data) return env.data.explanation;
+    if (env.error?.code === "INVITE_REQUIRED") {
+      toast("AI 解析需要登录或填写邀请码");
+      const activated = await openInviteModal();
+      if (!activated) return null;
+      env = await api.explain(text);
+      if (env.ok && env.data) return env.data.explanation;
+    }
+    if (env.error?.code === "QUOTA_EXHAUSTED") {
+      toast("邀请码额度已用完，请登录或联系管理员获取新邀请码");
+      return null;
+    }
+    toast(env.error?.message ?? "AI 解释失败");
+    return null;
+  }
+
+  function toast(msg: string) {
+    const t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2000);
+  }
+
+  // 共享 tooltip：hover/focus [data-explanation] 显示解释（支持 Markdown）。
+  // 悬停常驻：鼠标移到 tooltip 上不隐藏，移开「文字 + tooltip」两者才隐藏。
+  let annotationTip: HTMLDivElement | null = null;
+  let annotationHideTimer = 0;
+
+  function cancelHideAnnotationTip() {
+    window.clearTimeout(annotationHideTimer);
+  }
+
+  function hideAnnotationTip() {
+    cancelHideAnnotationTip();
+    if (annotationTip) annotationTip.hidden = true;
+  }
+
+  function scheduleHideAnnotationTip() {
+    cancelHideAnnotationTip();
+    annotationHideTimer = window.setTimeout(hideAnnotationTip, 150);
+  }
+
+  function showAnnotationTip(target: HTMLElement, content: string) {
+    if (!annotationTip) {
+      annotationTip = document.createElement("div");
+      annotationTip.className = "annotation-tip";
+      annotationTip.hidden = true;
+      document.body.appendChild(annotationTip);
+      // 粘性：鼠标移到 tooltip 上取消隐藏，移出再延迟隐藏
+      annotationTip.addEventListener("mouseenter", cancelHideAnnotationTip);
+      annotationTip.addEventListener("mouseleave", scheduleHideAnnotationTip);
+    }
+    cancelHideAnnotationTip();
+    annotationTip.innerHTML = renderMarkdown(content);
+    annotationTip.hidden = false;
+    const rect = target.getBoundingClientRect();
+    const viewport = window.visualViewport;
+    const width = viewport?.width ?? window.innerWidth;
+    const height = viewport?.height ?? window.innerHeight;
+    const margin = 8;
+    if (width <= 600) {
+      annotationTip.style.left = `${margin}px`;
+      annotationTip.style.right = `${margin}px`;
+      annotationTip.style.top = "auto";
+      annotationTip.style.bottom = "calc(16px + env(safe-area-inset-bottom))";
+      return;
+    }
+    annotationTip.style.right = "auto";
+    annotationTip.style.bottom = "auto";
+    const tipRect = annotationTip.getBoundingClientRect();
+    const below = rect.bottom + margin;
+    const top = below + tipRect.height <= height - margin ? below : Math.max(margin, rect.top - tipRect.height - margin);
+    const left = Math.max(margin, Math.min(rect.left + rect.width / 2 - tipRect.width / 2, width - tipRect.width - margin));
+    annotationTip.style.top = `${top}px`;
+    annotationTip.style.left = `${left}px`;
+  }
+
+  function annotationContentOf(node: Node | null): { el: HTMLElement; content: string } | null {
+    const el = (node as HTMLElement | null)?.closest?.("[data-explanation]") as HTMLElement | null;
+    if (!el) return null;
+    const content = el.dataset.explanation ?? "";
+    return content ? { el, content } : null;
+  }
+
+  document.addEventListener("mouseover", (e) => {
+    const hit = annotationContentOf(e.target as Node);
+    if (hit) showAnnotationTip(hit.el, hit.content);
+  });
+  document.addEventListener("mouseout", (e) => {
+    const hit = annotationContentOf(e.target as Node);
+    // 离开标记时延迟隐藏，给鼠标移到 tooltip 留时间；标记仍聚焦则保持常驻
+    if (hit && document.activeElement !== hit.el) scheduleHideAnnotationTip();
+  });
+  document.addEventListener("focusin", (e) => {
+    const hit = annotationContentOf(e.target as Node);
+    if (hit) showAnnotationTip(hit.el, hit.content);
+  });
+  document.addEventListener("focusout", (e) => {
+    if ((e.target as HTMLElement).closest?.("[data-explanation]")) hideAnnotationTip();
+  });
+
+  // 关键：mousedown 阻止按钮夺焦点（否则选区被清空）
+  const preserveSelection = (e: Event) => {
+    window.clearTimeout(selectionTimer);
+    e.preventDefault();
+    e.stopPropagation();
+  };
+  toolbar.addEventListener("pointerdown", preserveSelection);
+  toolbar.addEventListener("mousedown", preserveSelection);
+
+  toolbar.addEventListener("click", async (e) => {
+    const btn = (e.target as HTMLElement).closest("button");
+    const selected = current;
+    if (!btn || !selected || selected.length === 0) {
+      toolbar.dataset.state = "missing-selection";
+      toast("选区已失效，请重新选择文字");
+      return;
+    }
+    toolbar.dataset.state = "saving";
+    const act = btn.dataset.act as string;
+    const text = selected.map((o) => o.text).join(" ");
+    let saved = true;
+    if (act === "green" || act === "underline" || act === "bold") {
+      for (const off of selected) {
+        saved = await reconcileParagraph(off.paragraphIndex, applyStyle(spansFor(off.paragraphIndex), { start: off.start, end: off.end }, act as HighlightStyle));
+        if (!saved) break;
+      }
+    } else if (act === "explain") {
+      toast("AI 解释生成中…");
+      const explanation = await fetchExplanation(text);
+      if (explanation) {
+        for (const off of selected) {
+          saved = await reconcileParagraph(
+            off.paragraphIndex,
+            applyStyle(spansFor(off.paragraphIndex), { start: off.start, end: off.end }, "underline"),
+            {},
+            { [`${off.start}:${off.end}`]: explanation },
+          );
+          if (!saved) break;
+        }
+      } else {
+        saved = false;
+        toast("AI 解释失败");
+      }
+    } else if (act === "favorite") {
+      const env = await api.addFavorite({
+        url: favBtn.dataset.url || location.href,
+        title: favBtn.dataset.title || text,
+        kind: "quote",
+        quote: text,
+      });
+      saved = env.ok;
+      toast(env.ok ? "已收藏金句" : "收藏失败");
+    }
+    toolbar.dataset.state = saved ? "saved" : "error";
+    if (saved) hide();
+  });
+
+  function markOffsets(para: HTMLElement, mark: HTMLElement): { start: number; end: number } | null {
+    const walker = document.createTreeWalker(para, NodeFilter.SHOW_TEXT);
+    let total = 0;
+    let cur: Node | null;
+    while ((cur = walker.nextNode())) {
+      const len = cur.textContent?.length ?? 0;
+      if (cur.parentElement === mark) return { start: total, end: total + len };
+      total += len;
+    }
+    return null;
+  }
+
+  // 悬停已标注文字 → 闪烁提示 + 浮出「去除」，点击移除该处标注样式。
+  let removeBtn: HTMLButtonElement | null = null;
+  let removeTarget: { paragraphIndex: number; start: number; end: number } | null = null;
+  let removeTimer = 0;
+
+  function hideRemove() {
+    window.clearTimeout(removeTimer);
+    if (removeBtn) removeBtn.hidden = true;
+    removeTarget = null;
+    document.querySelectorAll("mark.hl-flash").forEach((m) => m.classList.remove("hl-flash"));
+  }
+
+  function showRemoveFor(mark: HTMLElement) {
+    // 选中文本期间（选择工具栏可能弹出）不显示「去除」，避免两者重叠
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed) return;
+    const para = mark.closest(".reading-para") as HTMLElement | null;
+    if (!para) return;
+    const index = paraEls.indexOf(para);
+    const off = markOffsets(para, mark);
+    if (index < 0 || !off) return;
+    if (!removeBtn) {
+      removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "hl-remove";
+      removeBtn.textContent = "去除";
+      removeBtn.hidden = true;
+      document.body.appendChild(removeBtn);
+      removeBtn.addEventListener("mouseenter", () => window.clearTimeout(removeTimer));
+      removeBtn.addEventListener("click", async () => {
+        if (!removeTarget) return;
+        const { paragraphIndex, start, end } = removeTarget;
+        hideRemove();
+        const saved = await reconcileParagraph(paragraphIndex, removeRange(spansFor(paragraphIndex), { start, end }));
+        if (saved) toast("已去除标注");
+      });
+    }
+    removeTarget = { paragraphIndex: index, start: off.start, end: off.end };
+    removeBtn.hidden = false;
+    placeFloating(removeBtn, mark.getBoundingClientRect(), true);
+    mark.classList.add("hl-flash");
+  }
+
+  document.addEventListener("mouseover", (e) => {
+    const mark = (e.target as HTMLElement).closest("mark[data-user-highlight]") as HTMLElement | null;
+    if (mark) showRemoveFor(mark);
+  });
+  document.addEventListener("mouseout", (e) => {
+    const mark = (e.target as HTMLElement).closest("mark[data-user-highlight]") as HTMLElement | null;
+    if (mark) {
+      window.clearTimeout(removeTimer);
+      removeTimer = window.setTimeout(hideRemove, 150);
+    }
+  });
+
+  // 回填：拉取已有划线并重渲染（与新建走同一条渲染路径）
+  void loadHighlights();
+</script>

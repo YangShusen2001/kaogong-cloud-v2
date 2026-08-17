@@ -1,0 +1,298 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+import Base from "../layouts/Base.astro";
+import { getSummary, latestNonEmptyDigest, listArticles, listDigests } from "../lib/content";
+
+// 后台可配置的开关（无配置文件时默认全开）
+let siteConfig: { carousel?: boolean; aiBanner?: boolean } = {};
+try {
+  siteConfig = JSON.parse(fs.readFileSync(path.join(process.cwd(), "src", "site-config.json"), "utf-8"));
+} catch { /* 无配置则默认开 */ }
+const showCarousel = siteConfig.carousel !== false;
+const showAiBanner = siteConfig.aiBanner !== false;
+
+const digests = listDigests();
+const latest = latestNonEmptyDigest(digests);
+const todaySummary = latest ? getSummary(latest.date) : null;
+const clipMap = new Map(listArticles().map((a) => [a.url, a]));
+
+function sourceName(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "官方来源";
+  }
+}
+
+function cardItem(it: { title: string; date: string; sourceUrl: string; summary?: string }, category: string) {
+  const article = clipMap.get(it.sourceUrl);
+  const aiSummary = article?.aiStatus === "ok" ? article.aiSummary?.trim() : "";
+  return {
+    title: it.title,
+    date: it.date,
+    source: article?.source || sourceName(it.sourceUrl),
+    category,
+    summary: aiSummary || it.summary?.trim() || article?.keySentences?.[0] || "暂无摘要，可进入阅读页查看原文。",
+    summaryKind: aiSummary ? "AI 概括" : "内容提示",
+    href: article ? `/read/${article.id}/` : it.sourceUrl,
+    external: !article,
+  };
+}
+
+// 轮播：取最新一期前面的条目，标签显示其所属分类；有剪藏的跳阅读页
+const carouselItems = latest
+  ? latest.sections.flatMap((s) =>
+      s.items.map((it) => {
+        return cardItem(it, s.title);
+      }),
+    ).slice(0, 6)
+  : [];
+
+// 今日时政：按分类分组，每类一个标题；全局序号便于定位「今日第 N 篇」
+let _no = 0;
+const todaySections = latest
+  ? latest.sections.map((s) => ({
+      title: s.title,
+      items: s.items.map((it) => {
+        _no += 1;
+        return { ...cardItem(it, s.title), no: _no };
+      }),
+    }))
+  : [];
+---
+<Base title="每日时政">
+  {showCarousel && latest && (
+    <section class="carousel" id="carousel">
+      <div class="hero__aurora" aria-hidden="true">
+        <span class="a1"></span><span class="a2"></span><span class="a3"></span>
+      </div>
+      <canvas id="hero-particles" class="hero__particles" aria-hidden="true"></canvas>
+      <div class="carousel-track" id="carousel-track">
+        {carouselItems.map((it) => (
+          <a class="carousel-slide" href={it.href} {...(it.external ? { target: "_blank", rel: "noopener" } : {})}>
+            <span class="carousel-tag">{it.category}</span>
+            <h2>{it.title}</h2>
+            <p class="carousel-meta">{it.source} · {it.summaryKind}</p>
+            <p>{it.summary}</p>
+          </a>
+        ))}
+      </div>
+      <div class="carousel-dots" id="carousel-dots"></div>
+    </section>
+  )}
+
+  {showAiBanner && todaySummary && (
+    <section class="today-brief" id="today-brief" data-date={todaySummary.date}>
+      <div class="tb-head">
+        <span class="tb-logo">每日时政</span>
+        <span class="tb-date">{todaySummary.date}</span>
+      </div>
+      <p class="tb-summary">{todaySummary.summary}</p>
+      {todaySummary.keywords.length > 0 && (
+        <div class="tb-keywords">
+          {todaySummary.keywords.map((k) => <span class="tb-tag">{k}</span>)}
+        </div>
+      )}
+      <div class="tb-actions">
+        <button type="button" class="tb-btn" id="tb-poster">生成海报</button>
+        <button type="button" class="tb-btn tb-btn-ghost" id="tb-dismiss">今日不再显示</button>
+      </div>
+    </section>
+  )}
+
+  {latest && (
+    <section class="card">
+      <div class="card-head">
+        <h2>今日时政 · {latest.date}</h2>
+        <button type="button" class="view-toggle" id="view-toggle" aria-pressed="false">列表视图</button>
+      </div>
+      {todaySections.map((s) => (
+        <details class="section" open>
+          <summary><h3>{s.title}</h3><span class="section-count">{s.items.length} 条</span></summary>
+          <div class="article-grid">
+            {s.items.map((it) => (
+              <a class="article-card" href={it.href} {...(it.external ? { target: "_blank", rel: "noopener" } : {})}>
+                <div class="article-card__meta"><span>{it.source}</span></div>
+                <h4><span class="article-card__no">{String(it.no).padStart(2, "0")}</span>{it.title}</h4>
+                <p>{it.summary}</p>
+              </a>
+            ))}
+          </div>
+        </details>
+      ))}
+    </section>
+  )}
+
+  <section class="card" id="history">
+    <h2>历史材料</h2>
+    {digests.length ? (
+      <div class="day-list">
+        {digests.map((d, i) => (
+          <a class="day-row" href={`/daily/${d.date}/`}>
+            <span class="day-num">{String(i + 1).padStart(2, "0")}</span>
+            <span class="day-date">{d.date.slice(5)}</span>
+            <span class="day-title">{d.title}</span>
+            <span class="day-arrow">›</span>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p>还没有材料。</p>
+    )}
+  </section>
+</Base>
+
+<script>
+  // 视图切换：卡片 / 列表（紧凑单行），localStorage 记忆
+  const viewToggle = document.getElementById("view-toggle");
+  if (viewToggle) {
+    const setView = (list: boolean) => {
+      document.body.classList.toggle("view-list", list);
+      viewToggle.textContent = list ? "卡片视图" : "列表视图";
+      viewToggle.setAttribute("aria-pressed", String(list));
+      localStorage.setItem("kaogong.indexView", list ? "list" : "grid");
+    };
+    setView(localStorage.getItem("kaogong.indexView") === "list");
+    viewToggle.addEventListener("click", () => setView(!document.body.classList.contains("view-list")));
+  }
+
+  // 今日速览横幅：生成海报 + 今日不再显示
+  const brief = document.getElementById("today-brief");
+  if (brief) {
+    const date = brief.dataset.date || "";
+    const dismissKey = `kaogong.summaryDismissed.${date}`;
+    if (localStorage.getItem(dismissKey) === "1") {
+      brief.remove();
+    } else {
+      document.getElementById("tb-dismiss")?.addEventListener("click", () => {
+        localStorage.setItem(dismissKey, "1");
+        brief.remove();
+      });
+      document.getElementById("tb-poster")?.addEventListener("click", () => {
+        const summary = brief.querySelector<HTMLElement>(".tb-summary")?.textContent ?? "";
+        const tags = Array.from(brief.querySelectorAll<HTMLElement>(".tb-tag")).map((t) => t.textContent ?? "").filter(Boolean);
+        const canvas = document.createElement("canvas");
+        const W = 800, H = 1000;
+        canvas.width = W; canvas.height = H;
+        const ctx = canvas.getContext("2d")!;
+        const gradient = ctx.createLinearGradient(0, 0, 0, H);
+        gradient.addColorStop(0, "#1d4ed8");
+        gradient.addColorStop(1, "#122a5c");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, W, H);
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "700 88px 'STKaiti','KaiTi',serif";
+        ctx.fillText("每日时政", W / 2, 180);
+        ctx.font = "400 32px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,.75)";
+        ctx.fillText(`${date} · 今日速览`, W / 2, 240);
+        // 一句话总结（自动换行）
+        ctx.font = "500 44px 'PingFang SC','Microsoft YaHei',sans-serif";
+        ctx.fillStyle = "#ffffff";
+        const words = Array.from(summary);
+        let line = "";
+        let y = 380;
+        for (const ch of words) {
+          const test = line + ch;
+          if (ctx.measureText(test).width > W - 120) {
+            ctx.fillText(line, W / 2, y);
+            line = ch;
+            y += 68;
+          } else {
+            line = test;
+          }
+        }
+        if (line) ctx.fillText(line, W / 2, y);
+        // 关键词
+        if (tags.length) {
+          const tagLine = tags.map((t) => `#${t}`).join("  ");
+          ctx.font = "400 32px sans-serif";
+          ctx.fillStyle = "rgba(255,255,255,.9)";
+          ctx.fillText(tagLine, W / 2, Math.min(H - 200, y + 90));
+        }
+        ctx.font = "400 26px sans-serif";
+        ctx.fillStyle = "rgba(255,255,255,.55)";
+        ctx.fillText("时政小助手 · 内容来自官方原文", W / 2, H - 60);
+        const a = document.createElement("a");
+        a.download = `每日时政-${date}.png`;
+        a.href = canvas.toDataURL("image/png");
+        a.click();
+      });
+    }
+  }
+
+  // 轮播：自动滚动 + 圆点导航
+  const track = document.getElementById("carousel-track") as HTMLElement | null;
+  const slides = track ? Array.from(track.querySelectorAll(".carousel-slide")) : [];
+  const dots = document.getElementById("carousel-dots");
+  if (track && dots && slides.length > 1) {
+    let idx = 0;
+    slides.forEach((_, i) => {
+      const d = document.createElement("button");
+      d.type = "button";
+      d.addEventListener("click", () => { idx = i; update(); });
+      dots.appendChild(d);
+    });
+    function update() {
+      track!.style.transform = `translateX(-${idx * 100}%)`;
+      Array.from(dots!.children).forEach((d, i) => d.classList.toggle("on", i === idx));
+    }
+    update();
+    setInterval(() => { idx = (idx + 1) % slides.length; update(); }, 4500);
+  }
+
+  // 粒子网络（背景）
+  const canvas = document.getElementById("hero-particles") as HTMLCanvasElement | null;
+  if (canvas && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      const parent = canvas.parentElement!;
+      let dotsArr: { x: number; y: number; vx: number; vy: number; r: number }[] = [];
+      let w = 0, h = 0, raf = 0;
+      const resize = () => {
+        const rect = parent.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        w = rect.width; h = rect.height;
+        canvas.width = w * dpr; canvas.height = h * dpr;
+        canvas.style.width = `${w}px`; canvas.style.height = `${h}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.min(60, Math.max(24, Math.floor((w * h) / 26000)));
+        dotsArr = Array.from({ length: count }, () => ({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+          r: Math.random() * 1.6 + 0.6,
+        }));
+      };
+      const step = () => {
+        ctx.clearRect(0, 0, w, h);
+        for (const d of dotsArr) {
+          d.x += d.vx; d.y += d.vy;
+          if (d.x < 0 || d.x > w) d.vx *= -1;
+          if (d.y < 0 || d.y > h) d.vy *= -1;
+        }
+        ctx.fillStyle = "rgba(255,255,255,.5)";
+        for (const d of dotsArr) { ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill(); }
+        ctx.lineWidth = 1;
+        for (let i = 0; i < dotsArr.length; i++) {
+          for (let j = i + 1; j < dotsArr.length; j++) {
+            const dx = dotsArr[i].x - dotsArr[j].x, dy = dotsArr[i].y - dotsArr[j].y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < 110) {
+              ctx.strokeStyle = `rgba(255,255,255,${((1 - dist / 110) * 0.18).toFixed(3)})`;
+              ctx.beginPath(); ctx.moveTo(dotsArr[i].x, dotsArr[i].y); ctx.lineTo(dotsArr[j].x, dotsArr[j].y); ctx.stroke();
+            }
+          }
+        }
+        raf = requestAnimationFrame(step);
+      };
+      resize();
+      window.addEventListener("resize", resize);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) cancelAnimationFrame(raf); else raf = requestAnimationFrame(step);
+      });
+      raf = requestAnimationFrame(step);
+    }
+  }
+</script>

@@ -1,0 +1,1 @@
+ALTER TABLE `subscriptions` ADD `unsubscribe_token_hash` text;

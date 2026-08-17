@@ -1,0 +1,93 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="QQ 邮箱登录 · 时政小助手">
+  <section class="card auth-card">
+    <h2>QQ 邮箱验证码登录</h2>
+    <form id="auth-form" class="auth-form">
+      <label>QQ 邮箱<input id="email" type="email" inputmode="email" autocomplete="email" placeholder="123456@qq.com" required /></label>
+      <label id="code-row" hidden>验证码<input id="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" disabled required /></label>
+      <p id="auth-error" class="auth-error" role="alert" hidden></p>
+      <button type="submit" class="btn btn--solid" id="auth-submit">发送验证码</button>
+      <p id="auth-status" class="item-summary" role="status" aria-live="polite"></p>
+      <p class="item-summary">首次验证成功会自动创建账号。登录后，你的<span class="text-unit">收藏</span>、划线和练习记录可随账号同步。</p>
+    </form>
+  </section>
+
+  <section class="card auth-card">
+    <h2>使用 AI 解析邀请码</h2>
+    <p class="item-summary">不登录也能用 AI 解析：填写邀请码后绑定到当前设备，在共享额度内按次扣减。</p>
+    <form id="invite-form" class="auth-form">
+      <label>邀请码<input id="invite-code" type="text" autocomplete="off" spellcheck="false" placeholder="请输入邀请码" required /></label>
+      <p id="invite-error" class="auth-error" role="alert" hidden></p>
+      <button type="submit" class="btn btn--solid" id="invite-submit">激活邀请码</button>
+      <p id="invite-status" class="item-summary" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+</Base>
+<script>
+  import { api } from "../lib/api";
+  const form = document.getElementById("auth-form") as HTMLFormElement;
+  const email = document.getElementById("email") as HTMLInputElement;
+  const code = document.getElementById("code") as HTMLInputElement;
+  const codeRow = document.getElementById("code-row") as HTMLElement;
+  const submit = document.getElementById("auth-submit") as HTMLButtonElement;
+  const error = document.getElementById("auth-error") as HTMLElement;
+  const status = document.getElementById("auth-status") as HTMLElement;
+  let sent = false;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    error.hidden = true;
+    status.textContent = "";
+    submit.disabled = true;
+    if (!sent) {
+      submit.textContent = "正在发送…";
+      const result = await api.requestEmailCode({ email: email.value.trim() });
+      if (result.ok) {
+        sent = true;
+        codeRow.hidden = false;
+        code.disabled = false;
+        submit.textContent = "验证并登录";
+        email.readOnly = true;
+        status.textContent = result.data?.message ?? "验证码已发送";
+        code.focus();
+      } else {
+        submit.textContent = "发送验证码";
+        error.textContent = result.error?.message ?? "发送失败，请重试";
+        error.hidden = false;
+      }
+    } else {
+      submit.textContent = "正在验证…";
+      const result = await api.verifyEmailCode({ email: email.value.trim(), code: code.value.trim() });
+      if (result.ok) location.href = "/";
+      else {
+        submit.textContent = "验证并登录";
+        error.textContent = result.error?.message ?? "验证失败，请重试";
+        error.hidden = false;
+      }
+    }
+    submit.disabled = false;
+  });
+
+  // —— 邀请码激活（绑定到当前设备） ——
+  const inviteForm = document.getElementById("invite-form") as HTMLFormElement;
+  const inviteCode = document.getElementById("invite-code") as HTMLInputElement;
+  const inviteError = document.getElementById("invite-error") as HTMLElement;
+  const inviteStatus = document.getElementById("invite-status") as HTMLElement;
+  const inviteSubmit = document.getElementById("invite-submit") as HTMLButtonElement;
+  inviteForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    inviteError.hidden = true;
+    inviteStatus.textContent = "";
+    inviteSubmit.disabled = true;
+    const result = await api.activateInvite(inviteCode.value.trim());
+    if (result.ok && result.data?.active) {
+      inviteStatus.textContent = `激活成功，剩余 ${result.data.remaining} 次。现在可返回阅读页使用 AI 解析。`;
+      inviteCode.value = "";
+    } else {
+      inviteError.textContent = result.error?.message ?? "激活失败，请重试";
+      inviteError.hidden = false;
+    }
+    inviteSubmit.disabled = false;
+  });
+</script>

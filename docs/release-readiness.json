@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "blockers": [
+    {
+      "id": "REL-NEWSLETTER-PROVIDER",
+      "title": "Production Resend newsletter delivery evidence is incomplete",
+      "severity": "high",
+      "status": "open",
+      "owner": "release-owner",
+      "scope": "newsletter-delivery",
+      "openedAt": "2026-08-15T00:00:00Z",
+      "closeCriteria": [
+        "Verify the selected Resend provider domain, sender, and production credentials",
+        "Configure the signed production webhook without using the transactional verification-email binding",
+        "Verify provider idempotency keys or reconciliation so outcome_unknown deliveries cannot be blindly resent",
+        "Pass bounce handling and production-representative bulk delivery verification",
+        "Pass newsletter reliability tests and one production-safe delivery verification",
+        "Record a successful deployed verification artifact in closeEvidence.evidence"
+      ],
+      "closeEvidence": null
+    },
+    {
+      "id": "REL-PRODUCTION-DEPLOYMENT",
+      "title": "Production Worker, D1, Pages, and same-site verification are incomplete",
+      "severity": "high",
+      "status": "open",
+      "owner": "release-owner",
+      "scope": "production-deployment",
+      "openedAt": "2026-08-15T00:00:00Z",
+      "closeCriteria": [
+        "Configure required Worker and Pages secrets, variables, bindings, and production URLs",
+        "Apply the complete D1 migration chain to the production database",
+        "Deploy the Worker and Pages artifacts and record their deployment identifiers",
+        "Configure Pages and Worker custom domains under the same site so the secure SameSite=Lax session cookie works",
+        "Pass deployed GET smoke for the home page, a discovered reading page, API ping, auth session, and subscription status",
+        "Send one safe verification email through the deployed verification EMAIL binding and confirm login without recording the code, address, token, or provider body",
+        "Record auditable deployment, smoke, and verification-email artifacts in closeEvidence.evidence"
+      ],
+      "closeEvidence": null
+    }
+  ]
+}

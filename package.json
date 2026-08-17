@@ -1,0 +1,17 @@
+{
+  "name": "kaogong-cloud",
+  "version": "2.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "build": "pnpm -r build",
+    "release:check": "node scripts/release-gate.mjs",
+    "test:release": "node --test scripts/release-gate.test.mjs scripts/smoke-release.test.mjs",
+    "test:smoke": "node scripts/smoke-release.mjs"
+  }
+}

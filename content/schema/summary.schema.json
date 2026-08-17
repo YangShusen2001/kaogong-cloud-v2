@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kaogong.local/schema/summary.schema.json",
+  "title": "TodaySummary",
+  "description": "今日速览：一句话总结 + 关键词（管道产出 → 首页横幅/海报消费）。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["date", "summary", "keywords"],
+  "properties": {
+    "date": { "type": "string", "format": "date", "description": "YYYY-MM-DD" },
+    "summary": { "type": "string", "minLength": 1 },
+    "keywords": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  }
+}

@@ -1,0 +1,57 @@
+---
+import Base from "../layouts/Base.astro";
+import { buildSearchIndex } from "../lib/search";
+
+const entries = buildSearchIndex();
+---
+<Base title="搜索 · 时政小助手">
+  <section class="card">
+    <h2>搜索</h2>
+    <input
+      id="search-input"
+      class="search-input"
+      type="search"
+      placeholder="输入关键词，如 高质量发展 / 乡村振兴…"
+      autocomplete="off"
+    />
+    <p id="search-count" class="item-summary">共 {entries.length} 条材料，输入关键词检索</p>
+    <div id="search-results"></div>
+  </section>
+</Base>
+
+<!-- define:vars 会把脚本当内联 JS（不能写 TS），所以这里是纯 JS -->
+<script define:vars={{ entries }}>
+  const input = document.getElementById("search-input");
+  const results = document.getElementById("search-results");
+  const count = document.getElementById("search-count");
+
+  const esc = (s) =>
+    String(s ?? "").replace(/[&<>"']/g, (c) => {
+      const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+      return map[c] ?? c;
+    });
+
+  input.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) {
+      results.innerHTML = "";
+      count.textContent = `共 ${entries.length} 条材料，输入关键词检索`;
+      return;
+    }
+    const hits = entries.filter((e) => `${e.title} ${e.section} ${e.summary} ${e.body}`.toLowerCase().includes(q));
+    const MAX_HITS = 100;
+    const shown = hits.slice(0, MAX_HITS);
+    count.textContent = hits.length > MAX_HITS
+      ? `共 ${hits.length} 条结果，显示前 ${MAX_HITS} 条`
+      : `共 ${hits.length} 条结果`;
+    results.innerHTML = shown
+      .map(
+        (e) => `
+      <div class="day-row">
+        <a href="${esc(e.href)}"${e.external ? ' target="_blank" rel="noopener"' : ""} style="flex:1">${esc(e.title)}</a>
+        <span class="item-date">${e.date.slice(5)} · ${esc(e.section)}</span>
+      </div>`,
+      )
+      .join("");
+  });
+</script>

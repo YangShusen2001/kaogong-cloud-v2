@@ -1,0 +1,27 @@
+# 复制本文件为 wrangler.toml 并填入你自己的真实值（wrangler.toml 已被 gitignore）。
+name = "kaogong-api"
+main = "src/index.ts"
+compatibility_date = "2026-08-13"
+workers_dev = true
+
+# 验证码邮件 binding（Cloudflare Email Sending）；不用可注释
+# send_email = [{ name = "EMAIL" }]
+
+# 自定义域名路由（可选；没有就去掉，用 <worker>.<account>.workers.dev）
+# routes = [{ pattern = "api.example.com", custom_domain = true }]
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[vars]
+PUBLIC_API_URL = "https://api.example.com"
+ALLOWED_ORIGINS = "https://www.example.com,https://example.com"
+MAIL_FROM = "noreply@example.com"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kaogong-db"
+# 替换为你自己的 D1 数据库 id：npx wrangler d1 create kaogong-db
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+migrations_dir = "drizzle"

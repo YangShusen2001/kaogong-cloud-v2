@@ -1,0 +1,65 @@
+---
+import Base from "../../layouts/Base.astro";
+import { listArticles, listDigests } from "../../lib/content";
+
+// 构建时扫 content/ 目录，为每个日期生成一个静态页
+export function getStaticPaths() {
+  return listDigests().map((d) => ({
+    params: { date: d.date },
+    props: { digest: d },
+  }));
+}
+
+const { digest } = Astro.props;
+// url → 文章 id 映射：有剪藏原文的条目才能跳阅读页
+const clipMap = new Map(listArticles().map((a) => [a.url, a.id]));
+---
+<Base title={`${digest.title} · 时政小助手`}>
+  <article class="card">
+    <h1>{digest.title}</h1>
+    {digest.sections.map((s) => (
+      <section class="section">
+        <h2>{s.title}</h2>
+        {s.items.map((it) => (
+          <div class="item">
+            {clipMap.has(it.sourceUrl) ? (
+              <a href={`/read/${clipMap.get(it.sourceUrl)}/`}>{it.title}</a>
+            ) : (
+              <a href={it.sourceUrl} target="_blank" rel="noopener">{it.title}</a>
+            )}
+            <span class="item-date">{it.date}</span>
+            {it.summary && <p class="item-summary">{it.summary}</p>}
+            {it.quotes?.map((q) => (
+              <div class="quote-item">
+                <blockquote>{q}</blockquote>
+                <button type="button" class="fav-btn explain-btn" data-text={q}>解释</button>
+                <p class="explain-result" hidden></p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </section>
+    ))}
+  </article>
+  <p><a href="/">← 返回首页</a></p>
+</Base>
+
+<script>
+  import { api } from "../../lib/api";
+
+  document.querySelectorAll<HTMLButtonElement>(".explain-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const text = btn.dataset.text || "";
+      const result = btn.nextElementSibling as HTMLElement | null;
+      btn.textContent = "解释中…";
+      btn.disabled = true;
+      const env = await api.explain(text);
+      btn.textContent = "解释";
+      btn.disabled = false;
+      if (result) {
+        result.hidden = false;
+        result.textContent = env.ok && env.data ? env.data.explanation : "解释失败";
+      }
+    });
+  });
+</script>

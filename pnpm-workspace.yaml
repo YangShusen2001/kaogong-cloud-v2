@@ -1,0 +1,13 @@
+# pnpm 工作区：告诉 pnpm 哪些目录是“包”
+# - apps/*     部署单元（前端 Astro / 后端 Worker）
+# - packages/* 共享库（契约等，不单独部署）
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# pnpm 11 默认不跑依赖的 postinstall 脚本（供应链安全），这里显式批准需要构建/下载二进制的依赖
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true
+  sharp: true
+  workerd: true

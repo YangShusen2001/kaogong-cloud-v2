@@ -1,0 +1,114 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="个人中心 · 每日时政">
+  <section class="card auth-card">
+    <h2>个人中心</h2>
+    <div id="profile-box"><p class="item-summary" role="status" aria-live="polite">加载中…</p></div>
+  </section>
+</Base>
+
+<script>
+  import { api } from "../lib/api";
+
+  const esc = (s: string): string =>
+    String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] ?? c));
+  const AVATARS = ["😀", "😎", "🤓", "🐱", "🐼", "🦊", "🦁", "🐯"];
+  const box = document.getElementById("profile-box")!;
+
+  const [profileResult, subscriptionResult] = await Promise.all([
+    api.getProfile(),
+    api.getSubscription(),
+  ]);
+  if (!profileResult.ok || !profileResult.data) {
+    box.innerHTML = '<p role="alert">未登录，请先 <a href="/login/">登录</a>。</p>';
+  } else {
+    const p = profileResult.data;
+    const subscription = subscriptionResult.ok ? subscriptionResult.data : null;
+    const subscribed = subscription?.subscribed ?? p.subscribed;
+    const deliveryAvailable = subscription?.deliveryAvailable ?? false;
+    const subscriptionDisabled = !subscription || (!deliveryAvailable && !subscribed);
+    box.innerHTML = `
+      <div class="profile-head">
+        <span class="profile-avatar">${esc(p.avatar || "😀")}</span>
+        <div><b>${esc(p.email)}</b><p class="item-summary">已验证 QQ 邮箱</p></div>
+      </div>
+      <div class="auth-form">
+        <label>姓名<input id="p-name" value="${esc(p.name)}" maxlength="32" /></label>
+        <label>头像
+          <div class="avatar-picker">${AVATARS.map((a) => `<button type="button" class="avatar-opt ${a === p.avatar ? "on" : ""}" data-a="${a}" aria-pressed="${a === p.avatar}">${a}</button>`).join("")}</div>
+        </label>
+        <div class="auth-actions"><button type="button" class="btn btn--solid" id="p-save">保存个人资料</button></div>
+        <p id="p-msg" class="item-summary" role="status" aria-live="polite"></p>
+        <div class="subscription-panel">
+          <h3>每日摘要</h3>
+          <label class="sub-row"><input type="checkbox" id="p-sub" aria-describedby="p-sub-availability" ${subscribed ? "checked" : ""} ${subscriptionDisabled ? "disabled" : ""} /> 订阅 QQ 邮箱通知</label>
+          <p id="p-sub-availability" class="item-summary">${
+            !subscription
+              ? "订阅状态加载失败，请刷新后重试。"
+              : deliveryAvailable
+                ? "每日时政摘要将发送到已验证的 QQ 邮箱。"
+                : subscribed
+                  ? "摘要邮件暂不可用；你仍可退订现有订阅。"
+                  : "摘要邮件暂不可用，恢复投递后才能订阅。"
+          }</p>
+          <div class="auth-actions"><button type="button" class="btn btn--line" id="p-sub-save" ${subscriptionDisabled ? "disabled" : ""}>保存订阅设置</button></div>
+          <p id="p-sub-msg" class="item-summary" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    `;
+    box.querySelectorAll(".avatar-opt").forEach((b) => {
+      b.addEventListener("click", () => {
+        box.querySelectorAll(".avatar-opt").forEach((x) => {
+          x.classList.remove("on");
+          x.setAttribute("aria-pressed", "false");
+        });
+        b.classList.add("on");
+        b.setAttribute("aria-pressed", "true");
+      });
+    });
+    const profileButton = document.getElementById("p-save") as HTMLButtonElement;
+    const profileMessage = document.getElementById("p-msg") as HTMLElement;
+    profileButton.addEventListener("click", async () => {
+      const name = (document.getElementById("p-name") as HTMLInputElement).value.trim();
+      const avatar = box.querySelector(".avatar-opt.on")?.getAttribute("data-a") || "😀";
+      profileButton.disabled = true;
+      profileButton.textContent = "正在保存…";
+      profileMessage.textContent = "";
+      const result = await api.updateProfile({ name, avatar });
+      profileMessage.textContent = result.ok ? "个人资料已保存" : (result.error?.message ?? "个人资料保存失败");
+      profileButton.textContent = "保存个人资料";
+      profileButton.disabled = false;
+    });
+
+    const subscriptionInput = document.getElementById("p-sub") as HTMLInputElement;
+    const subscriptionButton = document.getElementById("p-sub-save") as HTMLButtonElement;
+    const subscriptionMessage = document.getElementById("p-sub-msg") as HTMLElement;
+    const subscriptionAvailability = document.getElementById("p-sub-availability") as HTMLElement;
+    subscriptionButton.addEventListener("click", async () => {
+      if (!deliveryAvailable && subscriptionInput.checked) {
+        subscriptionMessage.textContent = "摘要邮件暂不可用，当前不能订阅。";
+        return;
+      }
+      subscriptionButton.disabled = true;
+      subscriptionButton.textContent = "正在保存…";
+      subscriptionMessage.textContent = "";
+      const result = await api.updateSubscription({ subscribed: subscriptionInput.checked });
+      if (result.ok && result.data) {
+        subscriptionInput.checked = result.data.subscribed;
+        subscriptionInput.disabled = !result.data.deliveryAvailable && !result.data.subscribed;
+        subscriptionButton.disabled = !result.data.deliveryAvailable && !result.data.subscribed;
+        subscriptionAvailability.textContent = result.data.deliveryAvailable
+          ? "每日时政摘要将发送到已验证的 QQ 邮箱。"
+          : result.data.subscribed
+            ? "摘要邮件暂不可用；你仍可退订现有订阅。"
+            : "摘要邮件暂不可用，恢复投递后才能订阅。";
+        subscriptionMessage.textContent = result.data.subscribed ? "订阅设置已保存" : "已退订每日摘要";
+      } else {
+        subscriptionMessage.textContent = result.error?.message ?? "订阅设置保存失败";
+        subscriptionButton.disabled = false;
+      }
+      subscriptionButton.textContent = "保存订阅设置";
+    });
+  }
+</script>

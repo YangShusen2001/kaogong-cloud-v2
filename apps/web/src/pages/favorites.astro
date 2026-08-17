@@ -1,0 +1,91 @@
+---
+import Base from "../layouts/Base.astro";
+import { listArticles } from "../lib/content";
+
+// url → article id 映射：收藏点击跳转到阅读页，而非原文外链。
+const articleIdByUrl: Record<string, string> = {};
+for (const a of listArticles()) articleIdByUrl[a.url] = a.id;
+---
+<Base title="我的收藏 · 时政小助手">
+  <section class="card">
+    <h2>我的收藏</h2>
+    <div class="fav-filters" id="fav-filters">
+      <button type="button" class="fav-filter on" data-filter="all">全部</button>
+      <button type="button" class="fav-filter" data-filter="article">文章收藏</button>
+      <button type="button" class="fav-filter" data-filter="quote">金句收藏</button>
+    </div>
+    <div id="fav-list"><p class="item-summary">加载中…</p></div>
+  </section>
+  <script type="application/json" id="article-id-map" set:html={JSON.stringify(articleIdByUrl).replace(/</g, "\\u003c")}></script>
+</Base>
+
+<script>
+  import { api } from "../lib/api";
+  import type { Favorite } from "@kaogong/contracts";
+
+  const esc = (s: unknown): string =>
+    String(s ?? "").replace(/[&<>"']/g, (c) => {
+      const map: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+      return map[c] ?? c;
+    });
+  const list = document.getElementById("fav-list")!;
+  const articleIdByUrl = JSON.parse(document.getElementById("article-id-map")?.textContent ?? "{}") as Record<string, string>;
+
+  let activeFilter: "all" | "article" | "quote" = "all";
+  let favorites: Favorite[] = [];
+
+  function rowHtml(f: Favorite): string {
+    const articleId = articleIdByUrl[f.url];
+    const href = articleId ? `/read/${articleId}/` : f.url;
+    const externalAttr = articleId ? "" : ' target="_blank" rel="noopener"';
+    const main = f.kind === "quote" ? (f.quote || f.title) : f.title;
+    const sub = f.kind === "quote" ? `—— ${f.title}` : (f.source || "官方来源");
+    return `
+      <div class="day-row">
+        <a href="${esc(href)}"${externalAttr} style="flex:1">
+          <span class="fav-main">${esc(main)}</span>
+          ${sub ? `<span class="fav-sub">${esc(sub)}</span>` : ""}
+        </a>
+        <button type="button" class="btn btn--line btn--sm" data-id="${esc(f.id)}">删除</button>
+      </div>`;
+  }
+
+  function renderList() {
+    if (!favorites.length) {
+      list.innerHTML = '<p class="item-summary">还没有收藏，去日报页或阅读页「收藏」添加。</p>';
+      return;
+    }
+    const filtered = favorites.filter((f) => activeFilter === "all" || f.kind === activeFilter);
+    if (!filtered.length) {
+      list.innerHTML = '<p class="item-summary">该分类暂无收藏。</p>';
+      return;
+    }
+    list.innerHTML = filtered.map(rowHtml).join("");
+    list.querySelectorAll("button[data-id]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        await api.removeFavorite(btn.getAttribute("data-id") || "");
+        await load();
+      });
+    });
+  }
+
+  async function load() {
+    const env = await api.listFavorites();
+    if (!env.ok) {
+      list.innerHTML = '<p class="item-summary">收藏加载失败，请刷新重试。</p>';
+      return;
+    }
+    favorites = env.data ?? [];
+    renderList();
+  }
+
+  document.querySelectorAll<HTMLElement>(".fav-filter").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      activeFilter = (tab.dataset.filter as "all" | "article" | "quote") ?? "all";
+      document.querySelectorAll(".fav-filter").forEach((t) => t.classList.toggle("on", t === tab));
+      renderList();
+    });
+  });
+
+  load();
+</script>
