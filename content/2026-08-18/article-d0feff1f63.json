@@ -1,0 +1,104 @@
+{
+  "id": "d0feff1f63",
+  "date": "2026-08-18",
+  "title": "佛山顺德龙江通报“引擎盖顶人行车”事件：系停车费纠纷，无人受伤",
+  "source": "news.dayoo.com",
+  "url": "https://news.dayoo.com/guangdong/202608/18/139996_54992049.htm",
+  "pubDate": "",
+  "fetchedAt": "2026-08-18T22:21:57+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "8月15日下午，佛山顺德龙江镇盈信广场周边发生一起停车收费纠纷，相关视频在网络引发关注。8月18日，记者从龙江镇获悉，该镇已经发布通报，公布调查处置情况。",
+    "通报称，事发当日，停车管理运营单位工作人员在核查泊位车辆信息时，发现一辆白色轿车存在历史欠费记录，遂向车主告知情况，双方发生争执。随后车辆启动前行，与工作人员发生接触，致其趴在引擎盖上，车辆缓慢前进一段距离后停下。工作人员随即下车离开，涉事车辆驶离现场。经核实，事件未造成人员受伤。目前，涉事车主和工作人员已依法依规完成调查处置。",
+    "龙江镇表示，事件发生后已督促停车管理运营单位规范管理、文明服务，下一步将持续加强对停车收费服务的监督管理，防止类似情况再次发生。同时，呼吁公众不传播未经证实的信息。",
+    "2026年8月15日下午，盈信广场周边发生一起停车收费纠纷，相关视频在网络传播并引发关注。我镇对此高度重视，现将有关情况通报如下。",
+    "当日，停车管理运营单位工作人员在盈信广场周边泊位核查车辆信息时，发现一辆白色轿车存在历史欠费记录，遂向车主告知相关情况，双方发生争执。随后车辆启动前行，与工作人员发生接触，致其趴在引擎盖上，车辆仍缓慢前进一段距离后停下，工作人员随即下车离开，涉事车辆驶离现场。经核实，事件未造成人员受伤。目前对涉事车主和工作人员依法依规完成调查处置。",
+    "事件发生后，镇相关部门已督促停车管理运营单位规范管理、文明服务。下一步，我镇将持续加强对停车收费服务的监督管理，防止类似情况再次发生。",
+    "感谢社会各界的关注与监督，呼吁公众不传播未经证实的信息。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-18T22:21:58+00:00",
+  "sourceTextHash": "256b7293a61e72f6393d4dfea59ea503b3d4370bba13e604e0b1256ddb09ac0a",
+  "aiStatus": "ok",
+  "aiSummary": "8月15日，佛山顺德龙江镇发生停车费纠纷，一车主因历史欠费与工作人员争执，车辆顶行工作人员后停下，无人受伤。官方已处置并加强监管。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-0-31-viewpoint",
+      "paragraphIndex": 0,
+      "start": 0,
+      "end": 31,
+      "text": "8月15日下午，佛山顺德龙江镇盈信广场周边发生一起停车收费纠纷",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-127-140-viewpoint",
+      "paragraphIndex": 1,
+      "start": 127,
+      "end": 140,
+      "text": "经核实，事件未造成人员受伤",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-0-31-viewpoint",
+      "paragraphIndex": 2,
+      "start": 0,
+      "end": 31,
+      "text": "龙江镇表示，事件发生后已督促停车管理运营单位规范管理、文明服务",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-0-7-exam_point",
+      "paragraphIndex": 0,
+      "start": 0,
+      "end": 7,
+      "text": "8月15日下午",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-42-48-exam_point",
+      "paragraphIndex": 1,
+      "start": 42,
+      "end": 48,
+      "text": "历史欠费记录",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-133-140-exam_point",
+      "paragraphIndex": 1,
+      "start": 133,
+      "end": 140,
+      "text": "未造成人员受伤",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-22-31-exam_point",
+      "paragraphIndex": 2,
+      "start": 22,
+      "end": 31,
+      "text": "规范管理、文明服务",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-71-81-exam_point",
+      "paragraphIndex": 2,
+      "start": 71,
+      "end": 81,
+      "text": "不传播未经证实的信息",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-88-91-term",
+      "paragraphIndex": 1,
+      "start": 88,
+      "end": 91,
+      "text": "引擎盖",
+      "type": "term",
+      "explanation": "汽车发动机舱上方的覆盖板，此处指工作人员趴在车辆前部的情况。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

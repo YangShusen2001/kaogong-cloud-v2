@@ -1,0 +1,111 @@
+{
+  "id": "f5dcda8c96",
+  "date": "2026-08-18",
+  "title": "&ldquo;人工智能+消费&rdquo;点亮七夕 奕境X9七夕礼遇暨锦江浪漫消费季启幕丨C视频",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83307200.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-18T22:22:18+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "四川在线记者&nbsp;薛维睿&nbsp;川观新闻成都观察&nbsp;杨柳&nbsp;文/图/视频",
+    "8月18日晚，成都春熙路广场，4台宇树机器人以现代舞串烧开场，现场大屏播出奕境X9首发活动亮点，&ldquo;首发春熙&nbsp;智在奕境&rdquo;&mdash;&mdash;奕境X9七夕礼遇暨锦江浪漫消费季正式启幕。",
+    "本次活动由奕境汽车与成都兴锦场景商业投资服务集团联合主办，构建&ldquo;1个核心首发主场+3大主题展区+N项惠民配套&rdquo;体系，集科创成果展示、新品首发、文旅场景融合、惠民政策落地于一体。智能网联汽车与人形机器人同台亮相核心商圈，以&ldquo;人工智能+消费&rdquo;点亮七夕，为传统佳节注入科技消费新动能。",
+    "&ldquo;硬核&rdquo;秀场：当&ldquo;成都造&rdquo;遇见百年商圈",
+    "在定制灯光秀中，奕境X9新车登场，主持人与人形机器人&ldquo;小锦&rdquo;围绕新车互动，将&ldquo;智能网联汽车&times;人形机器人&rdquo;同台推向高潮。",
+    "现场，奕境汽车销售负责人唐国宸对车型设计、智能座舱及智造工艺进行全景解读，以沉浸式展陈展现&ldquo;成都造&rdquo;硬核实力。",
+    "&ldquo;这次奕境X9首发活动，是商圈和奕境X9的双向赋能。&rdquo;成都百年春熙锦城商业运营管理有限公司董事、总经理金昀表示，春熙路商圈作为成都核心商圈之一，既是&ldquo;成都造&rdquo;高端智能汽车对接广大消费者的重要窗口，更是面向全球发布新品的优质首发平台。",
+    "她表示，此次引入奕境X9落地，正是推进商圈迭代升级的主动作为。&ldquo;成都造&rdquo;与百年商圈碰撞，并非简单的车辆陈列展示，而是希望借硬核科技产品为商圈发展注入新动能，让新质生产力真正走入市民的日常生活。",
+    "活动还搭建国际商贸交流平台，吸引韩国大邱市商工会议所成都代表处首席代表郑载明，中国意大利商会副会长、意大利商协会代表马晓利等商会协会和企业代表参与。",
+    "活动现场，锦江区商务局与奕境汽车及商圈企业共同发布七夕&ldquo;锦礼&rdquo;权益包及《七夕专属促消费指南》H5，以汽车消费为引擎，涵盖购车补贴等多重好礼，并为七夕当日领证新人开通专属消费券通道，联动商圈、餐饮、文娱业态协同让利，形成惠民生促消费闭环。",
+    "8月18日至20日，春熙路主展区集中呈现宇树仿生机器狗、人形机器人、镋钯双足机器人、仿生鸟、VR装备等&ldquo;成都造&middot;锦江造&rdquo;科创成果，与奕境X9静态展联动，打造可体验的&ldquo;人工智能+消费&rdquo;示范场景。七夕主题沉浸式互动打卡、广泰门等企业现场&ldquo;甜蜜展&rdquo;也将同步开展。",
+    "值得一提的是，8月19日，合江亭展区将设置&ldquo;一纸婚书&middot;奔赴余生&rdquo;誓言墙，引导新人与游客体验奕境X9家庭智能座舱；红砂社区展区依托公园式婚姻登记场景，推出&ldquo;红砂领证&middot;喜遇好车&rdquo;打卡点，以场景融合运营，串联起文旅体验与汽车消费。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-18T22:22:19+00:00",
+  "sourceTextHash": "aec779e96ea2c029a19cf7a48e6427e7c9ee048c05e17800f499b19310359250",
+  "aiStatus": "ok",
+  "aiSummary": "8月18日晚，奕境X9七夕礼遇暨锦江浪漫消费季在成都春熙路启幕，通过智能网联汽车与人形机器人同台，打造“人工智能+消费”示范场景，融合科创展示、新品首发、文旅惠民，为传统佳节注入科技消费新动能。",
+  "aiAnnotations": [
+    {
+      "id": "ai-7-70-107-viewpoint",
+      "paragraphIndex": 7,
+      "start": 70,
+      "end": 107,
+      "text": "希望借硬核科技产品为商圈发展注入新动能，让新质生产力真正走入市民的日常生活",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-9-119-129-viewpoint",
+      "paragraphIndex": 9,
+      "start": 119,
+      "end": 129,
+      "text": "形成惠民生促消费闭环",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-100-120-exam_point",
+      "paragraphIndex": 2,
+      "start": 100,
+      "end": 120,
+      "text": "智能网联汽车与人形机器人同台亮相核心商圈",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-6-27-31-exam_point",
+      "paragraphIndex": 6,
+      "start": 27,
+      "end": 31,
+      "text": "双向赋能",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-7-91-96-term",
+      "paragraphIndex": 7,
+      "start": 91,
+      "end": 96,
+      "text": "新质生产力",
+      "type": "term",
+      "explanation": "由技术革命性突破、生产要素创新性配置等催生的先进生产力质态，以高科技、高效能、高质量为特征。"
+    },
+    {
+      "id": "ai-9-47-60-exam_point",
+      "paragraphIndex": 9,
+      "start": 47,
+      "end": 60,
+      "text": "《七夕专属促消费指南》H5",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-11-130-136-exam_point",
+      "paragraphIndex": 11,
+      "start": 130,
+      "end": 136,
+      "text": "场景融合运营",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-90-94-term",
+      "paragraphIndex": 2,
+      "start": 90,
+      "end": 94,
+      "text": "惠民政策",
+      "type": "term",
+      "explanation": "政府或企业为改善民生、促进消费而推出的优惠措施，如补贴、消费券等。"
+    },
+    {
+      "id": "ai-10-20-27-term",
+      "paragraphIndex": 10,
+      "start": 20,
+      "end": 27,
+      "text": "宇树仿生机器狗",
+      "type": "term",
+      "explanation": "宇树科技研发的仿生四足机器人，具备灵活运动能力，常用于展示和互动。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 5
+  }
+}

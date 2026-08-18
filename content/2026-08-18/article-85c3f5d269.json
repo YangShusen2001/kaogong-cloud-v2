@@ -1,0 +1,111 @@
+{
+  "id": "85c3f5d269",
+  "date": "2026-08-18",
+  "title": "2026年四川省&ldquo;最美医务工作者&rdquo;现场交流活动在蓉举行",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83307181.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-18T22:22:37+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "8月18日晚，在第九个中国医师节来临之际，2026年四川省&ldquo;最美医务工作者&rdquo;现场交流活动在成都举行。省委常委、宣传部部长郑莉，省人大常委会副主任彭琳出席并颁发证书。",
+    "为深入学习贯彻习近平总书记关于健康中国建设的重要论述精神，大力弘扬&ldquo;敬佑生命、救死扶伤、甘于奉献、大爱无疆&rdquo;的崇高精神，在全社会营造尊医重卫的良好氛围，中共四川省委宣传部、四川省卫生健康委员会联合主办了2026年四川省&ldquo;最美医务工作者&rdquo;学习宣传活动，分&ldquo;大医精诚&rdquo;&ldquo;公卫先锋&rdquo;&ldquo;基层卫士&rdquo;&ldquo;护理天使&rdquo;4类，评选出20名&ldquo;最美医务工作者&rdquo;，充分发挥先进典型的引领作用，为建设新时代更高水平的健康四川凝聚更大力量。",
+    "现场发布了2026年四川省&ldquo;最美医务工作者&rdquo;名单。他们中有深耕临床、攻坚克难的学科带头人，也有扎根基层、守护乡村的健康守门人，有逆行出征、勇挑重担的业务骨干，也有默默耕耘、传道育才的前辈师者。现场还用精彩的群像短片，集中展现了我省90多万医务工作者始终坚持人民至上、生命至上，全力以赴守护人民群众生命健康的生动图景。部分&ldquo;最美医务工作者&rdquo;登台交流，分享了以仁心仁术为人民健康服务的感人故事。",
+    "近年来，省委省政府大力推动卫生健康事业高质量发展，全省医疗服务体系日趋完善，医疗服务能力稳步提高，人均预期寿命从2021年的77.95岁升至2025年的79.1岁，群众健康获得感持续提升。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-18T22:22:38+00:00",
+  "sourceTextHash": "90190d6e0e72d0694edb6a14a6f1029b2e035a8180ba2780d3fd9172e1b813b6",
+  "aiStatus": "ok",
+  "aiSummary": "2026年四川省“最美医务工作者”现场交流活动在成都举行，评选出20名先进典型，涵盖四类，旨在弘扬崇高精神，营造尊医重卫氛围，推动健康四川建设，全省人均预期寿命提升至79.1岁。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-7-20-viewpoint",
+      "paragraphIndex": 0,
+      "start": 7,
+      "end": 20,
+      "text": "在第九个中国医师节来临之际",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-253-266-viewpoint",
+      "paragraphIndex": 1,
+      "start": 253,
+      "end": 266,
+      "text": "充分发挥先进典型的引领作用",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-136-149-viewpoint",
+      "paragraphIndex": 2,
+      "start": 136,
+      "end": 149,
+      "text": "始终坚持人民至上、生命至上",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-3-82-93-viewpoint",
+      "paragraphIndex": 3,
+      "start": 82,
+      "end": 93,
+      "text": "群众健康获得感持续提升",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-62-93-exam_point",
+      "paragraphIndex": 0,
+      "start": 62,
+      "end": 93,
+      "text": "省委常委、宣传部部长郑莉，省人大常委会副主任彭琳出席并颁发证书",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-88-112-exam_point",
+      "paragraphIndex": 1,
+      "start": 88,
+      "end": 112,
+      "text": "中共四川省委宣传部、四川省卫生健康委员会联合主办",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-49-81-exam_point",
+      "paragraphIndex": 3,
+      "start": 49,
+      "end": 81,
+      "text": "人均预期寿命从2021年的77.95岁升至2025年的79.1岁",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-15-21-term",
+      "paragraphIndex": 1,
+      "start": 15,
+      "end": 21,
+      "text": "健康中国建设",
+      "type": "term",
+      "explanation": "指国家战略，旨在提高全民健康水平，涵盖医疗、公共卫生、健康促进等多方面。"
+    },
+    {
+      "id": "ai-1-40-59-term",
+      "paragraphIndex": 1,
+      "start": 40,
+      "end": 59,
+      "text": "敬佑生命、救死扶伤、甘于奉献、大爱无疆",
+      "type": "term",
+      "explanation": "中国医务工作者职业精神的核心表述，强调对生命的敬畏和无私奉献。"
+    },
+    {
+      "id": "ai-2-69-74-term",
+      "paragraphIndex": 2,
+      "start": 69,
+      "end": 74,
+      "text": "健康守门人",
+      "type": "term",
+      "explanation": "指基层医疗卫生人员，如乡村医生，承担基本医疗和公共卫生服务职责。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 4
+  }
+}

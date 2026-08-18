@@ -1,0 +1,117 @@
+{
+  "id": "b9427c4b9a",
+  "date": "2026-08-18",
+  "title": "江苏省人民政府 要闻关注 省财政下达“一事一议”奖补资金 支持村级小型公益项目实施",
+  "source": "中国政府网",
+  "url": "http://www.jiangsu.gov.cn/art/2026/8/18/art_84322_11817698.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-18T22:22:43+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "近日，江苏省财政下达2026年第三批农村公益事业建设“一事一议”财政奖补资金16200万元，支持各地扎实推进村级公益项目实施，助力宜居宜业和美乡村建设。",
+    "2026年，省财政共下达公益事业建设“一事一议”奖补资金7.5525亿元，支持市县建设3000多个村级小型公益项目，包括村内道路建设、坑塘沟渠整治、村容村貌提升、农村公共文体设施建设等，实实在在把财政红利送到乡村百姓身边。",
+    "省财政厅省农村综合改革办公室负责人表示，资金分配坚持普惠均衡与重点倾斜相结合，加大对经济薄弱村的支持力度，优先保障村民需求迫切、受益面广的民生工程，充分发挥“民办公助”政策优势，引导村民民主议事和广泛参与。",
+    "下一步，省财政将会同主管部门，指导各地加快项目建设，规范管理资金使用，强化全过程绩效管理，提升财政资金使用效益，改善农村生产生活条件。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-18T22:22:44+00:00",
+  "sourceTextHash": "e590d485cd0f3f888177526b632880434f3c6e342cb6f1807032bdf4afd16d8d",
+  "aiStatus": "ok",
+  "aiSummary": "江苏省财政下达2026年第三批“一事一议”奖补资金16200万元，全年共7.5525亿元支持3000多个村级小型公益项目，重点倾斜经济薄弱村，强化绩效管理，助力宜居宜业和美乡村建设。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-5-45-viewpoint",
+      "paragraphIndex": 0,
+      "start": 5,
+      "end": 45,
+      "text": "省财政下达2026年第三批农村公益事业建设“一事一议”财政奖补资金16200万元",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-46-75-viewpoint",
+      "paragraphIndex": 0,
+      "start": 46,
+      "end": 75,
+      "text": "支持各地扎实推进村级公益项目实施，助力宜居宜业和美乡村建设",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-0-36-exam_point",
+      "paragraphIndex": 1,
+      "start": 0,
+      "end": 36,
+      "text": "2026年，省财政共下达公益事业建设“一事一议”奖补资金7.5525亿元",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-37-57-exam_point",
+      "paragraphIndex": 1,
+      "start": 37,
+      "end": 57,
+      "text": "支持市县建设3000多个村级小型公益项目",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-58-92-exam_point",
+      "paragraphIndex": 1,
+      "start": 58,
+      "end": 92,
+      "text": "包括村内道路建设、坑塘沟渠整治、村容村貌提升、农村公共文体设施建设等",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-20-38-viewpoint",
+      "paragraphIndex": 2,
+      "start": 20,
+      "end": 38,
+      "text": "资金分配坚持普惠均衡与重点倾斜相结合",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-39-52-exam_point",
+      "paragraphIndex": 2,
+      "start": 39,
+      "end": 52,
+      "text": "加大对经济薄弱村的支持力度",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-53-73-exam_point",
+      "paragraphIndex": 2,
+      "start": 53,
+      "end": 73,
+      "text": "优先保障村民需求迫切、受益面广的民生工程",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-74-88-term",
+      "paragraphIndex": 2,
+      "start": 74,
+      "end": 88,
+      "text": "充分发挥“民办公助”政策优势",
+      "type": "term",
+      "explanation": "指政府通过奖补方式鼓励村民自主筹资筹劳建设公益项目，体现政府引导与村民参与相结合的政策机制。"
+    },
+    {
+      "id": "ai-3-35-44-exam_point",
+      "paragraphIndex": 3,
+      "start": 35,
+      "end": 44,
+      "text": "强化全过程绩效管理",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-45-55-viewpoint",
+      "paragraphIndex": 3,
+      "start": 45,
+      "end": 55,
+      "text": "提升财政资金使用效益",
+      "type": "viewpoint"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

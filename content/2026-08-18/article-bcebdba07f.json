@@ -1,0 +1,110 @@
+{
+  "id": "bcebdba07f",
+  "date": "2026-08-18",
+  "title": "&ldquo;成都造&rdquo;奕境X9三款车型开启预售，最低29.98万元",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83307199.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-18T22:22:24+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "四川在线记者&nbsp;文/王成栋&nbsp;图片/赵张冬&nbsp;韦维",
+    "8月18日晚，位于成都郫都区的成都科幻馆灯光亮起，奕境X9预售发布会正式揭幕。发布会透露，奕境X9的&ldquo;科技新旗舰&rdquo;&ldquo;豪华大满配&rdquo;&ldquo;智能头等舱&rdquo;三款汽车预售价分别为37.98万元、33.98万元、29.98万元，与同类型相比，价格相对亲民。",
+    "作为&ldquo;成都造&rdquo;新能源汽车，奕境X9定位为&ldquo;第二代家庭旗舰&rdquo;大六座SUV。此前，该车型在4月北京车展首秀，并于7月20日量产下线。",
+    "作为奕境汽车首款战略车型，奕境X9由东风汽车与华为乾崑共同打造，由成都龙泉驿区的东风汽车奕境工厂（原神龙工厂）生产，是&ldquo;成都造&rdquo;新能源车的拳头产品。",
+    "发布会上，奕境X9全球品牌代言人郭富城助阵推介。汽车品牌总经理曾清林发布了预售阶段同步启动的终生质保等配套促销、优惠政策。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-18T22:22:25+00:00",
+  "sourceTextHash": "60c0883df618b96918b19b14517ef5ed299f801bb6d5711494008c98d119b741",
+  "aiStatus": "ok",
+  "aiSummary": "8月18日，奕境X9在成都科幻馆开启预售，推出三款车型，价格29.98万元起。该车为“成都造”新能源SUV，由东风汽车与华为乾崑打造，在成都龙泉驿生产，并公布终身质保等优惠政策。",
+  "aiAnnotations": [
+    {
+      "id": "ai-1-141-154-viewpoint",
+      "paragraphIndex": 1,
+      "start": 141,
+      "end": 154,
+      "text": "与同类型相比，价格相对亲民",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-3-17-31-viewpoint",
+      "paragraphIndex": 3,
+      "start": 17,
+      "end": 31,
+      "text": "由东风汽车与华为乾崑共同打造",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-111-114-exam_point",
+      "paragraphIndex": 1,
+      "start": 111,
+      "end": 114,
+      "text": "预售价",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-83-87-exam_point",
+      "paragraphIndex": 2,
+      "start": 83,
+      "end": 87,
+      "text": "量产下线",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-8-12-exam_point",
+      "paragraphIndex": 3,
+      "start": 8,
+      "end": 12,
+      "text": "战略车型",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-55-57-exam_point",
+      "paragraphIndex": 3,
+      "start": 55,
+      "end": 57,
+      "text": "生产",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-4-46-50-exam_point",
+      "paragraphIndex": 4,
+      "start": 46,
+      "end": 50,
+      "text": "终生质保",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-4-53-60-exam_point",
+      "paragraphIndex": 4,
+      "start": 53,
+      "end": 60,
+      "text": "促销、优惠政策",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-56-59-term",
+      "paragraphIndex": 2,
+      "start": 56,
+      "end": 59,
+      "text": "SUV",
+      "type": "term"
+    },
+    {
+      "id": "ai-3-76-80-term",
+      "paragraphIndex": 3,
+      "start": 76,
+      "end": 80,
+      "text": "新能源车",
+      "type": "term",
+      "explanation": "采用非传统燃油动力系统的汽车，如纯电动、混合动力等，环保节能。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 3
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "id": "66e1cff3c2",
+  "date": "2026-08-18",
+  "title": "任京东在蓉看望慰问医务人员时强调 铸魂强基优服务 德高技精展风采",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83307192.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-18T22:22:29+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "在第九个中国医师节来临之际，8月18日，副省长任京东前往部分医疗机构看望慰问医务人员，向全省医务工作者致以节日问候和祝福。他强调，要积极践行新时代党的卫生与健康工作方针，铸魂强基优服务，德高技精展风采，守护好人民群众生命安全和身体健康，助力健康四川建设取得更大成效。",
+    "任京东先后前往四川大学华西口腔医院、省妇幼保健院晋阳院区、成都市武侯区晋阳社区卫生服务中心，深入科室与医务人员面对面交流，了解医疗服务、人才队伍、工作生活等情况，对大家的辛勤付出表示感谢。他指出，长期以来，广大医务工作者坚持人民至上、生命至上，尽心尽力救死扶伤，在增进民生福祉、建设健康四川中发挥了重要作用。",
+    "任京东强调，全社会要进一步营造尊医重卫的良好氛围，关心关爱医务人员身心健康，创造良好工作环境，帮助解决实际困难，让大家安心从医、舒心工作。他勉励大家要继续弘扬敬佑生命、救死扶伤、甘于奉献、大爱无疆的崇高精神，以精湛医术、高尚医德、优良医风，为群众提供更加优质、高效、安全的医疗服务，为全省卫生健康事业高质量发展作出新的更大贡献。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-18T22:22:30+00:00",
+  "sourceTextHash": "43e53f9e19f822450f1a1f7c377441d6ea6171bc43802e09fe9146a8649890e5",
+  "aiStatus": "ok",
+  "aiSummary": "8月18日，副省长任京东在蓉看望慰问医务人员，强调践行新时代卫生方针，铸魂强基优服务，德高技精展风采，营造尊医重卫氛围，助力健康四川建设。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-66-84-viewpoint",
+      "paragraphIndex": 0,
+      "start": 66,
+      "end": 84,
+      "text": "积极践行新时代党的卫生与健康工作方针",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-85-100-viewpoint",
+      "paragraphIndex": 0,
+      "start": 85,
+      "end": 100,
+      "text": "铸魂强基优服务，德高技精展风采",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-110-121-viewpoint",
+      "paragraphIndex": 1,
+      "start": 110,
+      "end": 121,
+      "text": "坚持人民至上、生命至上",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-13-24-viewpoint",
+      "paragraphIndex": 2,
+      "start": 13,
+      "end": 24,
+      "text": "营造尊医重卫的良好氛围",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-4-9-term",
+      "paragraphIndex": 0,
+      "start": 4,
+      "end": 9,
+      "text": "中国医师节",
+      "type": "term",
+      "explanation": "每年8月19日设立的节日，旨在表彰医务工作者，弘扬救死扶伤精神。"
+    },
+    {
+      "id": "ai-0-120-126-term",
+      "paragraphIndex": 0,
+      "start": 120,
+      "end": 126,
+      "text": "健康四川建设",
+      "type": "term"
+    },
+    {
+      "id": "ai-2-79-98-term",
+      "paragraphIndex": 2,
+      "start": 79,
+      "end": 98,
+      "text": "敬佑生命、救死扶伤、甘于奉献、大爱无疆",
+      "type": "term"
+    },
+    {
+      "id": "ai-0-70-84-exam_point",
+      "paragraphIndex": 0,
+      "start": 70,
+      "end": 84,
+      "text": "新时代党的卫生与健康工作方针",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-112-121-exam_point",
+      "paragraphIndex": 1,
+      "start": 112,
+      "end": 121,
+      "text": "人民至上、生命至上",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-15-19-exam_point",
+      "paragraphIndex": 2,
+      "start": 15,
+      "end": 19,
+      "text": "尊医重卫",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-105-119-exam_point",
+      "paragraphIndex": 2,
+      "start": 105,
+      "end": 119,
+      "text": "精湛医术、高尚医德、优良医风",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-59-68-exam_point",
+      "paragraphIndex": 2,
+      "start": 59,
+      "end": 68,
+      "text": "安心从医、舒心工作",
+      "type": "exam_point"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

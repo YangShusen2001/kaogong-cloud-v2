@@ -1,0 +1,143 @@
+{
+  "id": "8cbee23e45",
+  "date": "2026-08-18",
+  "title": "朱镕基同志生平照片",
+  "source": "qstheory.cn",
+  "url": "https://www.qstheory.cn/20260818/791d2b184a654e049b6d036a50817b5e/c.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-18T22:21:09+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "&emsp;&emsp;1991年2月6日，邓小平同志考察上海大众汽车有限公司，朱镕基同志陪同。新华社发",
+    "&emsp;&emsp;2012年11月14日，在党的十八大闭幕前，习近平同志同朱镕基同志在一起。新华社发",
+    "&emsp;&emsp;2002年10月22日，江泽民同志和朱镕基同志在北京人民大会堂合影。新华社记者 王新庆 摄",
+    "&emsp;&emsp;1997年9月18日，胡锦涛同志与朱镕基同志在北京人民大会堂交谈。新华社记者 王新庆 摄",
+    "&emsp;&emsp;1990年，朱镕基同志看望参加上海青年技术比赛的工人。新华社发",
+    "&emsp;&emsp;1992年5月21日，朱镕基同志在山西省大同市考察云冈煤矿。新华社发",
+    "&emsp;&emsp;1998年8月9日，朱镕基同志在江西省九江市防洪墙堵口现场指挥抗洪抢险工作。新华社记者 章武 摄",
+    "&emsp;&emsp;1998年12月29日，朱镕基同志在三峡工程施工现场与技术人员亲切握手。新华社记者 王新庆 摄",
+    "&emsp;&emsp;1999年3月5日，朱镕基同志在第九届全国人民代表大会第二次会议上作政府工作报告。新华社记者 刘前刚 摄",
+    "&emsp;&emsp;1999年4月8日，朱镕基同志访问美国期间出席美国总统克林顿在华盛顿举行的欢迎仪式并发表讲话。新华社发",
+    "&emsp;&emsp;2002年7月22日，朱镕基同志在辽宁省沈阳市大东区职业技术培训中心考察。新华社记者 鞠鹏 摄",
+    "&emsp;&emsp;2002年12月31日，朱镕基同志和来华访问的德国总理施罗德在上海一同乘坐磁浮列车。新华社记者 马占成 摄"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-18T22:21:09+00:00",
+  "sourceTextHash": "f7cecee6e304d925d2be4a40bd39730d3c10ac96ff2b16eada2ade0913cbacf8",
+  "aiStatus": "ok",
+  "aiSummary": "本组照片记录了朱镕基同志自1990年至2012年间的重要活动，涵盖陪同考察、国际交往、抗洪指挥、政府报告及民生关怀等场景，展现其工作历程与领导风范。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-22-47-viewpoint",
+      "paragraphIndex": 0,
+      "start": 22,
+      "end": 47,
+      "text": "邓小平同志考察上海大众汽车有限公司，朱镕基同志陪同",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-34-48-viewpoint",
+      "paragraphIndex": 1,
+      "start": 34,
+      "end": 48,
+      "text": "习近平同志同朱镕基同志在一起",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-6-22-49-viewpoint",
+      "paragraphIndex": 6,
+      "start": 22,
+      "end": 49,
+      "text": "朱镕基同志在江西省九江市防洪墙堵口现场指挥抗洪抢险工作",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-8-22-52-viewpoint",
+      "paragraphIndex": 8,
+      "start": 22,
+      "end": 52,
+      "text": "朱镕基同志在第九届全国人民代表大会第二次会议上作政府工作报告",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-12-21-exam_point",
+      "paragraphIndex": 0,
+      "start": 12,
+      "end": 21,
+      "text": "1991年2月6日",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-12-23-exam_point",
+      "paragraphIndex": 1,
+      "start": 12,
+      "end": 23,
+      "text": "2012年11月14日",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-6-12-21-exam_point",
+      "paragraphIndex": 6,
+      "start": 12,
+      "end": 21,
+      "text": "1998年8月9日",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-8-12-21-exam_point",
+      "paragraphIndex": 8,
+      "start": 12,
+      "end": 21,
+      "text": "1999年3月5日",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-9-12-21-exam_point",
+      "paragraphIndex": 9,
+      "start": 12,
+      "end": 21,
+      "text": "1999年4月8日",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-11-12-23-exam_point",
+      "paragraphIndex": 11,
+      "start": 12,
+      "end": 23,
+      "text": "2002年12月31日",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-6-43-47-term",
+      "paragraphIndex": 6,
+      "start": 43,
+      "end": 47,
+      "text": "抗洪抢险",
+      "type": "term",
+      "explanation": "指1998年长江流域特大洪水期间，军民共同抵御洪灾、保护人民生命财产安全的紧急行动。"
+    },
+    {
+      "id": "ai-8-46-52-term",
+      "paragraphIndex": 8,
+      "start": 46,
+      "end": 52,
+      "text": "政府工作报告",
+      "type": "term",
+      "explanation": "国务院总理每年在全国人大会议上所作的工作总结与部署，是政府施政的重要文件。"
+    },
+    {
+      "id": "ai-11-49-53-term",
+      "paragraphIndex": 11,
+      "start": 49,
+      "end": 53,
+      "text": "磁浮列车",
+      "type": "term",
+      "explanation": "利用电磁力悬浮于轨道并推进的列车，速度快、噪音低，是现代化轨道交通方式。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

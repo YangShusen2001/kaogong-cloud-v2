@@ -1,0 +1,22 @@
+{
+  "id": "633a346a06",
+  "date": "2026-08-18",
+  "title": "四川2026年上半年结婚登记数据公布",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83307204.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-18T22:22:05+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "明天就是七夕节了。8月18日，记者从四川省民政厅获悉，日前，省民政厅发布了全省2026年二季度民政统计数据，其中，四川2026年上半年结婚22.1万对。",
+    "此外，根据民政部网站发布的《2026年2季度民政统计数据》显示，今年一、二季度全国结婚登记327.5万对。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-18T22:22:07+00:00",
+  "sourceTextHash": "783e528104829800b511d42c09e87387a4e9542c2a90e23498a28bbf25c40260",
+  "aiStatus": "error",
+  "aiAnnotations": [],
+  "aiError": "ai_semantic:summary_length"
+}
