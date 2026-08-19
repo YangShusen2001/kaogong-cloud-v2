@@ -1,0 +1,100 @@
+{
+  "id": "e703973a5d",
+  "date": "2026-08-19",
+  "title": "江苏省人民政府 要闻关注 省领导会见德国费森尤斯卡比集团客人",
+  "source": "中国政府网",
+  "url": "http://www.jiangsu.gov.cn/art/2026/8/19/art_84322_11817985.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-19T22:24:06+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "8月18日，副省长赵岩在南京会见德国费森尤斯卡比集团全球执行副总裁乌夫·杨森一行。",
+    "赵岩表示，江苏是中国经济大省、开放大省，近年来经济社会高质量发展不断取得新成效，2025年全省地区生产总值达14.2万亿元，实际使用外资连续多年位居全国第一，进出口规模稳居全国第二。生物医药产业是江苏特色优势产业，拥有泰连锡生物医药、苏州生物医药及高端医疗器械等2个国家先进制造业集群。当前，江苏正在加快培育壮大生物医药产业，着力推动全产业链开放创新发展。费森尤斯卡比集团深耕江苏生物医药产业40多年，持续追加投资，建设运营生产基地和全球研发中心，为地方发展作出了积极贡献。希望集团继续扎根江苏，在医疗健康领域加大投入力度、拓展务实合作，实现更高水平互利共赢。",
+    "乌夫·杨森感谢江苏省对集团业务发展的支持，表示将持续加大在苏投资，深化在生物医药、特医食品等领域的创新合作，共促江苏生物医药产业高质量发展。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-19T22:24:07+00:00",
+  "sourceTextHash": "9a6f4c45df8a81e686bac105b5e39b09132d479e1d256121eb80d4c7426a47ec",
+  "aiStatus": "ok",
+  "aiSummary": "8月18日，副省长赵岩在南京会见德国费森尤斯卡比集团全球执行副总裁乌夫·杨森一行，双方就深化生物医药产业合作、推动互利共赢进行交流。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-6-40-viewpoint",
+      "paragraphIndex": 0,
+      "start": 6,
+      "end": 40,
+      "text": "副省长赵岩在南京会见德国费森尤斯卡比集团全球执行副总裁乌夫·杨森一行",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-5-19-viewpoint",
+      "paragraphIndex": 1,
+      "start": 5,
+      "end": 19,
+      "text": "江苏是中国经济大省、开放大省",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-91-106-viewpoint",
+      "paragraphIndex": 1,
+      "start": 91,
+      "end": 106,
+      "text": "生物医药产业是江苏特色优势产业",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-40-61-exam_point",
+      "paragraphIndex": 1,
+      "start": 40,
+      "end": 61,
+      "text": "2025年全省地区生产总值达14.2万亿元",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-62-78-exam_point",
+      "paragraphIndex": 1,
+      "start": 62,
+      "end": 78,
+      "text": "实际使用外资连续多年位居全国第一",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-79-90-exam_point",
+      "paragraphIndex": 1,
+      "start": 79,
+      "end": 90,
+      "text": "进出口规模稳居全国第二",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-109-142-exam_point",
+      "paragraphIndex": 1,
+      "start": 109,
+      "end": 142,
+      "text": "泰连锡生物医药、苏州生物医药及高端医疗器械等2个国家先进制造业集群",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-178-186-term",
+      "paragraphIndex": 1,
+      "start": 178,
+      "end": 186,
+      "text": "费森尤斯卡比集团",
+      "type": "term",
+      "explanation": "德国知名医疗健康企业，专注于输液、营养等产品，在华投资多年。"
+    },
+    {
+      "id": "ai-2-0-20-viewpoint",
+      "paragraphIndex": 2,
+      "start": 0,
+      "end": 20,
+      "text": "乌夫·杨森感谢江苏省对集团业务发展的支持",
+      "type": "viewpoint"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

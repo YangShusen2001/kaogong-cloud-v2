@@ -1,0 +1,126 @@
+{
+  "id": "736bb99a77",
+  "date": "2026-08-19",
+  "title": "七夕音乐会奏响蓉城 17首情歌演绎爱情百态",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83307849.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-19T22:23:11+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "8月19日七夕当晚，城市爱乐“爱让我们变得完整”专场音乐会在成都城市音乐厅戏剧厅浪漫上演。城市爱乐室内乐团音乐总监林东珉表示本场音乐会以“初见、心动、相守到释怀圆满”为完整爱情叙事脉络，精选17首大众耳熟能详的爱情金曲，以精致室内乐重新编排演绎。",
+    "七夕专场音乐会现场，一对情侣在浪漫主题打卡展板前合影留念，记录节日美好瞬间。",
+    "现场曲目涵盖《告白气球》《小幸运》《红豆》《一生所爱》等经典旋律，层层串联起相识、心动、相守、和解的爱情全过程。钢琴演奏者现场分享创作巧思：“今天所有歌曲的安排顺序，其实是我们感情的一条线路，从头到尾都是匹配的。从两个人相识、相爱、相知，也希望大家在今后的生活里，能遇到自己喜欢、真心对你好的另一半，听完这场音乐会，能拥有美好的邂逅与缘分。”",
+    "城市爱乐室内乐团登台，在烛光布景下带来七夕主题室内乐演出。",
+    "城市爱乐室内乐团的演奏家在烛光环绕的舞台上倾情演绎曲目。",
+    "整场演出氛围感十足，活动打造沉浸式七夕体验，设置专属打卡互动区域，配备专业摄影师记录观众浪漫瞬间。购票观众可领取玫瑰、定制周边等七夕礼遇，单人、结伴观演皆氛围感满满。演出尾声设置掌声互动返场环节，用悠扬乐声，为蓉城观众献上一场温柔治愈的七夕浪漫夜。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-19T22:23:13+00:00",
+  "sourceTextHash": "666feb1cedf5b9356fd0c0fad1dc143349820ad73071103449d36c220dbdcb36",
+  "aiStatus": "ok",
+  "aiSummary": "8月19日七夕当晚，城市爱乐“爱让我们变得完整”专场音乐会在成都城市音乐厅上演，精选17首情歌，以初见、心动、相守到释怀圆满为脉络，打造沉浸式浪漫体验，为观众献上温柔治愈的七夕夜。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-0-45-viewpoint",
+      "paragraphIndex": 0,
+      "start": 0,
+      "end": 45,
+      "text": "8月19日七夕当晚，城市爱乐“爱让我们变得完整”专场音乐会在成都城市音乐厅戏剧厅浪漫上演。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-67-92-viewpoint",
+      "paragraphIndex": 0,
+      "start": 67,
+      "end": 92,
+      "text": "以“初见、心动、相守到释怀圆满”为完整爱情叙事脉络",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-0-56-viewpoint",
+      "paragraphIndex": 2,
+      "start": 0,
+      "end": 56,
+      "text": "现场曲目涵盖《告白气球》《小幸运》《红豆》《一生所爱》等经典旋律，层层串联起相识、心动、相守、和解的爱情全过程。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-5-0-21-viewpoint",
+      "paragraphIndex": 5,
+      "start": 0,
+      "end": 21,
+      "text": "整场演出氛围感十足，活动打造沉浸式七夕体验",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-45-92-exam_point",
+      "paragraphIndex": 0,
+      "start": 45,
+      "end": 92,
+      "text": "城市爱乐室内乐团音乐总监林东珉表示本场音乐会以“初见、心动、相守到释怀圆满”为完整爱情叙事脉络",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-93-123-exam_point",
+      "paragraphIndex": 0,
+      "start": 93,
+      "end": 123,
+      "text": "精选17首大众耳熟能详的爱情金曲，以精致室内乐重新编排演绎。",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-0-32-exam_point",
+      "paragraphIndex": 2,
+      "start": 0,
+      "end": 32,
+      "text": "现场曲目涵盖《告白气球》《小幸运》《红豆》《一生所爱》等经典旋律",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-56-106-exam_point",
+      "paragraphIndex": 2,
+      "start": 56,
+      "end": 106,
+      "text": "钢琴演奏者现场分享创作巧思：“今天所有歌曲的安排顺序，其实是我们感情的一条线路，从头到尾都是匹配的。",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-5-10-49-exam_point",
+      "paragraphIndex": 5,
+      "start": 10,
+      "end": 49,
+      "text": "活动打造沉浸式七夕体验，设置专属打卡互动区域，配备专业摄影师记录观众浪漫瞬间。",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-5-83-97-exam_point",
+      "paragraphIndex": 5,
+      "start": 83,
+      "end": 97,
+      "text": "演出尾声设置掌声互动返场环节",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-45-53-term",
+      "paragraphIndex": 0,
+      "start": 45,
+      "end": 53,
+      "text": "城市爱乐室内乐团",
+      "type": "term"
+    },
+    {
+      "id": "ai-5-14-17-term",
+      "paragraphIndex": 5,
+      "start": 14,
+      "end": 17,
+      "text": "沉浸式",
+      "type": "term"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 1
+  }
+}

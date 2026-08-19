@@ -1,0 +1,141 @@
+{
+  "id": "9faccb7ba9",
+  "date": "2026-08-19",
+  "title": "87岁老人寻亡妻墓迷路，徒步一天未曾进食，幸得民警找回，七夕前如愿完成祭拜丨C视频",
+  "source": "sichuan.scol.com.cn",
+  "url": "https://sichuan.scol.com.cn/ggxw/202608/83307825.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-19T22:23:42+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "87岁老人寻亡妻墓，徒步一天迷路，幸得民警找回。七夕节前夕，他在儿女的帮助下遂愿，完成祭拜。",
+    "这是近期发生在达州市渠县的感人事件。8月中旬，渠县公安局宝城派出所收到一条求助线索，南充市蓬安县福德镇的政府工作人员称，热心群众发现，在G85公路渠县新市镇至蓬安县福德镇交界路段，一名高龄老人在车流中步行，存在安全隐患。",
+    "接警后，宝城派出所民辅警迅速赶赴现场，同时调阅沿途监控画面缩小搜寻范围。最终，出警民辅警在同事的远程协助下，在蓬安县辖区的车行道边缘，发现了老人。老人身形佝偻，看起来精神状态和身体状态不佳。",
+    "经核实，老人姓唐，今年87岁，是渠县宝城镇人，前不久老伴因医治无效离世。老伴生病期间，一直由儿女照料。老伴离世后，儿女担心老人得知消息会伤心过度，未让他给老伴送行。事后，老人才知道亡妻已下葬。",
+    "事发当天，老人因思念亡妻，早晨独自出门寻找老伴墓地，途中坐错了车，后来又不慎迷路，到晚上他已颤颤巍巍步行一整天，走了近20公里，其间未曾进食。",
+    "民警为老人递上食物与饮用水，安抚其情绪，将老人接回派出所，同时通过身份核查联系到老人亲属。当晚，亲属赶到宝城派出所将老人接回家。",
+    "8月17日，七夕节前夕，在儿女的陪伴下，老人如愿抵达亡妻墓前祭拜，了却了心愿。",
+    "家属介绍，老人和老伴感情特别好，所以担心老人承受不住打击，未告诉其亡妻已下葬。",
+    "日前，老人的儿子专门致电宝城派出所，向救助老人的民辅警表达谢意。",
+    "民警提醒，家中有高龄老人，应加强日常照护与陪伴，必要时可为老人配备定位设备或联系卡片，避免类似事件发生。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-19T22:23:43+00:00",
+  "sourceTextHash": "9e02a1cc97216fa62afc1ef362f78a6ebaa1e7e083a1d48e889d6af168ad4c33",
+  "aiStatus": "ok",
+  "aiSummary": "87岁老人因思念亡妻独自外出寻墓，徒步近20公里迷路且一天未进食，幸得渠县民警救助并联系家属，最终在七夕前夕于儿女陪伴下完成祭拜，民警提醒加强高龄老人照护。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-0-24-viewpoint",
+      "paragraphIndex": 0,
+      "start": 0,
+      "end": 24,
+      "text": "87岁老人寻亡妻墓，徒步一天迷路，幸得民警找回。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-0-18-viewpoint",
+      "paragraphIndex": 1,
+      "start": 0,
+      "end": 18,
+      "text": "这是近期发生在达州市渠县的感人事件。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-3-51-82-viewpoint",
+      "paragraphIndex": 3,
+      "start": 51,
+      "end": 82,
+      "text": "老伴离世后，儿女担心老人得知消息会伤心过度，未让他给老伴送行。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-4-0-71-viewpoint",
+      "paragraphIndex": 4,
+      "start": 0,
+      "end": 71,
+      "text": "事发当天，老人因思念亡妻，早晨独自出门寻找老伴墓地，途中坐错了车，后来又不慎迷路，到晚上他已颤颤巍巍步行一整天，走了近20公里，其间未曾进食。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-9-0-52-viewpoint",
+      "paragraphIndex": 9,
+      "start": 0,
+      "end": 52,
+      "text": "民警提醒，家中有高龄老人，应加强日常照护与陪伴，必要时可为老人配备定位设备或联系卡片，避免类似事件发生。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-68-73-term",
+      "paragraphIndex": 1,
+      "start": 68,
+      "end": 73,
+      "text": "G85公路",
+      "type": "term",
+      "explanation": "G85公路是连接重庆至昆明的高速公路，途经四川达州等地，属于国家高速公路网的一部分。"
+    },
+    {
+      "id": "ai-2-0-3-exam_point",
+      "paragraphIndex": 2,
+      "start": 0,
+      "end": 3,
+      "text": "接警后",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-21-27-exam_point",
+      "paragraphIndex": 2,
+      "start": 21,
+      "end": 27,
+      "text": "调阅沿途监控",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-0-3-exam_point",
+      "paragraphIndex": 3,
+      "start": 0,
+      "end": 3,
+      "text": "经核实",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-5-33-37-exam_point",
+      "paragraphIndex": 5,
+      "start": 33,
+      "end": 37,
+      "text": "身份核查",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-6-6-9-term",
+      "paragraphIndex": 6,
+      "start": 6,
+      "end": 9,
+      "text": "七夕节",
+      "type": "term",
+      "explanation": "七夕节是中国传统节日，农历七月初七，象征爱情与团圆，常与牛郎织女传说相关。"
+    },
+    {
+      "id": "ai-7-10-15-exam_point",
+      "paragraphIndex": 7,
+      "start": 10,
+      "end": 15,
+      "text": "感情特别好",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-9-33-37-term",
+      "paragraphIndex": 9,
+      "start": 33,
+      "end": 37,
+      "text": "定位设备",
+      "type": "term",
+      "explanation": "定位设备指通过GPS等技术实时获取位置信息的电子装置，常用于防止老人或儿童走失。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

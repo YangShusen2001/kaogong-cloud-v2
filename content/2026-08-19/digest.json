@@ -1,0 +1,133 @@
+{
+  "date": "2026-08-19",
+  "title": "每日日报 · 2026-08-19（周三）",
+  "sections": [
+    {
+      "id": "essay",
+      "title": "申论精读",
+      "items": [
+        {
+          "title": "多彩暑期，沉浸式文旅激活“留量”密码",
+          "date": "08-19",
+          "sourceUrl": "https://www.news.cn/politics/20260819/0ef20f52d3a54c20950a3588c9ac8cd1/c.html"
+        }
+      ]
+    },
+    {
+      "id": "guangdong",
+      "title": "广东要闻动态",
+      "items": [
+        {
+          "title": "2026年广东省党外人士暑期座谈会召开",
+          "date": "08-19",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/19/139996_54992306.htm"
+        },
+        {
+          "title": "南湛高速广东段全面开工，扩容省际通道，打造粤桂新动脉",
+          "date": "08-19",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/19/139996_54992561.htm"
+        },
+        {
+          "title": "广东唯一！75岁院士侯凡凡入选“最美医生”",
+          "date": "08-19",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/19/139996_54992420.htm"
+        },
+        {
+          "title": "广东居民人均预期寿命80.6岁 40万医师守护群众健康",
+          "date": "08-19",
+          "sourceUrl": "https://news.dayoo.com/guangdong/202608/19/139996_54992323.htm"
+        },
+        {
+          "title": "习近平同厄瓜多尔总统诺沃亚会谈",
+          "date": "08-19",
+          "sourceUrl": "https://www.gd.gov.cn/gdywdt/xwdt/content/post_4944312.html",
+          "summary": "8月18日下午，国家主席习近平在北京人民大会堂同来华进行国事访问的厄瓜多尔总统诺沃亚举行会谈。"
+        }
+      ]
+    },
+    {
+      "id": "sichuan",
+      "title": "四川要闻动态",
+      "items": [
+        {
+          "title": "15家川企亮相世界机器人大会，传递了哪些新信号？",
+          "date": "08-19",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83307851.html"
+        },
+        {
+          "title": "七夕音乐会奏响蓉城 17首情歌演绎爱情百态",
+          "date": "08-19",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83307849.html"
+        },
+        {
+          "title": "持续推动两岸融合发展 近百位两岸专家学者齐聚四川",
+          "date": "08-19",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83307837.html"
+        },
+        {
+          "title": "十余人持械破门强拆，房主反击致一人死亡，法院为何判他无罪？丨小铭切瓜",
+          "date": "08-19",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83307831.html"
+        },
+        {
+          "title": "“升学宴突发事故”现场实探：清理仍在持续",
+          "date": "08-19",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83307827.html"
+        },
+        {
+          "title": "87岁老人寻亡妻墓迷路，徒步一天未曾进食，幸得民警找回，七夕前如愿完成祭拜丨C视频",
+          "date": "08-19",
+          "sourceUrl": "https://sichuan.scol.com.cn/ggxw/202608/83307825.html"
+        }
+      ]
+    },
+    {
+      "id": "jiangsu",
+      "title": "江苏要闻动态",
+      "items": [
+        {
+          "title": "全省市县乡三级人大换届选举工作会议召开 信长星出席并讲话",
+          "date": "08-19",
+          "sourceUrl": "http://www.jiangsu.gov.cn/art/2026/8/19/art_84322_11817986.html"
+        },
+        {
+          "title": "刘小涛在科研院所调研科技创新工作 以高水平科技创新引领新质生产力发展",
+          "date": "08-19",
+          "sourceUrl": "http://www.jiangsu.gov.cn/art/2026/8/19/art_84322_11817984.html"
+        },
+        {
+          "title": "省领导会见德国费森尤斯卡比集团客人",
+          "date": "08-19",
+          "sourceUrl": "http://www.jiangsu.gov.cn/art/2026/8/19/art_84322_11817985.html"
+        },
+        {
+          "title": "江苏光伏装机规模在全国率先破亿千瓦 超越煤电晋级“第一大电源”",
+          "date": "08-19",
+          "sourceUrl": "http://www.jiangsu.gov.cn/art/2026/8/19/art_84322_11817987.html"
+        }
+      ]
+    },
+    {
+      "id": "today-talk",
+      "title": "今日谈（半月谈·申论素材）",
+      "items": [
+        {
+          "title": "“宁静住宅”是奢侈吗",
+          "date": "08-19",
+          "sourceUrl": "http://www.banyuetan.org/jrt/detail/20260819/1000200033134991787102725851289398_1.html"
+        }
+      ]
+    },
+    {
+      "id": "south-review",
+      "title": "南方时评（南方网·广东申论素材）",
+      "items": [
+        {
+          "title": "南方快评",
+          "date": "08-19",
+          "sourceUrl": "https://opinion.southcn.com/node_e4f9db6b4d"
+        }
+      ]
+    }
+  ]
+}

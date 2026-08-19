@@ -1,0 +1,149 @@
+{
+  "id": "524303588e",
+  "date": "2026-08-19",
+  "title": "新华视点丨多彩暑期，沉浸式文旅激活“留量”密码",
+  "source": "news.cn",
+  "url": "https://www.news.cn/politics/20260819/0ef20f52d3a54c20950a3588c9ac8cd1/c.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-19T22:22:15+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "&emsp;&emsp;时值暑期，文旅市场热度持续攀升。山东省济宁市梁山县依托当地文化资源，探索文旅新形式，让游客从“看景”变为“入戏”。",
+    "&emsp;&emsp;在梁山水浒酒文化体验馆，游客可沉浸式体验宋代酿酒技艺，还能欣赏精彩纷呈的当地特色文化表演。今年，这里推出以水浒文化为主题的地方菜品，让游客在宴饮中感受独特味道。",
+    "&emsp;&emsp;你敢信吗，曾经“闲人免进”的生产车间正成为大众争相打卡的旅游新地标，把冰冷的流水线变成一道特色的风景线。近日，七部门联合印发《关于弘扬工业文化 保护工业遗产 发展工业旅游的通知》。这个夏天，“工厂游”也许是大小朋友读懂“中国制造”最好的课堂。",
+    "&emsp;&emsp;更“硬核”的“工厂游”让游客近距离感受“大国重器”的实力。在上海长兴岛，人们可以通过团队预约方式走进振华重工集团和江南造船厂参观，它们也是“中国制造”加速迈向“中国智造”的生动注脚。",
+    "&emsp;&emsp;在百诺巧克力博物馆，大小朋友可以在模拟热带雨林环境的“可可丛林”里穿梭，通过38米的动画长卷了解巧克力从诞生到传入中国的发展历程，通过真实机器感受巧克力从研磨、精炼到调温、抛光的全过程。",
+    "&emsp;&emsp;太原北齐壁画博物馆以“2002年度全国十大考古新发现”之一的北齐徐显秀墓为核心内容，依托精美的展陈和沉浸式参观体验，成为暑期游客的“宝藏打卡地”。",
+    "&emsp;&emsp;戴上VR眼镜，游客能“走进”徐显秀墓葬遗址中，看到千年以前的宴饮场景，听到乐师的演奏。",
+    "&emsp;&emsp;暑期以来，陕西省麟游县将文化传承、安全守护、课业辅导、素质培育、情感关爱融为一体，开展内容丰富、形式多样的暑期公益课堂。麟游县九成宫镇南坊社区组织辖区40余名少年儿童，走进麟游九成宫博物馆，让孩子们在学习实践中感受隋唐历史文脉，收获成长与进步。",
+    "&emsp;&emsp;麟游县依托青少年校外活动中心、县总工会两大平台，结合各阶段孩子年龄特点和兴趣爱好，免费开设了科技、音乐、舞蹈、体育、美术等特色暑期托管班，优先保障双职工家庭、困难职工家庭及新就业形态劳动者子女入托。",
+    "&emsp;&emsp;统筹：李杰 李佳琳 王冰笛"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-19T22:22:16+00:00",
+  "sourceTextHash": "191d17aadc1c53d060ab4dd28390e3de7f402705584991d2305ae82e67c5f180",
+  "aiStatus": "ok",
+  "aiSummary": "暑期文旅市场火热，山东梁山以水浒文化打造沉浸式体验，工业旅游兴起，上海长兴岛展示大国重器，太原北齐壁画博物馆用VR还原历史，陕西麟游县开设公益课堂与托管班，丰富青少年暑期生活。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-54-68-viewpoint",
+      "paragraphIndex": 0,
+      "start": 54,
+      "end": 68,
+      "text": "让游客从“看景”变为“入戏”",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-46-63-viewpoint",
+      "paragraphIndex": 2,
+      "start": 46,
+      "end": 63,
+      "text": "把冰冷的流水线变成一道特色的风景线",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-3-81-97-viewpoint",
+      "paragraphIndex": 3,
+      "start": 81,
+      "end": 97,
+      "text": "“中国制造”加速迈向“中国智造”",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-7-23-52-viewpoint",
+      "paragraphIndex": 7,
+      "start": 23,
+      "end": 52,
+      "text": "将文化传承、安全守护、课业辅导、素质培育、情感关爱融为一体",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-17-27-exam_point",
+      "paragraphIndex": 0,
+      "start": 17,
+      "end": 27,
+      "text": "文旅市场热度持续攀升",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-27-38-exam_point",
+      "paragraphIndex": 1,
+      "start": 27,
+      "end": 38,
+      "text": "沉浸式体验宋代酿酒技艺",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-67-101-exam_point",
+      "paragraphIndex": 2,
+      "start": 67,
+      "end": 101,
+      "text": "七部门联合印发《关于弘扬工业文化 保护工业遗产 发展工业旅游的通知》",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-62-74-exam_point",
+      "paragraphIndex": 3,
+      "start": 62,
+      "end": 74,
+      "text": "振华重工集团和江南造船厂",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-5-42-48-exam_point",
+      "paragraphIndex": 5,
+      "start": 42,
+      "end": 48,
+      "text": "北齐徐显秀墓",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-6-12-18-exam_point",
+      "paragraphIndex": 6,
+      "start": 12,
+      "end": 18,
+      "text": "戴上VR眼镜",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-8-81-110-exam_point",
+      "paragraphIndex": 8,
+      "start": 81,
+      "end": 110,
+      "text": "优先保障双职工家庭、困难职工家庭及新就业形态劳动者子女入托",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-93-97-term",
+      "paragraphIndex": 2,
+      "start": 93,
+      "end": 97,
+      "text": "工业旅游",
+      "type": "term",
+      "explanation": "以工业生产过程、工厂风貌、工业遗产等为吸引物的旅游活动，兼具观光、教育和文化体验功能。"
+    },
+    {
+      "id": "ai-3-32-36-term",
+      "paragraphIndex": 3,
+      "start": 32,
+      "end": 36,
+      "text": "大国重器",
+      "type": "term",
+      "explanation": "指国家重大技术装备或工程，体现国家科技实力和工业水平，如振华重工、江南造船厂等。"
+    },
+    {
+      "id": "ai-5-29-38-term",
+      "paragraphIndex": 5,
+      "start": 29,
+      "end": 38,
+      "text": "全国十大考古新发现",
+      "type": "term",
+      "explanation": "由中国文物报社等评选的年度重要考古发现，代表中国考古学界的重大成果。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

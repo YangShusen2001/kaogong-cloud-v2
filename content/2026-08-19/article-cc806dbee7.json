@@ -1,0 +1,84 @@
+{
+  "id": "cc806dbee7",
+  "date": "2026-08-19",
+  "title": "江苏省人民政府 要闻关注 刘小涛在科研院所调研科技创新工作 以高水平科技创新引领新质生产力发展",
+  "source": "中国政府网",
+  "url": "http://www.jiangsu.gov.cn/art/2026/8/19/art_84322_11817984.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-19T22:24:00+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "8月17日，省长刘小涛来到中国科学院工业人工智能研究所、紫金山实验室调研科技创新工作。",
+    "刘小涛强调，要深入学习贯彻习近平总书记关于科技创新的重要论述和对江苏工作重要讲话精神，建强高水平科技创新平台，健全研用一体的成果转化应用机制，持续产出更多标志性重大成果，以高水平科技创新引领新质生产力发展。刘小涛要求省有关部门和地方主动对接、靠前服务，全力保障科研团队潜心钻研，充分激发创新创造活力。",
+    "省委常委、南京市委书记周红波，副省长沈剑荣，省政府秘书长赵建军参加。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-19T22:24:01+00:00",
+  "sourceTextHash": "f8d67b1f7fd1556994508c7b738a368dbf100afdee9369674463d6343855ca12",
+  "aiStatus": "ok",
+  "aiSummary": "8月17日，省长刘小涛调研中科院工业人工智能研究所和紫金山实验室，强调建强科创平台、健全成果转化机制，以高水平科技创新引领新质生产力发展，并要求部门地方靠前服务保障科研。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-34-42-viewpoint",
+      "paragraphIndex": 0,
+      "start": 34,
+      "end": 42,
+      "text": "调研科技创新工作",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-85-102-viewpoint",
+      "paragraphIndex": 1,
+      "start": 85,
+      "end": 102,
+      "text": "以高水平科技创新引领新质生产力发展",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-43-54-exam_point",
+      "paragraphIndex": 1,
+      "start": 43,
+      "end": 54,
+      "text": "建强高水平科技创新平台",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-55-70-exam_point",
+      "paragraphIndex": 1,
+      "start": 55,
+      "end": 70,
+      "text": "健全研用一体的成果转化应用机制",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-71-84-exam_point",
+      "paragraphIndex": 1,
+      "start": 71,
+      "end": 84,
+      "text": "持续产出更多标志性重大成果",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-116-125-exam_point",
+      "paragraphIndex": 1,
+      "start": 116,
+      "end": 125,
+      "text": "主动对接、靠前服务",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-95-100-term",
+      "paragraphIndex": 1,
+      "start": 95,
+      "end": 100,
+      "text": "新质生产力",
+      "type": "term",
+      "explanation": "由技术革命性突破、生产要素创新性配置等催生的先进生产力质态。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}
