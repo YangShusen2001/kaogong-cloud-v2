@@ -1,0 +1,108 @@
+{
+  "id": "6591b19f30",
+  "date": "2026-08-20",
+  "title": "江苏省人民政府 要闻关注 哈萨克斯坦阿拉木图州议会代表团访问江苏 信长星会见拜戈扎耶夫",
+  "source": "中国政府网",
+  "url": "http://www.jiangsu.gov.cn/art/2026/8/20/art_84322_11818449.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-20T22:26:31+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "日前，哈萨克斯坦阿拉木图州议会代表团来江苏访问。8月18日，省委书记、省人大常委会主任信长星在南京会见阿拉木图州议会主席拜戈扎耶夫，共同签署江苏省人大常委会与阿拉木图州议会友好交流合作备忘录。",
+    "信长星说，在习近平主席和托卡耶夫总统战略引领下，中哈关系保持快速发展势头，展现强大韧性与旺盛活力。哈萨克斯坦是江苏在中亚地区第一大贸易伙伴。两个月前，江苏省代表团到哈萨克斯坦考察访问，取得积极成果。我们将认真落实两国元首重要共识，弘扬“中国—中亚精神”，以此次备忘录签署为契机，加强两省州立法机构交流，提升经贸合作质效，促进人文交流交往，为推动中哈战略协作不断迈上新台阶、取得新成果贡献更大力量。",
+    "拜戈扎耶夫表示，哈中是好邻居、好朋友。阿拉木图州高度重视与江苏省的交流交往，将推进两省州各领域务实合作，共同增进人民福祉，更好助力哈中关系高水平发展。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-20T22:26:32+00:00",
+  "sourceTextHash": "92dc2ddf1e16ea57b53ddc5abc07640f6e4246a068d26ed5b05b96e8e74b621b",
+  "aiStatus": "ok",
+  "aiSummary": "哈萨克斯坦阿拉木图州议会代表团访问江苏，信长星会见拜戈扎耶夫并签署友好交流合作备忘录，旨在加强立法机构交流、提升经贸合作、促进人文交往，助力中哈关系发展。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-66-95-viewpoint",
+      "paragraphIndex": 0,
+      "start": 66,
+      "end": 95,
+      "text": "共同签署江苏省人大常委会与阿拉木图州议会友好交流合作备忘录",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-5-36-viewpoint",
+      "paragraphIndex": 1,
+      "start": 5,
+      "end": 36,
+      "text": "在习近平主席和托卡耶夫总统战略引领下，中哈关系保持快速发展势头",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-99-126-viewpoint",
+      "paragraphIndex": 1,
+      "start": 99,
+      "end": 126,
+      "text": "我们将认真落实两国元首重要共识，弘扬“中国—中亚精神”",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-19-37-viewpoint",
+      "paragraphIndex": 2,
+      "start": 19,
+      "end": 37,
+      "text": "阿拉木图州高度重视与江苏省的交流交往",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-49-69-exam_point",
+      "paragraphIndex": 1,
+      "start": 49,
+      "end": 69,
+      "text": "哈萨克斯坦是江苏在中亚地区第一大贸易伙伴",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-139-150-exam_point",
+      "paragraphIndex": 1,
+      "start": 139,
+      "end": 150,
+      "text": "加强两省州立法机构交流",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-151-159-exam_point",
+      "paragraphIndex": 1,
+      "start": 151,
+      "end": 159,
+      "text": "提升经贸合作质效",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-160-168-exam_point",
+      "paragraphIndex": 1,
+      "start": 160,
+      "end": 168,
+      "text": "促进人文交流交往",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-39-51-exam_point",
+      "paragraphIndex": 2,
+      "start": 39,
+      "end": 51,
+      "text": "推进两省州各领域务实合作",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-118-125-term",
+      "paragraphIndex": 1,
+      "start": 118,
+      "end": 125,
+      "text": "中国—中亚精神",
+      "type": "term",
+      "explanation": "指中国与中亚国家在合作中秉持的相互尊重、互利共赢、共同发展的精神理念。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

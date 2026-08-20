@@ -1,0 +1,150 @@
+{
+  "id": "6415e738fb",
+  "date": "2026-08-20",
+  "title": "江苏省人民政府 要闻关注 省政府党组会议暨理论学习中心组学习会召开 刘小涛主持",
+  "source": "中国政府网",
+  "url": "http://www.jiangsu.gov.cn/art/2026/8/20/art_84322_11818450.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-20T22:26:39+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "8月18日，省政府党组会议暨理论学习中心组学习会召开，深入学习贯彻习近平总书记重要讲话重要指示和重要文章精神，按照省委要求，研究政府系统贯彻落实工作。省政府党组书记、省长刘小涛主持会议。",
+    "会议指出，习近平总书记在纪念江泽民同志诞辰100周年大会上的重要讲话，全面回顾江泽民同志光辉战斗的一生，高度评价江泽民同志为党和人民建立的不朽功勋，系统概括了江泽民同志的崇高风范，具有很强的政治性、思想性、指导性。我们要深学细悟习近平总书记重要讲话精神，更加深刻领悟“两个确立”的决定性意义，坚决做到“两个维护”，坚定地在推进中国式现代化中走在前、做示范，奋力谱写“强富美高”新江苏现代化建设新篇章，把江泽民同志的家乡建设得更加美好，不辜负习近平总书记和党中央对江苏的关心厚爱。",
+    "会议强调，要认真学习领会习近平总书记在中央政治局第二十七次集体学习时的重要讲话精神，深化军地协同共建，加强军地沟通会商，扎实做好拥军优属工作，持续营造军民鱼水一家亲的浓厚氛围。要深入学习贯彻习近平总书记在《求是》杂志发表的重要文章《加快建设健康中国》《提高防灾减灾救灾能力》，建设更高水平的健康江苏，不断提高防范应对各类自然灾害的能力和水平。",
+    "会议围绕学习贯彻习近平总书记关于基层工作方法的重要论述进行集中学习研讨，省政府党组成员交流学习体会。大家一致认为，重要论述科学回答了“什么是基层、如何深入基层、如何服务基层”等重大理论和实践问题，为做好基层工作指明了前进方向、提供了根本遵循。要把牢基层工作正确方向，有力有效做好基层各项工作，始终站稳群众立场，推动企业和群众诉求及时闭环办理，健全为基层减负长效机制，以实干实绩扛好走在前、做示范、挑大梁的责任担当。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-20T22:26:40+00:00",
+  "sourceTextHash": "cd21f80890abd3905ad3a5330cda1bfd4cab372406b85d3f8eb851252cbea977",
+  "aiStatus": "ok",
+  "aiSummary": "江苏省政府党组会议暨理论学习中心组学习会召开，学习贯彻习近平总书记重要讲话和文章精神，强调深刻领悟“两个确立”意义，推进中国式现代化，加强军地协同，建设健康江苏，提高防灾减灾能力，并研讨基层工作方法。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-27-54-viewpoint",
+      "paragraphIndex": 0,
+      "start": 27,
+      "end": 54,
+      "text": "深入学习贯彻习近平总书记重要讲话重要指示和重要文章精神",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-127-156-viewpoint",
+      "paragraphIndex": 1,
+      "start": 127,
+      "end": 156,
+      "text": "更加深刻领悟“两个确立”的决定性意义，坚决做到“两个维护”",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-157-177-viewpoint",
+      "paragraphIndex": 1,
+      "start": 157,
+      "end": 177,
+      "text": "坚定地在推进中国式现代化中走在前、做示范",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-42-59-viewpoint",
+      "paragraphIndex": 2,
+      "start": 42,
+      "end": 59,
+      "text": "深化军地协同共建，加强军地沟通会商",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-3-122-145-viewpoint",
+      "paragraphIndex": 3,
+      "start": 122,
+      "end": 145,
+      "text": "把牢基层工作正确方向，有力有效做好基层各项工作",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-134-138-exam_point",
+      "paragraphIndex": 1,
+      "start": 134,
+      "end": 138,
+      "text": "两个确立",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-151-155-exam_point",
+      "paragraphIndex": 1,
+      "start": 151,
+      "end": 155,
+      "text": "两个维护",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-163-169-exam_point",
+      "paragraphIndex": 1,
+      "start": 163,
+      "end": 169,
+      "text": "中国式现代化",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-44-50-exam_point",
+      "paragraphIndex": 2,
+      "start": 44,
+      "end": 50,
+      "text": "军地协同共建",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-120-124-exam_point",
+      "paragraphIndex": 2,
+      "start": 120,
+      "end": 124,
+      "text": "健康中国",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-128-136-exam_point",
+      "paragraphIndex": 2,
+      "start": 128,
+      "end": 136,
+      "text": "防灾减灾救灾能力",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-16-22-exam_point",
+      "paragraphIndex": 3,
+      "start": 16,
+      "end": 22,
+      "text": "基层工作方法",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-183-187-term",
+      "paragraphIndex": 1,
+      "start": 183,
+      "end": 187,
+      "text": "强富美高",
+      "type": "term"
+    },
+    {
+      "id": "ai-2-64-68-term",
+      "paragraphIndex": 2,
+      "start": 64,
+      "end": 68,
+      "text": "拥军优属",
+      "type": "term",
+      "explanation": "指拥护军队、优待军人家属的政策和活动，是双拥工作的重要内容。"
+    },
+    {
+      "id": "ai-3-166-170-term",
+      "paragraphIndex": 3,
+      "start": 166,
+      "end": 170,
+      "text": "闭环办理",
+      "type": "term",
+      "explanation": "指对群众诉求从受理、处理到反馈的全流程管理，确保问题有效解决。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

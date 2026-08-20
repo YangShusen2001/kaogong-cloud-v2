@@ -1,0 +1,101 @@
+{
+  "id": "0ca00e7f15",
+  "date": "2026-08-20",
+  "title": "新华视点丨起底部分社会化环境监测机构数据造假套路",
+  "source": "news.cn",
+  "url": "https://www.news.cn/politics/20260820/a453f8d65cd547ef8ec3fec4c98c96cd/c.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-20T22:24:55+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "真实、准确的环境监测数据，既是客观反映环境质量变化的“镜子”，也是生态环境部门开展监管工作的重要依据。然而，受利益驱使，部分社会生态环境监测机构漠视法律法规，出具虚假监测报告，扰乱行业市场秩序，影响生态环境监管的准确性。",
+    "近年来，安徽省生态环境部门重拳出击，依法查处一批环境监测数据弄虚作假行为，揭开了其背后的造假套路。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-20T22:24:56+00:00",
+  "sourceTextHash": "0cf7986f890d5f1a8ff76d8107d74354c05d1d6f4bef79778768e8c73b1601aa",
+  "aiStatus": "ok",
+  "aiSummary": "环境监测数据是环境监管的重要依据，但部分社会化监测机构受利益驱使数据造假。安徽省生态环境部门重拳出击，查处弄虚作假行为，揭露造假套路，以维护行业秩序和监管准确性。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-0-51-viewpoint",
+      "paragraphIndex": 0,
+      "start": 0,
+      "end": 51,
+      "text": "真实、准确的环境监测数据，既是客观反映环境质量变化的“镜子”，也是生态环境部门开展监管工作的重要依据。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-54-110-viewpoint",
+      "paragraphIndex": 0,
+      "start": 54,
+      "end": 110,
+      "text": "受利益驱使，部分社会生态环境监测机构漠视法律法规，出具虚假监测报告，扰乱行业市场秩序，影响生态环境监管的准确性。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-4-49-viewpoint",
+      "paragraphIndex": 1,
+      "start": 4,
+      "end": 49,
+      "text": "安徽省生态环境部门重拳出击，依法查处一批环境监测数据弄虚作假行为，揭开了其背后的造假套路。",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-6-12-term",
+      "paragraphIndex": 0,
+      "start": 6,
+      "end": 12,
+      "text": "环境监测数据",
+      "type": "term",
+      "explanation": "指通过科学方法对环境要素进行测量和记录的数据，用于反映环境质量状况和变化趋势。"
+    },
+    {
+      "id": "ai-0-33-39-term",
+      "paragraphIndex": 0,
+      "start": 33,
+      "end": 39,
+      "text": "生态环境部门",
+      "type": "term",
+      "explanation": "负责生态环境保护和监管的政府机构，依法开展环境监测、执法等工作。"
+    },
+    {
+      "id": "ai-0-81-87-term",
+      "paragraphIndex": 0,
+      "start": 81,
+      "end": 87,
+      "text": "虚假监测报告",
+      "type": "term",
+      "explanation": "指监测机构故意伪造或篡改数据后出具的不真实报告，违反法律法规。"
+    },
+    {
+      "id": "ai-0-0-51-exam_point",
+      "paragraphIndex": 0,
+      "start": 0,
+      "end": 51,
+      "text": "真实、准确的环境监测数据，既是客观反映环境质量变化的“镜子”，也是生态环境部门开展监管工作的重要依据。",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-54-110-exam_point",
+      "paragraphIndex": 0,
+      "start": 54,
+      "end": 110,
+      "text": "受利益驱使，部分社会生态环境监测机构漠视法律法规，出具虚假监测报告，扰乱行业市场秩序，影响生态环境监管的准确性。",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-4-49-exam_point",
+      "paragraphIndex": 1,
+      "start": 4,
+      "end": 49,
+      "text": "安徽省生态环境部门重拳出击，依法查处一批环境监测数据弄虚作假行为，揭开了其背后的造假套路。",
+      "type": "exam_point"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}
