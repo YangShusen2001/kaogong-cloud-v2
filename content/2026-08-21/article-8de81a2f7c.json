@@ -1,0 +1,109 @@
+{
+  "id": "8de81a2f7c",
+  "date": "2026-08-21",
+  "title": "今年第19号台风生成，广东启动防风Ⅳ级应急响应",
+  "source": "news.dayoo.com",
+  "url": "https://news.dayoo.com/guangdong/202608/21/139996_54993527.htm",
+  "pubDate": "",
+  "fetchedAt": "2026-08-21T22:24:14+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "记者8月21日晚获悉，根据气象部门监测预报，原位于北部湾海面的热带低压已于8月21日17时加强为今年第19号台风，其中心位于湛江市徐闻县西偏北方向约160公里的北部湾海面上，中心附近最大风力8级（18米/秒）。预计，其将于21日夜间到22日在北部湾海面回旋，强度将有所增强，23日后转向偏东方向移动，趋向琼州海峡，强度缓慢减弱。鉴于当前形势，根据《广东省防汛防旱防风防冻应急预案》和省防总有关规定，广东省防汛防旱防风总指挥部决定于8月21日20时启动防风Ⅳ级应急响应。",
+    "各地各部门要认真落实省委、省政府工作部署，强化组织领导，层层压实责任，加强预测预报预警，及时启动应急响应，按照防台风“六个百分百”要求，扎实做好台风防御各项工作，切实把保障人民群众生命财产安全放在第一位落到实处。",
+    "文/广州日报新花城记者：叶作林 &nbsp;通讯员：粤应宣"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-21T22:24:16+00:00",
+  "sourceTextHash": "f849166dd130ecd5c05bb08a529fb7aca0c44d7c1bbf33206fa340d6408f6110",
+  "aiStatus": "ok",
+  "aiSummary": "今年第19号台风于8月21日17时生成，中心位于北部湾海面，预计将回旋并趋向琼州海峡。广东省防汛防旱防风总指挥部于20时启动防风Ⅳ级应急响应，要求各地落实防台风措施，保障人民安全。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-22-56-viewpoint",
+      "paragraphIndex": 0,
+      "start": 22,
+      "end": 56,
+      "text": "原位于北部湾海面的热带低压已于8月21日17时加强为今年第19号台风",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-199-233-viewpoint",
+      "paragraphIndex": 0,
+      "start": 199,
+      "end": 233,
+      "text": "广东省防汛防旱防风总指挥部决定于8月21日20时启动防风Ⅳ级应急响应",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-81-105-viewpoint",
+      "paragraphIndex": 1,
+      "start": 81,
+      "end": 105,
+      "text": "切实把保障人民群众生命财产安全放在第一位落到实处",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-87-104-exam_point",
+      "paragraphIndex": 0,
+      "start": 87,
+      "end": 104,
+      "text": "中心附近最大风力8级（18米/秒）",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-108-163-exam_point",
+      "paragraphIndex": 0,
+      "start": 108,
+      "end": 163,
+      "text": "其将于21日夜间到22日在北部湾海面回旋，强度将有所增强，23日后转向偏东方向移动，趋向琼州海峡，强度缓慢减弱",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-171-198-exam_point",
+      "paragraphIndex": 0,
+      "start": 171,
+      "end": 198,
+      "text": "根据《广东省防汛防旱防风防冻应急预案》和省防总有关规定",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-53-67-exam_point",
+      "paragraphIndex": 1,
+      "start": 53,
+      "end": 67,
+      "text": "按照防台风“六个百分百”要求",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-21-34-exam_point",
+      "paragraphIndex": 1,
+      "start": 21,
+      "end": 34,
+      "text": "强化组织领导，层层压实责任",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-31-35-term",
+      "paragraphIndex": 0,
+      "start": 31,
+      "end": 35,
+      "text": "热带低压",
+      "type": "term",
+      "explanation": "热带气旋的初级形态，中心附近最大风力低于8级，可发展为台风。"
+    },
+    {
+      "id": "ai-0-225-233-term",
+      "paragraphIndex": 0,
+      "start": 225,
+      "end": 233,
+      "text": "防风Ⅳ级应急响应",
+      "type": "term",
+      "explanation": "广东省防汛防旱防风总指挥部根据预案启动的应急响应级别，Ⅳ级为最低级别。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

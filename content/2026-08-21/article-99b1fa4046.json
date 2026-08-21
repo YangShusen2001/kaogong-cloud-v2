@@ -1,0 +1,91 @@
+{
+  "id": "99b1fa4046",
+  "date": "2026-08-21",
+  "title": "广东水利防汛防台风Ⅳ级应急响应启动",
+  "source": "news.dayoo.com",
+  "url": "https://news.dayoo.com/guangdong/202608/21/139996_54993574.htm",
+  "pubDate": "",
+  "fetchedAt": "2026-08-21T22:24:29+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "据气象部门监测预报，北部湾热带低压已于8月21日下午加强为今年第19号台风（热带风暴级，暂未命名）。预计，该台风将于21日夜间至22日在北部湾海面回旋，强度还将有所增强，23日后转向东偏北方向缓慢移动，逐渐靠近雷州半岛西部沿海，未来几天将给广东省带来明显风雨影响。根据《广东省水利厅水旱灾害防御工作规则》，省水利厅水旱灾害防御领导小组定于2026年8月21日20时启动水利防汛防台风Ⅳ级应急响应。",
+    "省水利厅要求，全省各级水利部门和有关单位要高度重视，严格落实汛期24小时领导带班和值班值守制度，特别是周末要安排人员值班，密切监视风情、雨情、水情、汛情、工情发展态势，滚动会商研判，及时启动水利应急响应，落实落细“456”水利预警机制，切实做好中小河流洪水、山洪灾害防御，突出抓好在建水利工程各项防御工作，强化病险水库、高危山塘、薄弱堤段等工程的一线巡查防守和风险管控，科学精准调度水工程，提前预置应急抢险力量，全力保障人民生命财产安全。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-21T22:24:30+00:00",
+  "sourceTextHash": "c1848b39db192590f5fd48763655185354bd6c2c21eed3bc7de4aa523a7dbde4",
+  "aiStatus": "ok",
+  "aiSummary": "北部湾热带低压加强为今年第19号台风，预计将影响广东省，带来明显风雨。省水利厅于8月21日20时启动水利防汛防台风Ⅳ级应急响应，要求各级部门落实值班值守，加强监测预警，防御中小河流洪水、山洪灾害，保障人民生命财产安全。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-10-49-viewpoint",
+      "paragraphIndex": 0,
+      "start": 10,
+      "end": 49,
+      "text": "北部湾热带低压已于8月21日下午加强为今年第19号台风（热带风暴级，暂未命名）",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-153-197-viewpoint",
+      "paragraphIndex": 0,
+      "start": 153,
+      "end": 197,
+      "text": "省水利厅水旱灾害防御领导小组定于2026年8月21日20时启动水利防汛防台风Ⅳ级应急响应",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-26-47-exam_point",
+      "paragraphIndex": 1,
+      "start": 26,
+      "end": 47,
+      "text": "严格落实汛期24小时领导带班和值班值守制度",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-102-117-exam_point",
+      "paragraphIndex": 1,
+      "start": 102,
+      "end": 117,
+      "text": "落实落细“456”水利预警机制",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-118-135-exam_point",
+      "paragraphIndex": 1,
+      "start": 118,
+      "end": 135,
+      "text": "切实做好中小河流洪水、山洪灾害防御",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-153-184-exam_point",
+      "paragraphIndex": 1,
+      "start": 153,
+      "end": 184,
+      "text": "强化病险水库、高危山塘、薄弱堤段等工程的一线巡查防守和风险管控",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-185-194-exam_point",
+      "paragraphIndex": 1,
+      "start": 185,
+      "end": 194,
+      "text": "科学精准调度水工程",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-0-191-197-term",
+      "paragraphIndex": 0,
+      "start": 191,
+      "end": 197,
+      "text": "Ⅳ级应急响应",
+      "type": "term",
+      "explanation": "指水利部门针对台风或洪水灾害启动的最低级别应急响应，用于协调防御工作。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

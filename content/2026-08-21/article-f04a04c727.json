@@ -1,0 +1,100 @@
+{
+  "id": "f04a04c727",
+  "date": "2026-08-21",
+  "title": "江苏省人民政府 要闻关注 2026江苏—德国经贸合作交流会在苏州太仓举行",
+  "source": "中国政府网",
+  "url": "http://www.jiangsu.gov.cn/art/2026/8/21/art_84322_11818906.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-21T22:25:23+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "2026江苏—德国经贸合作交流会于8月20日在苏州太仓举行。商务部副部长兼国际贸易谈判副代表凌激发表视频致辞，省委常委、苏州市委书记范波，副省长赵岩出席活动并致辞。德国各州驻华代表，欧盟及德国的商协会代表，以及在苏重点德资企业代表参加活动。",
+    "范波表示，苏州是中国东部地区重要的中心城市，当前正持续扩大高水平对外开放，因地制宜发展新质生产力，打造具有国际竞争力的“智能制造之城”。苏州对德合作基础深厚、优势明显，希望双方共同落实好中德两国领导人达成的重要共识，进一步深化高能级平台建设、拓展多领域产业合作、加强深层次交流交往，助力中德做相互支持的可靠伙伴、开放互利的创新伙伴、相知相亲的人文伙伴，为中德全方位战略伙伴关系发展贡献力量。",
+    "赵岩表示，江苏与德国是相隔万里又心灵相通的合作伙伴，双方有着紧密的经贸合作和互补的产业优势，德国是江苏在欧洲最大的贸易伙伴、第一大外资来源地。经贸合作交流会是江苏对接德国先进制造、绿色低碳、科创转化的重要窗口，希望继续发挥好这一平台作用，深化双向投资与产业合作，携手推动经济社会绿色化转型，形成更多积极务实成果，共同书写两地合作共赢新篇章。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-21T22:25:24+00:00",
+  "sourceTextHash": "b15157154b04781f2b8bb6f99e10ff981f2792ea57c5ece91062e386d48f694a",
+  "aiStatus": "ok",
+  "aiSummary": "2026江苏—德国经贸合作交流会在苏州太仓举行，旨在深化双方经贸合作，推动产业升级与绿色转型，助力中德战略伙伴关系发展。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-0-29-viewpoint",
+      "paragraphIndex": 0,
+      "start": 0,
+      "end": 29,
+      "text": "2026江苏—德国经贸合作交流会于8月20日在苏州太仓举行",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-68-83-viewpoint",
+      "paragraphIndex": 1,
+      "start": 68,
+      "end": 83,
+      "text": "苏州对德合作基础深厚、优势明显",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-46-70-viewpoint",
+      "paragraphIndex": 2,
+      "start": 46,
+      "end": 70,
+      "text": "德国是江苏在欧洲最大的贸易伙伴、第一大外资来源地",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-0-30-54-exam_point",
+      "paragraphIndex": 0,
+      "start": 30,
+      "end": 54,
+      "text": "商务部副部长兼国际贸易谈判副代表凌激发表视频致辞",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-37-48-exam_point",
+      "paragraphIndex": 1,
+      "start": 37,
+      "end": 48,
+      "text": "因地制宜发展新质生产力",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-177-188-exam_point",
+      "paragraphIndex": 1,
+      "start": 177,
+      "end": 188,
+      "text": "中德全方位战略伙伴关系",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-121-130-exam_point",
+      "paragraphIndex": 2,
+      "start": 121,
+      "end": 130,
+      "text": "双向投资与产业合作",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-2-139-144-exam_point",
+      "paragraphIndex": 2,
+      "start": 139,
+      "end": 144,
+      "text": "绿色化转型",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-1-43-48-term",
+      "paragraphIndex": 1,
+      "start": 43,
+      "end": 48,
+      "text": "新质生产力",
+      "type": "term",
+      "explanation": "由技术革命性突破、生产要素创新性配置、产业深度转型升级而催生的先进生产力质态。"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 0
+  }
+}

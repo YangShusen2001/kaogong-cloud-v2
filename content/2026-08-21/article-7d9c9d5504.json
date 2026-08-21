@@ -1,0 +1,129 @@
+{
+  "id": "7d9c9d5504",
+  "date": "2026-08-21",
+  "title": "商圈“C位”让给科学家，值得提倡",
+  "source": "半月谈",
+  "url": "http://www.banyuetan.org/jrt/detail/20260821/1000200033134991787299667733326179_1.html",
+  "pubDate": "",
+  "fetchedAt": "2026-08-21T22:25:44+00:00",
+  "status": "ok",
+  "paragraphs": [
+    "近日，全国多家商业综合体悄然换新风景：以往在城市人流最密集的商圈“C位”轮番滚动、重金竞价的商业广告被撤下，换上了钱学森、邓稼先、钱三强等功勋科学家的巨幅海报。这一暖心举动，迅速引发全网热议。",
+    "商圈大屏是优质的注意力资源。每一块灯箱、每一块屏幕背后，都是可观的商业收益，是市场逻辑下争抢的流量高地。商圈大屏的内容更迭，大多围绕消费热度、娱乐流量展开，而此次商家主动放弃广告营收，让商业空间在消费属性之外，多了一层厚重的人文温度。",
+    "科学家海报登上商圈“C位”被网友点赞，背后是人们对时代价值标尺的追问。流量时代，到底什么才是真正值得追逐的“顶流”？当钱学森、邓稼先、钱三强等科学家的巨幅画像出现在人来人往的商圈街头，路过的市民驻足凝望，家长指着屏幕向孩子讲述先辈故事，无形之中，闹市商圈变成了开放的爱国主义课堂，宏大的家国情怀就落到了看得见、摸得着的日常。",
+    "一块大屏亮起来容易，而让崇尚科学、致敬楷模成为长久风尚，不能止于一阵热点刷屏。一方面，可尝试推动商业空间与公益宣传常态化联动，鼓励更多经营主体参与正能量传播，让英雄影像、科学故事长期出现于城市核心场景；另一方面，可丰富传播形式与内容，让大众不仅看得见国士容颜，更读得懂国士精神，引导更多青少年崇尚科学、矢志报国。",
+    "一座有温度的城市，既要有烟火消费的热闹，也要有仰望英雄的庄重。当越来越多公共空间愿意把“C位”留给民族脊梁，崇敬英雄、崇尚奉献就会更加蔚然成风，照亮更多人的前行之路。"
+  ],
+  "keySentences": [],
+  "aiModel": "deepseek-chat",
+  "aiPromptVersion": "article-analysis-v1",
+  "aiGeneratedAt": "2026-08-21T22:25:49+00:00",
+  "sourceTextHash": "9defcf4ce1ec5eab17f6dac65656f7e058ac2325a6a8b83827714d97548492e1",
+  "aiStatus": "ok",
+  "aiSummary": "商业综合体将商圈C位广告换成科学家海报，引发热议。此举体现商家让利公益，传递人文温度，引导社会崇尚科学、致敬楷模，并推动商业空间与公益宣传常态化联动，使英雄精神融入城市日常。",
+  "aiAnnotations": [
+    {
+      "id": "ai-0-69-79-term",
+      "paragraphIndex": 0,
+      "start": 69,
+      "end": 79,
+      "text": "功勋科学家的巨幅海报",
+      "type": "term",
+      "explanation": "指为国家作出重大贡献的科学家的大幅宣传画像，常用于公共展示以弘扬其精神。"
+    },
+    {
+      "id": "ai-1-0-13-viewpoint",
+      "paragraphIndex": 1,
+      "start": 0,
+      "end": 13,
+      "text": "商圈大屏是优质的注意力资源",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-1-112-116-term",
+      "paragraphIndex": 1,
+      "start": 112,
+      "end": 116,
+      "text": "人文温度",
+      "type": "term",
+      "explanation": "指在商业环境中融入人文关怀，体现对精神价值和社会情感的重视。"
+    },
+    {
+      "id": "ai-2-0-34-viewpoint",
+      "paragraphIndex": 2,
+      "start": 0,
+      "end": 34,
+      "text": "科学家海报登上商圈“C位”被网友点赞，背后是人们对时代价值标尺的追问",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-2-35-39-term",
+      "paragraphIndex": 2,
+      "start": 35,
+      "end": 39,
+      "text": "流量时代",
+      "type": "term",
+      "explanation": "指以网络流量为核心关注点的时代，强调关注度、点击量等数据指标。"
+    },
+    {
+      "id": "ai-2-133-139-term",
+      "paragraphIndex": 2,
+      "start": 133,
+      "end": 139,
+      "text": "爱国主义课堂",
+      "type": "term",
+      "explanation": "指利用公共空间进行爱国主义教育的场所或形式，使爱国精神融入日常生活。"
+    },
+    {
+      "id": "ai-3-0-38-viewpoint",
+      "paragraphIndex": 3,
+      "start": 0,
+      "end": 38,
+      "text": "一块大屏亮起来容易，而让崇尚科学、致敬楷模成为长久风尚，不能止于一阵热点刷屏",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-3-48-62-exam_point",
+      "paragraphIndex": 3,
+      "start": 48,
+      "end": 62,
+      "text": "商业空间与公益宣传常态化联动",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-107-116-exam_point",
+      "paragraphIndex": 3,
+      "start": 107,
+      "end": 116,
+      "text": "丰富传播形式与内容",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-3-139-155-exam_point",
+      "paragraphIndex": 3,
+      "start": 139,
+      "end": 155,
+      "text": "引导更多青少年崇尚科学、矢志报国",
+      "type": "exam_point"
+    },
+    {
+      "id": "ai-4-0-30-viewpoint",
+      "paragraphIndex": 4,
+      "start": 0,
+      "end": 30,
+      "text": "一座有温度的城市，既要有烟火消费的热闹，也要有仰望英雄的庄重",
+      "type": "viewpoint"
+    },
+    {
+      "id": "ai-4-54-71-exam_point",
+      "paragraphIndex": 4,
+      "start": 54,
+      "end": 71,
+      "text": "崇敬英雄、崇尚奉献就会更加蔚然成风",
+      "type": "exam_point"
+    }
+  ],
+  "aiQuality": {
+    "locationErrors": 1
+  }
+}
